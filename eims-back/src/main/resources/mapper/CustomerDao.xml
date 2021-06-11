@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.CustomerDao">
+
+    <resultMap type="com.eims.mybatis.entity.Customer" id="CustomerMap">
+        <result property="customerId" column="CUSTOMER_ID" jdbcType="INTEGER"/>
+        <result property="customerName" column="CUSTOMER_NAME" jdbcType="VARCHAR"/>
+        <result property="customerType" column="CUSTOMER_TYPE" jdbcType="VARCHAR"/>
+        <result property="customerLevel" column="CUSTOMER_LEVEL" jdbcType="VARCHAR"/>
+        <result property="contact" column="CONTACT" jdbcType="VARCHAR"/>
+        <result property="contactAddress" column="CONTACT_ADDRESS" jdbcType="VARCHAR"/>
+        <result property="contactNumber" column="CONTACT_NUMBER" jdbcType="VARCHAR"/>
+        <result property="contactEmaill" column="CONTACT_EMAILL" jdbcType="VARCHAR"/>
+        <result property="isEnabled" column="IS_ENABLED" jdbcType="INTEGER"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="CustomerCol">
+        CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_TYPE, CUSTOMER_LEVEL, CONTACT, CONTACT_ADDRESS, CONTACT_NUMBER, CONTACT_EMAILL, IS_ENABLED, REMARK, WORK_POINT_ID, WORK_POINT_NAME    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="CustomerMap">
+        select
+        <include refid="CustomerCol"></include>
+        from EIMS.CUSTOMER
+        where CUSTOMER_ID = #{customerId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="CustomerMap">
+        select
+        <include refid="CustomerCol"></include>
+        from (select * from EIMS.CUSTOMER where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="CustomerMap">
+        select
+        <include refid="CustomerCol"></include>
+        from (select * from EIMS.CUSTOMER where work_point_id = #{workPointId})
+        <where>
+            <if test="customerId != null">
+                or CUSTOMER_ID like '%'||#{customerId}||'%'
+            </if>
+            <if test="customerName != null and customerName != ''">
+                or CUSTOMER_NAME like '%'||#{customerName}||'%'
+            </if>
+            <if test="customerType != null and customerType != ''">
+                or CUSTOMER_TYPE like '%'||#{customerType}||'%'
+            </if>
+            <if test="customerLevel != null and customerLevel != ''">
+                or CUSTOMER_LEVEL like '%'||#{customerLevel}||'%'
+            </if>
+            <if test="contact != null and contact != ''">
+                or CONTACT like '%'||#{contact}||'%'
+            </if>
+            <if test="contactAddress != null and contactAddress != ''">
+                or CONTACT_ADDRESS like '%'||#{contactAddress}||'%'
+            </if>
+            <if test="contactNumber != null and contactNumber != ''">
+                or CONTACT_NUMBER like '%'||#{contactNumber}||'%'
+            </if>
+            <if test="contactEmaill != null and contactEmaill != ''">
+                or CONTACT_EMAILL like '%'||#{contactEmaill}||'%'
+            </if>
+            <if test="isEnabled != null">
+                or IS_ENABLED like '%'||#{isEnabled}||'%'
+            </if>
+            <if test="remark != null and remark != ''">
+                or REMARK like '%'||#{remark}||'%'
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="CustomerMap">
+        select
+        <include refid="CustomerCol"></include>
+        from EIMS.CUSTOMER
+        <where>
+            <if test="customerId != null">
+                and CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="customerName != null and customerName != ''">
+                and CUSTOMER_NAME = #{customerName}
+            </if>
+            <if test="customerType != null and customerType != ''">
+                and CUSTOMER_TYPE = #{customerType}
+            </if>
+            <if test="customerLevel != null and customerLevel != ''">
+                and CUSTOMER_LEVEL = #{customerLevel}
+            </if>
+            <if test="contact != null and contact != ''">
+                and CONTACT = #{contact}
+            </if>
+            <if test="contactAddress != null and contactAddress != ''">
+                and CONTACT_ADDRESS = #{contactAddress}
+            </if>
+            <if test="contactNumber != null and contactNumber != ''">
+                and CONTACT_NUMBER = #{contactNumber}
+            </if>
+            <if test="contactEmaill != null and contactEmaill != ''">
+                and CONTACT_EMAILL = #{contactEmaill}
+            </if>
+            <if test="isEnabled != null">
+                and IS_ENABLED = #{isEnabled}
+            </if>
+            <if test="remark != null and remark != ''">
+                and REMARK = #{remark}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                and WORK_POINT_NAME = #{workPointName}
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAllXyj" resultMap="CustomerMap">
+        select
+        CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_TYPE, CUSTOMER_LEVEL, CONTACT, CONTACT_ADDRESS, CONTACT_NUMBER,
+        CONTACT_EMAILL, IS_ENABLED, REMARK, WORK_POINT_ID, WORK_POINT_NAME
+        from EIMS.CUSTOMER
+
+        <where>
+
+
+            <if test='customerName != null and customerName != " " and customerName != ""'>
+
+                and CUSTOMER_NAME like concat(concat('%',#{customerName}),'%')
+                or CONTACT like  concat(concat('%',#{customerName}),'%')
+                or CONTACT_NUMBER like  concat( concat('%',#{customerName}),'%')
+                or CUSTOMER_TYPE like  concat( concat('%',#{customerName}),'%')
+
+            </if>
+
+            <if test='is_enabled == "正常" '>
+                and IS_ENABLED = 0
+
+            </if>
+            <if test='is_enabled == "禁用" '>
+                and IS_ENABLED = 1
+
+            </if>
+
+
+
+
+
+        </where>
+
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.CUSTOMER
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            CUSTOMER_ID,
+            <if test="customerName != null">
+                CUSTOMER_NAME,
+            </if>
+            <if test="customerType != null">
+                CUSTOMER_TYPE,
+            </if>
+            <if test="customerLevel != null">
+                CUSTOMER_LEVEL,
+            </if>
+            <if test="contact != null">
+                CONTACT,
+            </if>
+            <if test="contactAddress != null">
+                CONTACT_ADDRESS,
+            </if>
+            <if test="contactNumber != null">
+                CONTACT_NUMBER,
+            </if>
+            <if test="contactEmaill != null">
+                CONTACT_EMAILL,
+            </if>
+            <if test="isEnabled != null">
+                IS_ENABLED,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{customerId},
+            <if test="customerName != null">
+                #{customerName},
+            </if>
+            <if test="customerType != null">
+                #{customerType},
+            </if>
+            <if test="customerLevel != null">
+                #{customerLevel},
+            </if>
+            <if test="contact != null">
+                #{contact},
+            </if>
+            <if test="contactAddress != null">
+                #{contactAddress},
+            </if>
+            <if test="contactNumber != null">
+                #{contactNumber},
+            </if>
+            <if test="contactEmaill != null">
+                #{contactEmaill},
+            </if>
+            <if test="isEnabled != null">
+                #{isEnabled},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                #{workPointName},
+            </if>
+        </trim>
+        <selectKey keyProperty="customerId" resultType="INTEGER" order="BEFORE">
+            select SEQ_CUSTOMER.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.CUSTOMER
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                CUSTOMER_ID,
+                <if test="entity.customerName != null">
+                    CUSTOMER_NAME,
+                </if>
+                <if test="entity.customerType != null">
+                    CUSTOMER_TYPE,
+                </if>
+                <if test="entity.customerLevel != null">
+                    CUSTOMER_LEVEL,
+                </if>
+                <if test="entity.contact != null">
+                    CONTACT,
+                </if>
+                <if test="entity.contactAddress != null">
+                    CONTACT_ADDRESS,
+                </if>
+                <if test="entity.contactNumber != null">
+                    CONTACT_NUMBER,
+                </if>
+                <if test="entity.contactEmaill != null">
+                    CONTACT_EMAILL,
+                </if>
+                <if test="entity.isEnabled != null">
+                    IS_ENABLED,
+                </if>
+                <if test="entity.remark != null">
+                    REMARK,
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_CUSTOMER.NEXTVAL,
+                <if test="entity.customerName != null">
+                    #{entity.customerName},
+                </if>
+                <if test="entity.customerType != null">
+                    #{entity.customerType},
+                </if>
+                <if test="entity.customerLevel != null">
+                    #{entity.customerLevel},
+                </if>
+                <if test="entity.contact != null">
+                    #{entity.contact},
+                </if>
+                <if test="entity.contactAddress != null">
+                    #{entity.contactAddress},
+                </if>
+                <if test="entity.contactNumber != null">
+                    #{entity.contactNumber},
+                </if>
+                <if test="entity.contactEmaill != null">
+                    #{entity.contactEmaill},
+                </if>
+                <if test="entity.isEnabled != null">
+                    #{entity.isEnabled},
+                </if>
+                <if test="entity.remark != null">
+                    #{entity.remark},
+                </if>
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    #{entity.workPointName},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.CUSTOMER
+        <set>
+            <if test="customerName != null">
+                CUSTOMER_NAME = #{customerName},
+            </if>
+            <if test="customerType != null">
+                CUSTOMER_TYPE = #{customerType},
+            </if>
+            <if test="customerLevel != null">
+                CUSTOMER_LEVEL = #{customerLevel},
+            </if>
+            <if test="contact != null">
+                CONTACT = #{contact},
+            </if>
+            <if test="contactAddress != null">
+                CONTACT_ADDRESS = #{contactAddress},
+            </if>
+            <if test="contactNumber != null">
+                CONTACT_NUMBER = #{contactNumber},
+            </if>
+            <if test="contactEmaill != null">
+                CONTACT_EMAILL = #{contactEmaill},
+            </if>
+            <if test="isEnabled != null">
+                IS_ENABLED = #{isEnabled},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark},
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME = #{workPointName},
+            </if>
+        </set>
+        where CUSTOMER_ID = #{customerId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.CUSTOMER
+            <set>
+                <if test="entity.customerName != null">
+                    CUSTOMER_NAME = #{entity.customerName},
+                </if>
+                <if test="entity.customerType != null">
+                    CUSTOMER_TYPE = #{entity.customerType},
+                </if>
+                <if test="entity.customerLevel != null">
+                    CUSTOMER_LEVEL = #{entity.customerLevel},
+                </if>
+                <if test="entity.contact != null">
+                    CONTACT = #{entity.contact},
+                </if>
+                <if test="entity.contactAddress != null">
+                    CONTACT_ADDRESS = #{entity.contactAddress},
+                </if>
+                <if test="entity.contactNumber != null">
+                    CONTACT_NUMBER = #{entity.contactNumber},
+                </if>
+                <if test="entity.contactEmaill != null">
+                    CONTACT_EMAILL = #{entity.contactEmaill},
+                </if>
+                <if test="entity.isEnabled != null">
+                    IS_ENABLED = #{entity.isEnabled},
+                </if>
+                <if test="entity.remark != null">
+                    REMARK = #{entity.remark},
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME = #{entity.workPointName},
+                </if>
+            </set>
+            where CUSTOMER_ID = #{entity.customerId}
+        </foreach>
+    </update>
+
+    <!--通过主键多条修改-->
+
+    <update id="updateStop">
+        update EIMS.CUSTOMER
+        <set>
+            IS_ENABLED = 1,
+        </set>
+        where CUSTOMER_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+    </update>
+
+    <!--通过主键多条修改-->
+    <update id="updateOpen">
+        update EIMS.CUSTOMER
+        <set>
+            IS_ENABLED = 0,
+        </set>
+        where CUSTOMER_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.CUSTOMER where CUSTOMER_ID = #{customerId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.CUSTOMER where CUSTOMER_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.CUSTOMER where CUSTOMER_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.customerId}
+        </foreach>
+    </delete>
+</mapper>
+

@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.PaymentDao">
+
+    <resultMap type="com.eims.mybatis.entity.Payment" id="PaymentMap">
+        <result property="payId" column="PAY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="payDocunum" column="PAY_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="paymentAmount" column="PAYMENT_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="clearingForm" column="CLEARING_FORM" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="PaymentCol">
+        PAY_ID, WORK_POINT_ID, WORK_POINT_NAME, PAY_DOCUNUM, DOCUMENT_DATE, PURCH_ID, PURCH_DOCUNUM, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, PAYMENT_AMOUNT, REMARK, AUDITED, CLEARING_FORM    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PaymentMap">
+        select
+        <include refid="PaymentCol"></include>
+        from EIMS.PAYMENT
+        where PAY_ID = #{payId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="PaymentMap">
+        select
+        <include refid="PaymentCol"></include>
+        from (select * from EIMS.PAYMENT where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="PaymentMap">
+        select
+        <include refid="PaymentCol"></include>
+        from (select * from EIMS.PAYMENT where work_point_id = #{workPointId})
+        <where>
+            <if test="payId != null">
+                or PAY_ID like '%'||#{payId}||'%'
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
+            </if>
+            <if test="payDocunum != null and payDocunum != ''">
+                or PAY_DOCUNUM like '%'||#{payDocunum}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
+            </if>
+            <if test="purchId != null">
+                or PURCH_ID like '%'||#{purchId}||'%'
+            </if>
+            <if test="purchDocunum != null and purchDocunum != ''">
+                or PURCH_DOCUNUM like '%'||#{purchDocunum}||'%'
+            </if>
+            <if test="supplierId != null">
+                or SUPPLIER_ID like '%'||#{supplierId}||'%'
+            </if>
+            <if test="supplierName != null and supplierName != ''">
+                or SUPPLIER_NAME like '%'||#{supplierName}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="paymentAmount != null">
+                or PAYMENT_AMOUNT like '%'||#{paymentAmount}||'%'
+            </if>
+            <if test="remark != null and remark != ''">
+                or REMARK like '%'||#{remark}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="clearingForm != null and clearingForm != ''">
+                or CLEARING_FORM like '%'||#{clearingForm}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="PaymentMap">
+        select
+        <include refid="PaymentCol"></include>
+        from EIMS.PAYMENT
+        <where>
+            <if test="payId != null">
+                and PAY_ID = #{payId}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                and WORK_POINT_NAME = #{workPointName}
+            </if>
+            <if test="payDocunum != null and payDocunum != ''">
+                and PAY_DOCUNUM = #{payDocunum}
+            </if>
+            <if test="documentDate != null">
+                and DOCUMENT_DATE = #{documentDate}
+            </if>
+            <if test="purchId != null">
+                and PURCH_ID = #{purchId}
+            </if>
+            <if test="purchDocunum != null and purchDocunum != ''">
+                and PURCH_DOCUNUM = #{purchDocunum}
+            </if>
+            <if test="supplierId != null">
+                and SUPPLIER_ID = #{supplierId}
+            </if>
+            <if test="supplierName != null and supplierName != ''">
+                and SUPPLIER_NAME = #{supplierName}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+            <if test="paymentAmount != null">
+                and PAYMENT_AMOUNT = #{paymentAmount}
+            </if>
+            <if test="remark != null and remark != ''">
+                and REMARK = #{remark}
+            </if>
+            <if test="audited != null">
+                and AUDITED = #{audited}
+            </if>
+            <if test="clearingForm != null and clearingForm != ''">
+                and CLEARING_FORM = #{clearingForm}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.PAYMENT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            PAY_ID,
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME,
+            </if>
+            <if test="payDocunum != null">
+                PAY_DOCUNUM,
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE,
+            </if>
+            <if test="purchId != null">
+                PURCH_ID,
+            </if>
+            <if test="purchDocunum != null">
+                PURCH_DOCUNUM,
+            </if>
+            <if test="supplierId != null">
+                SUPPLIER_ID,
+            </if>
+            <if test="supplierName != null">
+                SUPPLIER_NAME,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="paymentAmount != null">
+                PAYMENT_AMOUNT,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="audited != null">
+                AUDITED,
+            </if>
+            <if test="clearingForm != null">
+                CLEARING_FORM,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{payId},
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                #{workPointName},
+            </if>
+            <if test="payDocunum != null">
+                #{payDocunum},
+            </if>
+            <if test="documentDate != null">
+                #{documentDate},
+            </if>
+            <if test="purchId != null">
+                #{purchId},
+            </if>
+            <if test="purchDocunum != null">
+                #{purchDocunum},
+            </if>
+            <if test="supplierId != null">
+                #{supplierId},
+            </if>
+            <if test="supplierName != null">
+                #{supplierName},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+            <if test="paymentAmount != null">
+                #{paymentAmount},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="audited != null">
+                #{audited},
+            </if>
+            <if test="clearingForm != null">
+                #{clearingForm},
+            </if>
+        </trim>
+        <selectKey keyProperty="payId" resultType="INTEGER" order="BEFORE">
+            select SEQ_PAYMENT.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.PAYMENT
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                PAY_ID,
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME,
+                </if>
+                <if test="entity.payDocunum != null">
+                    PAY_DOCUNUM,
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE,
+                </if>
+                <if test="entity.purchId != null">
+                    PURCH_ID,
+                </if>
+                <if test="entity.purchDocunum != null">
+                    PURCH_DOCUNUM,
+                </if>
+                <if test="entity.supplierId != null">
+                    SUPPLIER_ID,
+                </if>
+                <if test="entity.supplierName != null">
+                    SUPPLIER_NAME,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.paymentAmount != null">
+                    PAYMENT_AMOUNT,
+                </if>
+                <if test="entity.remark != null">
+                    REMARK,
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED,
+                </if>
+                <if test="entity.clearingForm != null">
+                    CLEARING_FORM,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_PAYMENT.NEXTVAL,
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    #{entity.workPointName},
+                </if>
+                <if test="entity.payDocunum != null">
+                    #{entity.payDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    #{entity.documentDate},
+                </if>
+                <if test="entity.purchId != null">
+                    #{entity.purchId},
+                </if>
+                <if test="entity.purchDocunum != null">
+                    #{entity.purchDocunum},
+                </if>
+                <if test="entity.supplierId != null">
+                    #{entity.supplierId},
+                </if>
+                <if test="entity.supplierName != null">
+                    #{entity.supplierName},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.paymentAmount != null">
+                    #{entity.paymentAmount},
+                </if>
+                <if test="entity.remark != null">
+                    #{entity.remark},
+                </if>
+                <if test="entity.audited != null">
+                    #{entity.audited},
+                </if>
+                <if test="entity.clearingForm != null">
+                    #{entity.clearingForm},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.PAYMENT
+        <set>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME = #{workPointName},
+            </if>
+            <if test="payDocunum != null">
+                PAY_DOCUNUM = #{payDocunum},
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE = #{documentDate},
+            </if>
+            <if test="purchId != null">
+                PURCH_ID = #{purchId},
+            </if>
+            <if test="purchDocunum != null">
+                PURCH_DOCUNUM = #{purchDocunum},
+            </if>
+            <if test="supplierId != null">
+                SUPPLIER_ID = #{supplierId},
+            </if>
+            <if test="supplierName != null">
+                SUPPLIER_NAME = #{supplierName},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+            <if test="paymentAmount != null">
+                PAYMENT_AMOUNT = #{paymentAmount},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark},
+            </if>
+            <if test="audited != null">
+                AUDITED = #{audited},
+            </if>
+            <if test="clearingForm != null">
+                CLEARING_FORM = #{clearingForm},
+            </if>
+        </set>
+        where PAY_ID = #{payId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.PAYMENT
+            <set>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME = #{entity.workPointName},
+                </if>
+                <if test="entity.payDocunum != null">
+                    PAY_DOCUNUM = #{entity.payDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE = #{entity.documentDate},
+                </if>
+                <if test="entity.purchId != null">
+                    PURCH_ID = #{entity.purchId},
+                </if>
+                <if test="entity.purchDocunum != null">
+                    PURCH_DOCUNUM = #{entity.purchDocunum},
+                </if>
+                <if test="entity.supplierId != null">
+                    SUPPLIER_ID = #{entity.supplierId},
+                </if>
+                <if test="entity.supplierName != null">
+                    SUPPLIER_NAME = #{entity.supplierName},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.paymentAmount != null">
+                    PAYMENT_AMOUNT = #{entity.paymentAmount},
+                </if>
+                <if test="entity.remark != null">
+                    REMARK = #{entity.remark},
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED = #{entity.audited},
+                </if>
+                <if test="entity.clearingForm != null">
+                    CLEARING_FORM = #{entity.clearingForm},
+                </if>
+            </set>
+            where PAY_ID = #{entity.payId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.PAYMENT where PAY_ID = #{payId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.PAYMENT where PAY_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.PAYMENT where PAY_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.payId}
+        </foreach>
+    </delete>
+</mapper>
+

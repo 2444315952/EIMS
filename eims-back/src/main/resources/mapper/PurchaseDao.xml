@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.PurchaseDao">
+
+    <resultMap type="com.eims.mybatis.entity.Purchase" id="PurchaseMap">
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="inStorage" column="IN_STORAGE" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="paymentStatus" column="PAYMENT_STATUS" jdbcType="INTEGER"/>
+        <result property="returnState" column="RETURN_STATE" jdbcType="INTEGER"/>
+        <result property="transactionAmount" column="TRANSACTION_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="isOnline" column="IS_ONLINE" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap type="com.eims.mybatis.entity.Purchase" id="PurchaseAndDetailMap">
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="inStorage" column="IN_STORAGE" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="paymentStatus" column="PAYMENT_STATUS" jdbcType="INTEGER"/>
+        <result property="returnState" column="RETURN_STATE" jdbcType="INTEGER"/>
+        <result property="transactionAmount" column="TRANSACTION_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="isOnline" column="IS_ONLINE" jdbcType="INTEGER"/>
+
+        <collection property="purchaseDetailList" javaType="list" ofType="com.eims.mybatis.entity.PurchaseDetail">
+            <result property="purchDetailId" column="PURCH_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+            <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
+            <result property="purchaseQuantity" column="PURCHASE_QUANTITY" jdbcType="INTEGER"/>
+            <result property="purchaseSubtotal" column="PURCHASE_SUBTOTAL" jdbcType="VARCHAR"/>
+            <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
+            <result property="paid" column="PAID" jdbcType="INTEGER"/>
+        </collection>
+    </resultMap>
+
+    <sql id="PurchaseCol">
+        PURCH_ID, WORK_POINT_ID, WORK_POINT_NAME, PURCH_DOCUNUM, DOCUMENT_DATE, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, IN_STORAGE, WAREHOUSE_ID, WAREHOUSE_NAME, AUDITED, PAYMENT_STATUS, RETURN_STATE, TRANSACTION_AMOUNT, IS_ONLINE    </sql>
+
+    <sql id="PurchaseJoinCol">
+        P.PURCH_ID, P.WORK_POINT_ID, P.WORK_POINT_NAME, P.PURCH_DOCUNUM, P.DOCUMENT_DATE, P.SUPPLIER_ID, P.SUPPLIER_NAME, P.EMPLOYEE_ID, P.EMPLOYEE_NAME, P.IN_STORAGE, P.WAREHOUSE_ID, P.WAREHOUSE_NAME, P.AUDITED, P.PAYMENT_STATUS, P.RETURN_STATE, P.TRANSACTION_AMOUNT, P.IS_ONLINE</sql>
+
+    <sql id="PurchaseDetailJoinCol">
+        D.PURCH_DETAIL_ID, D.PURCH_ID, D.PURCH_DOCUNUM, D.PRODUCT_ID, D.PRODUCT_NAME, D.PRODUCT_PICTURE, D.SPEC_MODEL, D.PRODUCT_UNIT, D.PURCHASE_PRICE, D.PURCHASE_QUANTITY, D.PURCHASE_SUBTOTAL, D.RETURNED, D.PAID  </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PurchaseAndDetailMap">
+        select
+        <include refid="PurchaseJoinCol"></include>,<include refid="PurchaseDetailJoinCol"></include>
+        from EIMS.PURCHASE P LEFT JOIN EIMS.PURCHASE_DETAIL D ON P.PURCH_ID = D.PURCH_ID
+        where P.PURCH_ID = #{purchId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="PurchaseMap">
+        select
+        <include refid="PurchaseCol"></include>
+        from (select * from EIMS.PURCHASE where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="PurchaseMap">
+        select
+        <include refid="PurchaseCol"></include>
+        from (select * from EIMS.PURCHASE where work_point_id = #{workPointId})
+        <where>
+            <if test="purchId != null">
+                or PURCH_ID like '%'||#{purchId}||'%'
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
+            </if>
+            <if test="purchDocunum != null and purchDocunum != ''">
+                or PURCH_DOCUNUM like '%'||#{purchDocunum}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
+            </if>
+            <if test="supplierId != null">
+                or SUPPLIER_ID like '%'||#{supplierId}||'%'
+            </if>
+            <if test="supplierName != null and supplierName != ''">
+                or SUPPLIER_NAME like '%'||#{supplierName}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="inStorage != null">
+                or IN_STORAGE like '%'||#{inStorage}||'%'
+            </if>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="paymentStatus != null">
+                or PAYMENT_STATUS like '%'||#{paymentStatus}||'%'
+            </if>
+            <if test="returnState != null">
+                or RETURN_STATE like '%'||#{returnState}||'%'
+            </if>
+            <if test="transactionAmount != null">
+                or TRANSACTION_AMOUNT like '%'||#{transactionAmount}||'%'
+            </if>
+            <if test="isOnline != null">
+                or IS_ONLINE like '%'||#{isOnline}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="PurchaseMap">
+        select
+        <include refid="PurchaseCol"></include>
+        from EIMS.PURCHASE
+        <where>
+            <if test="purchId != null">
+                and PURCH_ID = #{purchId}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                and WORK_POINT_NAME = #{workPointName}
+            </if>
+            <if test="purchDocunum != null and purchDocunum != ''">
+                and PURCH_DOCUNUM = #{purchDocunum}
+            </if>
+            <if test="documentDate != null">
+                and DOCUMENT_DATE = #{documentDate}
+            </if>
+            <if test="supplierId != null">
+                and SUPPLIER_ID = #{supplierId}
+            </if>
+            <if test="supplierName != null and supplierName != ''">
+                and SUPPLIER_NAME = #{supplierName}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+            <if test="inStorage != null">
+                and IN_STORAGE = #{inStorage}
+            </if>
+            <if test="warehouseId != null">
+                and WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                and WAREHOUSE_NAME = #{warehouseName}
+            </if>
+            <if test="audited != null">
+                and AUDITED = #{audited}
+            </if>
+            <if test="paymentStatus != null">
+                and PAYMENT_STATUS = #{paymentStatus}
+            </if>
+            <if test="returnState != null">
+                and RETURN_STATE = #{returnState}
+            </if>
+            <if test="transactionAmount != null">
+                and TRANSACTION_AMOUNT = #{transactionAmount}
+            </if>
+            <if test="isOnline != null">
+                and IS_ONLINE = #{isOnline}
+            </if>
+        </where>
+    </select>
+
+    <!--通过采购单据编号，和工作点，查询单据条数-->
+    <select id="selectCountByDocuNumAndWorkPointId" resultType="int">
+        select count(*)
+        from (select * from EIMS.PURCHASE where work_point_id = #{workPointId}) where PURCH_DOCUNUM like '%'||#{docuNum}||'%'
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.PURCHASE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            PURCH_ID,
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME,
+            </if>
+            <if test="purchDocunum != null">
+                PURCH_DOCUNUM,
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE,
+            </if>
+            <if test="supplierId != null">
+                SUPPLIER_ID,
+            </if>
+            <if test="supplierName != null">
+                SUPPLIER_NAME,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="inStorage != null">
+                IN_STORAGE,
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID,
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME,
+            </if>
+            <if test="audited != null">
+                AUDITED,
+            </if>
+            <if test="paymentStatus != null">
+                PAYMENT_STATUS,
+            </if>
+            <if test="returnState != null">
+                RETURN_STATE,
+            </if>
+            <if test="transactionAmount != null">
+                TRANSACTION_AMOUNT,
+            </if>
+            <if test="isOnline != null">
+                IS_ONLINE,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{purchId},
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                #{workPointName},
+            </if>
+            <if test="purchDocunum != null">
+                #{purchDocunum},
+            </if>
+            <if test="documentDate != null">
+                #{documentDate},
+            </if>
+            <if test="supplierId != null">
+                #{supplierId},
+            </if>
+            <if test="supplierName != null">
+                #{supplierName},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+            <if test="inStorage != null">
+                #{inStorage},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                #{warehouseName},
+            </if>
+            <if test="audited != null">
+                #{audited},
+            </if>
+            <if test="paymentStatus != null">
+                #{paymentStatus},
+            </if>
+            <if test="returnState != null">
+                #{returnState},
+            </if>
+            <if test="transactionAmount != null">
+                #{transactionAmount},
+            </if>
+            <if test="isOnline != null">
+                #{isOnline},
+            </if>
+        </trim>
+        <selectKey keyProperty="purchId" resultType="INTEGER" order="BEFORE">
+            select SEQ_PURCHASE.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.PURCHASE
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                PURCH_ID,
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME,
+                </if>
+                <if test="entity.purchDocunum != null">
+                    PURCH_DOCUNUM,
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE,
+                </if>
+                <if test="entity.supplierId != null">
+                    SUPPLIER_ID,
+                </if>
+                <if test="entity.supplierName != null">
+                    SUPPLIER_NAME,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.inStorage != null">
+                    IN_STORAGE,
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID,
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME,
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED,
+                </if>
+                <if test="entity.paymentStatus != null">
+                    PAYMENT_STATUS,
+                </if>
+                <if test="entity.returnState != null">
+                    RETURN_STATE,
+                </if>
+                <if test="entity.transactionAmount != null">
+                    TRANSACTION_AMOUNT,
+                </if>
+                <if test="entity.isOnline != null">
+                    IS_ONLINE,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_PURCHASE.NEXTVAL,
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    #{entity.workPointName},
+                </if>
+                <if test="entity.purchDocunum != null">
+                    #{entity.purchDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    #{entity.documentDate},
+                </if>
+                <if test="entity.supplierId != null">
+                    #{entity.supplierId},
+                </if>
+                <if test="entity.supplierName != null">
+                    #{entity.supplierName},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.inStorage != null">
+                    #{entity.inStorage},
+                </if>
+                <if test="entity.warehouseId != null">
+                    #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    #{entity.warehouseName},
+                </if>
+                <if test="entity.audited != null">
+                    #{entity.audited},
+                </if>
+                <if test="entity.paymentStatus != null">
+                    #{entity.paymentStatus},
+                </if>
+                <if test="entity.returnState != null">
+                    #{entity.returnState},
+                </if>
+                <if test="entity.transactionAmount != null">
+                    #{entity.transactionAmount},
+                </if>
+                <if test="entity.isOnline != null">
+                    #{entity.isOnline},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.PURCHASE
+        <set>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME = #{workPointName},
+            </if>
+            <if test="purchDocunum != null">
+                PURCH_DOCUNUM = #{purchDocunum},
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE = #{documentDate},
+            </if>
+            <if test="supplierId != null">
+                SUPPLIER_ID = #{supplierId},
+            </if>
+            <if test="supplierName != null">
+                SUPPLIER_NAME = #{supplierName},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+            <if test="inStorage != null">
+                IN_STORAGE = #{inStorage},
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID = #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME = #{warehouseName},
+            </if>
+            <if test="audited != null">
+                AUDITED = #{audited},
+            </if>
+            <if test="paymentStatus != null">
+                PAYMENT_STATUS = #{paymentStatus},
+            </if>
+            <if test="returnState != null">
+                RETURN_STATE = #{returnState},
+            </if>
+            <if test="transactionAmount != null">
+                TRANSACTION_AMOUNT = #{transactionAmount},
+            </if>
+            <if test="isOnline != null">
+                IS_ONLINE = #{isOnline},
+            </if>
+        </set>
+        where PURCH_ID = #{purchId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.PURCHASE
+            <set>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME = #{entity.workPointName},
+                </if>
+                <if test="entity.purchDocunum != null">
+                    PURCH_DOCUNUM = #{entity.purchDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE = #{entity.documentDate},
+                </if>
+                <if test="entity.supplierId != null">
+                    SUPPLIER_ID = #{entity.supplierId},
+                </if>
+                <if test="entity.supplierName != null">
+                    SUPPLIER_NAME = #{entity.supplierName},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.inStorage != null">
+                    IN_STORAGE = #{entity.inStorage},
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID = #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME = #{entity.warehouseName},
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED = #{entity.audited},
+                </if>
+                <if test="entity.paymentStatus != null">
+                    PAYMENT_STATUS = #{entity.paymentStatus},
+                </if>
+                <if test="entity.returnState != null">
+                    RETURN_STATE = #{entity.returnState},
+                </if>
+                <if test="entity.transactionAmount != null">
+                    TRANSACTION_AMOUNT = #{entity.transactionAmount},
+                </if>
+                <if test="entity.isOnline != null">
+                    IS_ONLINE = #{entity.isOnline},
+                </if>
+            </set>
+            where PURCH_ID = #{entity.purchId}
+        </foreach>
+    </update>
+
+    <!--通过主键id修改审核状态 -->
+    <update id="updateAuditedById">
+        update EIMS.PURCHASE set audited = #{audited} where PURCH_ID = #{purchId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from EIMS.PURCHASE where PURCH_ID = #{purchId}
+    </delete>
+
+    <!--批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.PURCHASE where PURCH_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.PURCHASE where PURCH_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.purchId}
+        </foreach>
+    </delete>
+</mapper>
+

@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.WarehouseWarrantDao">
+
+    <resultMap type="com.eims.mybatis.entity.WarehouseWarrant" id="WarehouseWarrantMap">
+        <result property="warehouseWarrantId" column="WAREHOUSE_WARRANT_ID" jdbcType="INTEGER"/>
+        <result property="warehouseDocunum" column="WAREHOUSE_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="storageType" column="STORAGE_TYPE" jdbcType="VARCHAR"/>
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="saleReturnId" column="SALE_RETURN_ID" jdbcType="INTEGER"/>
+        <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
+        <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
+        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="com.eims.mybatis.entity.WarehouseWarrant" id="WarehouseAndDetailMap">
+        <result property="warehouseWarrantId" column="WAREHOUSE_WARRANT_ID" jdbcType="INTEGER"/>
+        <result property="warehouseDocunum" column="WAREHOUSE_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="storageType" column="STORAGE_TYPE" jdbcType="VARCHAR"/>
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="saleReturnId" column="SALE_RETURN_ID" jdbcType="INTEGER"/>
+        <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
+        <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
+        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
+
+        <collection property="warehousingDetailList" javaType="list" ofType="com.eims.mybatis.entity.WarehousingDetail">
+            <result property="warehousingDetailId" column="WAREHOUSING_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="warehouseWarrantId" column="WAREHOUSE_WARRANT_ID" jdbcType="INTEGER"/>
+            <result property="warehouseDocunum" column="WAREHOUSE_DOCUNUM" jdbcType="VARCHAR"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+            <result property="commodityNote" column="COMMODITY_NOTE" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <sql id="WarehouseWarrantCol">
+        WAREHOUSE_WARRANT_ID, WAREHOUSE_DOCUNUM, DOCUMENT_DATE, WORK_POINT_ID, WORK_POINT_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, AUDITED, WAREHOUSE_ID, WAREHOUSE_NAME, STORAGE_TYPE, PURCH_ID, SALE_RETURN_ID, TRANSFER_ORDER_ID, BLITEM_ID, INVENTORY_QUANTITY, DOCUMENTS_NOTE    </sql>
+
+    <sql id="WarehousingDetailCol">
+        WAREHOUSING_DETAIL_ID, WAREHOUSE_WARRANT_ID, WAREHOUSE_DOCUNUM, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, SPEC_MODEL, PRODUCT_UNIT, INVENTORY_QUANTITY, COMMODITY_NOTE    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="WarehouseAndDetailMap">
+        select
+        <include refid="WarehouseWarrantCol"></include>,<include refid="WarehousingDetailCol"></include>
+        from EIMS.WAREHOUSE_WARRANT
+        where WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="WarehouseWarrantMap">
+        select
+        <include refid="WarehouseWarrantCol"></include>
+        from (select * from EIMS.WAREHOUSE_WARRANT where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="WarehouseWarrantMap">
+        select
+        <include refid="WarehouseWarrantCol"></include>
+        from (select * from EIMS.WAREHOUSE_WARRANT where work_point_id = #{workPointId})
+        <where>
+            <if test="warehouseWarrantId != null">
+                or WAREHOUSE_WARRANT_ID like '%'||#{warehouseWarrantId}||'%'
+            </if>
+            <if test="warehouseDocunum != null and warehouseDocunum != ''">
+                or WAREHOUSE_DOCUNUM like '%'||#{warehouseDocunum}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="storageType != null and storageType != ''">
+                or STORAGE_TYPE like '%'||#{storageType}||'%'
+            </if>
+            <if test="purchId != null">
+                or PURCH_ID like '%'||#{purchId}||'%'
+            </if>
+            <if test="saleReturnId != null">
+                or SALE_RETURN_ID like '%'||#{saleReturnId}||'%'
+            </if>
+            <if test="transferOrderId != null">
+                or TRANSFER_ORDER_ID like '%'||#{transferOrderId}||'%'
+            </if>
+            <if test="blitemId != null">
+                or BLITEM_ID like '%'||#{blitemId}||'%'
+            </if>
+            <if test="inventoryQuantity != null">
+                or INVENTORY_QUANTITY like '%'||#{inventoryQuantity}||'%'
+            </if>
+            <if test="documentsNote != null and documentsNote != ''">
+                or DOCUMENTS_NOTE like '%'||#{documentsNote}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="WarehouseWarrantMap">
+        select
+        <include refid="WarehouseWarrantCol"></include>
+        from EIMS.WAREHOUSE_WARRANT
+        <where>
+            <if test="warehouseWarrantId != null">
+                and WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+            </if>
+            <if test="warehouseDocunum != null and warehouseDocunum != ''">
+                and WAREHOUSE_DOCUNUM = #{warehouseDocunum}
+            </if>
+            <if test="documentDate != null">
+                and DOCUMENT_DATE = #{documentDate}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                and WORK_POINT_NAME = #{workPointName}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+            <if test="audited != null">
+                and AUDITED = #{audited}
+            </if>
+            <if test="warehouseId != null">
+                and WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                and WAREHOUSE_NAME = #{warehouseName}
+            </if>
+            <if test="storageType != null and storageType != ''">
+                and STORAGE_TYPE = #{storageType}
+            </if>
+            <if test="purchId != null">
+                and PURCH_ID = #{purchId}
+            </if>
+            <if test="saleReturnId != null">
+                and SALE_RETURN_ID = #{saleReturnId}
+            </if>
+            <if test="transferOrderId != null">
+                and TRANSFER_ORDER_ID = #{transferOrderId}
+            </if>
+            <if test="blitemId != null">
+                and BLITEM_ID = #{blitemId}
+            </if>
+            <if test="inventoryQuantity != null">
+                and INVENTORY_QUANTITY = #{inventoryQuantity}
+            </if>
+            <if test="documentsNote != null and documentsNote != ''">
+                and DOCUMENTS_NOTE = #{documentsNote}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.WAREHOUSE_WARRANT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            WAREHOUSE_WARRANT_ID,
+            <if test="warehouseDocunum != null">
+                WAREHOUSE_DOCUNUM,
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE,
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="audited != null">
+                AUDITED,
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID,
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME,
+            </if>
+            <if test="storageType != null">
+                STORAGE_TYPE,
+            </if>
+            <if test="purchId != null">
+                PURCH_ID,
+            </if>
+            <if test="saleReturnId != null">
+                SALE_RETURN_ID,
+            </if>
+            <if test="transferOrderId != null">
+                TRANSFER_ORDER_ID,
+            </if>
+            <if test="blitemId != null">
+                BLITEM_ID,
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY,
+            </if>
+            <if test="documentsNote != null">
+                DOCUMENTS_NOTE,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{warehouseWarrantId},
+            <if test="warehouseDocunum != null">
+                #{warehouseDocunum},
+            </if>
+            <if test="documentDate != null">
+                #{documentDate},
+            </if>
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                #{workPointName},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+            <if test="audited != null">
+                #{audited},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                #{warehouseName},
+            </if>
+            <if test="storageType != null">
+                #{storageType},
+            </if>
+            <if test="purchId != null">
+                #{purchId},
+            </if>
+            <if test="saleReturnId != null">
+                #{saleReturnId},
+            </if>
+            <if test="transferOrderId != null">
+                #{transferOrderId},
+            </if>
+            <if test="blitemId != null">
+                #{blitemId},
+            </if>
+            <if test="inventoryQuantity != null">
+                #{inventoryQuantity},
+            </if>
+            <if test="documentsNote != null">
+                #{documentsNote},
+            </if>
+        </trim>
+        <selectKey keyProperty="warehouseWarrantId" resultType="INTEGER" order="BEFORE">
+            select SEQ_WAREHOUSE_WARRANT.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.WAREHOUSE_WARRANT
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                WAREHOUSE_WARRANT_ID,
+                <if test="entity.warehouseDocunum != null">
+                    WAREHOUSE_DOCUNUM,
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE,
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED,
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID,
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME,
+                </if>
+                <if test="entity.storageType != null">
+                    STORAGE_TYPE,
+                </if>
+                <if test="entity.purchId != null">
+                    PURCH_ID,
+                </if>
+                <if test="entity.saleReturnId != null">
+                    SALE_RETURN_ID,
+                </if>
+                <if test="entity.transferOrderId != null">
+                    TRANSFER_ORDER_ID,
+                </if>
+                <if test="entity.blitemId != null">
+                    BLITEM_ID,
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY,
+                </if>
+                <if test="entity.documentsNote != null">
+                    DOCUMENTS_NOTE,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_WAREHOUSE_WARRANT.NEXTVAL,
+                <if test="entity.warehouseDocunum != null">
+                    #{entity.warehouseDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    #{entity.documentDate},
+                </if>
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    #{entity.workPointName},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.audited != null">
+                    #{entity.audited},
+                </if>
+                <if test="entity.warehouseId != null">
+                    #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    #{entity.warehouseName},
+                </if>
+                <if test="entity.storageType != null">
+                    #{entity.storageType},
+                </if>
+                <if test="entity.purchId != null">
+                    #{entity.purchId},
+                </if>
+                <if test="entity.saleReturnId != null">
+                    #{entity.saleReturnId},
+                </if>
+                <if test="entity.transferOrderId != null">
+                    #{entity.transferOrderId},
+                </if>
+                <if test="entity.blitemId != null">
+                    #{entity.blitemId},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.documentsNote != null">
+                    #{entity.documentsNote},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.WAREHOUSE_WARRANT
+        <set>
+            <if test="warehouseDocunum != null">
+                WAREHOUSE_DOCUNUM = #{warehouseDocunum},
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE = #{documentDate},
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME = #{workPointName},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+            <if test="audited != null">
+                AUDITED = #{audited},
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID = #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME = #{warehouseName},
+            </if>
+            <if test="storageType != null">
+                STORAGE_TYPE = #{storageType},
+            </if>
+            <if test="purchId != null">
+                PURCH_ID = #{purchId},
+            </if>
+            <if test="saleReturnId != null">
+                SALE_RETURN_ID = #{saleReturnId},
+            </if>
+            <if test="transferOrderId != null">
+                TRANSFER_ORDER_ID = #{transferOrderId},
+            </if>
+            <if test="blitemId != null">
+                BLITEM_ID = #{blitemId},
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY = #{inventoryQuantity},
+            </if>
+            <if test="documentsNote != null">
+                DOCUMENTS_NOTE = #{documentsNote},
+            </if>
+        </set>
+        where WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.WAREHOUSE_WARRANT
+            <set>
+                <if test="entity.warehouseDocunum != null">
+                    WAREHOUSE_DOCUNUM = #{entity.warehouseDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE = #{entity.documentDate},
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME = #{entity.workPointName},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED = #{entity.audited},
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID = #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME = #{entity.warehouseName},
+                </if>
+                <if test="entity.storageType != null">
+                    STORAGE_TYPE = #{entity.storageType},
+                </if>
+                <if test="entity.purchId != null">
+                    PURCH_ID = #{entity.purchId},
+                </if>
+                <if test="entity.saleReturnId != null">
+                    SALE_RETURN_ID = #{entity.saleReturnId},
+                </if>
+                <if test="entity.transferOrderId != null">
+                    TRANSFER_ORDER_ID = #{entity.transferOrderId},
+                </if>
+                <if test="entity.blitemId != null">
+                    BLITEM_ID = #{entity.blitemId},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY = #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.documentsNote != null">
+                    DOCUMENTS_NOTE = #{entity.documentsNote},
+                </if>
+            </set>
+            where WAREHOUSE_WARRANT_ID = #{entity.warehouseWarrantId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.WAREHOUSE_WARRANT where WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.WAREHOUSE_WARRANT where WAREHOUSE_WARRANT_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.WAREHOUSE_WARRANT where WAREHOUSE_WARRANT_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.warehouseWarrantId}
+        </foreach>
+    </delete>
+</mapper>
+

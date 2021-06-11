@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.WarehousingDetailDao">
+
+    <resultMap type="com.eims.mybatis.entity.WarehousingDetail" id="WarehousingDetailMap">
+        <result property="warehousingDetailId" column="WAREHOUSING_DETAIL_ID" jdbcType="INTEGER"/>
+        <result property="warehouseWarrantId" column="WAREHOUSE_WARRANT_ID" jdbcType="INTEGER"/>
+        <result property="warehouseDocunum" column="WAREHOUSE_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+        <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="commodityNote" column="COMMODITY_NOTE" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="WarehousingDetailCol">
+        WAREHOUSING_DETAIL_ID, WAREHOUSE_WARRANT_ID, WAREHOUSE_DOCUNUM, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, SPEC_MODEL, PRODUCT_UNIT, INVENTORY_QUANTITY, COMMODITY_NOTE    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="WarehousingDetailMap">
+        select
+        <include refid="WarehousingDetailCol"></include>
+        from EIMS.WAREHOUSING_DETAIL
+        where WAREHOUSING_DETAIL_ID = #{warehousingDetailId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="WarehousingDetailMap">
+        select
+        <include refid="WarehousingDetailCol"></include>
+        from (select * from EIMS.WAREHOUSING_DETAIL where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="WarehousingDetailMap">
+        select
+        <include refid="WarehousingDetailCol"></include>
+        from (select * from EIMS.WAREHOUSING_DETAIL where work_point_id = #{workPointId})
+        <where>
+            <if test="warehousingDetailId != null">
+                or WAREHOUSING_DETAIL_ID like '%'||#{warehousingDetailId}||'%'
+            </if>
+            <if test="warehouseWarrantId != null">
+                or WAREHOUSE_WARRANT_ID like '%'||#{warehouseWarrantId}||'%'
+            </if>
+            <if test="warehouseDocunum != null and warehouseDocunum != ''">
+                or WAREHOUSE_DOCUNUM like '%'||#{warehouseDocunum}||'%'
+            </if>
+            <if test="productId != null">
+                or PRODUCT_ID like '%'||#{productId}||'%'
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                or PRODUCT_PICTURE like '%'||#{productPicture}||'%'
+            </if>
+            <if test="productName != null and productName != ''">
+                or PRODUCT_NAME like '%'||#{productName}||'%'
+            </if>
+            <if test="specModel != null and specModel != ''">
+                or SPEC_MODEL like '%'||#{specModel}||'%'
+            </if>
+            <if test="productUnit != null and productUnit != ''">
+                or PRODUCT_UNIT like '%'||#{productUnit}||'%'
+            </if>
+            <if test="inventoryQuantity != null">
+                or INVENTORY_QUANTITY like '%'||#{inventoryQuantity}||'%'
+            </if>
+            <if test="commodityNote != null and commodityNote != ''">
+                or COMMODITY_NOTE like '%'||#{commodityNote}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="WarehousingDetailMap">
+        select
+        <include refid="WarehousingDetailCol"></include>
+        from EIMS.WAREHOUSING_DETAIL
+        <where>
+            <if test="warehousingDetailId != null">
+                and WAREHOUSING_DETAIL_ID = #{warehousingDetailId}
+            </if>
+            <if test="warehouseWarrantId != null">
+                and WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+            </if>
+            <if test="warehouseDocunum != null and warehouseDocunum != ''">
+                and WAREHOUSE_DOCUNUM = #{warehouseDocunum}
+            </if>
+            <if test="productId != null">
+                and PRODUCT_ID = #{productId}
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                and PRODUCT_PICTURE = #{productPicture}
+            </if>
+            <if test="productName != null and productName != ''">
+                and PRODUCT_NAME = #{productName}
+            </if>
+            <if test="specModel != null and specModel != ''">
+                and SPEC_MODEL = #{specModel}
+            </if>
+            <if test="productUnit != null and productUnit != ''">
+                and PRODUCT_UNIT = #{productUnit}
+            </if>
+            <if test="inventoryQuantity != null">
+                and INVENTORY_QUANTITY = #{inventoryQuantity}
+            </if>
+            <if test="commodityNote != null and commodityNote != ''">
+                and COMMODITY_NOTE = #{commodityNote}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.WAREHOUSING_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            WAREHOUSING_DETAIL_ID,
+            <if test="warehouseWarrantId != null">
+                WAREHOUSE_WARRANT_ID,
+            </if>
+            <if test="warehouseDocunum != null">
+                WAREHOUSE_DOCUNUM,
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID,
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE,
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME,
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL,
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT,
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY,
+            </if>
+            <if test="commodityNote != null">
+                COMMODITY_NOTE,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{warehousingDetailId},
+            <if test="warehouseWarrantId != null">
+                #{warehouseWarrantId},
+            </if>
+            <if test="warehouseDocunum != null">
+                #{warehouseDocunum},
+            </if>
+            <if test="productId != null">
+                #{productId},
+            </if>
+            <if test="productPicture != null">
+                #{productPicture},
+            </if>
+            <if test="productName != null">
+                #{productName},
+            </if>
+            <if test="specModel != null">
+                #{specModel},
+            </if>
+            <if test="productUnit != null">
+                #{productUnit},
+            </if>
+            <if test="inventoryQuantity != null">
+                #{inventoryQuantity},
+            </if>
+            <if test="commodityNote != null">
+                #{commodityNote},
+            </if>
+        </trim>
+        <selectKey keyProperty="warehousingDetailId" resultType="INTEGER" order="BEFORE">
+            select SEQ_WAREHOUSING_DETAIL.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.WAREHOUSING_DETAIL
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                WAREHOUSING_DETAIL_ID,
+                <if test="entity.warehouseWarrantId != null">
+                    WAREHOUSE_WARRANT_ID,
+                </if>
+                <if test="entity.warehouseDocunum != null">
+                    WAREHOUSE_DOCUNUM,
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID,
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE,
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME,
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL,
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT,
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY,
+                </if>
+                <if test="entity.commodityNote != null">
+                    COMMODITY_NOTE,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_WAREHOUSING_DETAIL.NEXTVAL,
+                <if test="entity.warehouseWarrantId != null">
+                    #{entity.warehouseWarrantId},
+                </if>
+                <if test="entity.warehouseDocunum != null">
+                    #{entity.warehouseDocunum},
+                </if>
+                <if test="entity.productId != null">
+                    #{entity.productId},
+                </if>
+                <if test="entity.productPicture != null">
+                    #{entity.productPicture},
+                </if>
+                <if test="entity.productName != null">
+                    #{entity.productName},
+                </if>
+                <if test="entity.specModel != null">
+                    #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    #{entity.productUnit},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.commodityNote != null">
+                    #{entity.commodityNote},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.WAREHOUSING_DETAIL
+        <set>
+            <if test="warehouseWarrantId != null">
+                WAREHOUSE_WARRANT_ID = #{warehouseWarrantId},
+            </if>
+            <if test="warehouseDocunum != null">
+                WAREHOUSE_DOCUNUM = #{warehouseDocunum},
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID = #{productId},
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE = #{productPicture},
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME = #{productName},
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL = #{specModel},
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT = #{productUnit},
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY = #{inventoryQuantity},
+            </if>
+            <if test="commodityNote != null">
+                COMMODITY_NOTE = #{commodityNote},
+            </if>
+        </set>
+        where WAREHOUSING_DETAIL_ID = #{warehousingDetailId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.WAREHOUSING_DETAIL
+            <set>
+                <if test="entity.warehouseWarrantId != null">
+                    WAREHOUSE_WARRANT_ID = #{entity.warehouseWarrantId},
+                </if>
+                <if test="entity.warehouseDocunum != null">
+                    WAREHOUSE_DOCUNUM = #{entity.warehouseDocunum},
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID = #{entity.productId},
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE = #{entity.productPicture},
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME = #{entity.productName},
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL = #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT = #{entity.productUnit},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY = #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.commodityNote != null">
+                    COMMODITY_NOTE = #{entity.commodityNote},
+                </if>
+            </set>
+            where WAREHOUSING_DETAIL_ID = #{entity.warehousingDetailId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.WAREHOUSING_DETAIL where WAREHOUSING_DETAIL_ID = #{warehousingDetailId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.WAREHOUSING_DETAIL where WAREHOUSING_DETAIL_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.WAREHOUSING_DETAIL where WAREHOUSING_DETAIL_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.warehousingDetailId}
+        </foreach>
+    </delete>
+</mapper>
+

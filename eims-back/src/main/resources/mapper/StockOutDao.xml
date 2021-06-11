@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.StockOutDao">
+
+    <resultMap type="com.eims.mybatis.entity.StockOut" id="StockOutMap">
+        <result property="stockOutId" column="STOCK_OUT_ID" jdbcType="INTEGER"/>
+        <result property="stockOutDocunum" column="STOCK_OUT_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="outboundType" column="OUTBOUND_TYPE" jdbcType="VARCHAR"/>
+        <result property="purchReturnId" column="PURCH_RETURN_ID" jdbcType="INTEGER"/>
+        <result property="saleId" column="SALE_ID" jdbcType="INTEGER"/>
+        <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
+        <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
+        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="com.eims.mybatis.entity.StockOut" id="OutboundDetailListMap">
+        <result property="stockOutId" column="STOCK_OUT_ID" jdbcType="INTEGER"/>
+        <result property="stockOutDocunum" column="STOCK_OUT_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="outboundType" column="OUTBOUND_TYPE" jdbcType="VARCHAR"/>
+        <result property="purchReturnId" column="PURCH_RETURN_ID" jdbcType="INTEGER"/>
+        <result property="saleId" column="SALE_ID" jdbcType="INTEGER"/>
+        <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
+        <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
+        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
+
+        <collection property="outboundDetailList" javaType="list" ofType="com.eims.mybatis.entity.OutboundDetail">
+            <result property="outboundDetailId" column="OUTBOUND_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="stockOutId" column="STOCK_OUT_ID" jdbcType="INTEGER"/>
+            <result property="stockOutDocunum" column="STOCK_OUT_DOCUNUM" jdbcType="VARCHAR"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="deliveryQuantity" column="DELIVERY_QUANTITY" jdbcType="INTEGER"/>
+            <result property="commodityNote" column="COMMODITY_NOTE" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <sql id="StockOutCol">
+        STOCK_OUT_ID, STOCK_OUT_DOCUNUM, DOCUMENT_DATE, WORK_POINT_ID, WORK_POINT_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, AUDITED, WAREHOUSE_ID, WAREHOUSE_NAME, OUTBOUND_TYPE, PURCH_RETURN_ID, SALE_ID, TRANSFER_ORDER_ID, BLITEM_ID, INVENTORY_QUANTITY, DOCUMENTS_NOTE    </sql>
+
+    <sql id="OutboundDetailCol">
+        OUTBOUND_DETAIL_ID, STOCK_OUT_ID, STOCK_OUT_DOCUNUM, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, SPEC_MODEL, PRODUCT_UNIT, DELIVERY_QUANTITY, COMMODITY_NOTE    </sql>
+
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="OutboundDetailListMap">
+        select
+        <include refid="StockOutCol"></include>,<include refid="OutboundDetailCol"></include>
+        from EIMS.STOCK_OUT
+        where STOCK_OUT_ID = #{stockOutId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="StockOutMap">
+        select
+        <include refid="StockOutCol"></include>
+        from (select * from EIMS.STOCK_OUT where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="StockOutMap">
+        select
+        <include refid="StockOutCol"></include>
+        from (select * from EIMS.STOCK_OUT where work_point_id = #{workPointId})
+        <where>
+            <if test="stockOutId != null">
+                or STOCK_OUT_ID like '%'||#{stockOutId}||'%'
+            </if>
+            <if test="stockOutDocunum != null and stockOutDocunum != ''">
+                or STOCK_OUT_DOCUNUM like '%'||#{stockOutDocunum}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="outboundType != null and outboundType != ''">
+                or OUTBOUND_TYPE like '%'||#{outboundType}||'%'
+            </if>
+            <if test="purchReturnId != null">
+                or PURCH_RETURN_ID like '%'||#{purchReturnId}||'%'
+            </if>
+            <if test="saleId != null">
+                or SALE_ID like '%'||#{saleId}||'%'
+            </if>
+            <if test="transferOrderId != null">
+                or TRANSFER_ORDER_ID like '%'||#{transferOrderId}||'%'
+            </if>
+            <if test="blitemId != null">
+                or BLITEM_ID like '%'||#{blitemId}||'%'
+            </if>
+            <if test="inventoryQuantity != null">
+                or INVENTORY_QUANTITY like '%'||#{inventoryQuantity}||'%'
+            </if>
+            <if test="documentsNote != null and documentsNote != ''">
+                or DOCUMENTS_NOTE like '%'||#{documentsNote}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="StockOutMap">
+        select
+        <include refid="StockOutCol"></include>
+        from EIMS.STOCK_OUT
+        <where>
+            <if test="stockOutId != null">
+                and STOCK_OUT_ID = #{stockOutId}
+            </if>
+            <if test="stockOutDocunum != null and stockOutDocunum != ''">
+                and STOCK_OUT_DOCUNUM = #{stockOutDocunum}
+            </if>
+            <if test="documentDate != null">
+                and DOCUMENT_DATE = #{documentDate}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                and WORK_POINT_NAME = #{workPointName}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+            <if test="audited != null">
+                and AUDITED = #{audited}
+            </if>
+            <if test="warehouseId != null">
+                and WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                and WAREHOUSE_NAME = #{warehouseName}
+            </if>
+            <if test="outboundType != null and outboundType != ''">
+                and OUTBOUND_TYPE = #{outboundType}
+            </if>
+            <if test="purchReturnId != null">
+                and PURCH_RETURN_ID = #{purchReturnId}
+            </if>
+            <if test="saleId != null">
+                and SALE_ID = #{saleId}
+            </if>
+            <if test="transferOrderId != null">
+                and TRANSFER_ORDER_ID = #{transferOrderId}
+            </if>
+            <if test="blitemId != null">
+                and BLITEM_ID = #{blitemId}
+            </if>
+            <if test="inventoryQuantity != null">
+                and INVENTORY_QUANTITY = #{inventoryQuantity}
+            </if>
+            <if test="documentsNote != null and documentsNote != ''">
+                and DOCUMENTS_NOTE = #{documentsNote}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.STOCK_OUT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            STOCK_OUT_ID,
+            <if test="stockOutDocunum != null">
+                STOCK_OUT_DOCUNUM,
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE,
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="audited != null">
+                AUDITED,
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID,
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME,
+            </if>
+            <if test="outboundType != null">
+                OUTBOUND_TYPE,
+            </if>
+            <if test="purchReturnId != null">
+                PURCH_RETURN_ID,
+            </if>
+            <if test="saleId != null">
+                SALE_ID,
+            </if>
+            <if test="transferOrderId != null">
+                TRANSFER_ORDER_ID,
+            </if>
+            <if test="blitemId != null">
+                BLITEM_ID,
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY,
+            </if>
+            <if test="documentsNote != null">
+                DOCUMENTS_NOTE,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{stockOutId},
+            <if test="stockOutDocunum != null">
+                #{stockOutDocunum},
+            </if>
+            <if test="documentDate != null">
+                #{documentDate},
+            </if>
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                #{workPointName},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+            <if test="audited != null">
+                #{audited},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                #{warehouseName},
+            </if>
+            <if test="outboundType != null">
+                #{outboundType},
+            </if>
+            <if test="purchReturnId != null">
+                #{purchReturnId},
+            </if>
+            <if test="saleId != null">
+                #{saleId},
+            </if>
+            <if test="transferOrderId != null">
+                #{transferOrderId},
+            </if>
+            <if test="blitemId != null">
+                #{blitemId},
+            </if>
+            <if test="inventoryQuantity != null">
+                #{inventoryQuantity},
+            </if>
+            <if test="documentsNote != null">
+                #{documentsNote},
+            </if>
+        </trim>
+        <selectKey keyProperty="stockOutId" resultType="INTEGER" order="BEFORE">
+            select SEQ_STOCK_OUT.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.STOCK_OUT
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                STOCK_OUT_ID,
+                <if test="entity.stockOutDocunum != null">
+                    STOCK_OUT_DOCUNUM,
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE,
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED,
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID,
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME,
+                </if>
+                <if test="entity.outboundType != null">
+                    OUTBOUND_TYPE,
+                </if>
+                <if test="entity.purchReturnId != null">
+                    PURCH_RETURN_ID,
+                </if>
+                <if test="entity.saleId != null">
+                    SALE_ID,
+                </if>
+                <if test="entity.transferOrderId != null">
+                    TRANSFER_ORDER_ID,
+                </if>
+                <if test="entity.blitemId != null">
+                    BLITEM_ID,
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY,
+                </if>
+                <if test="entity.documentsNote != null">
+                    DOCUMENTS_NOTE,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_STOCK_OUT.NEXTVAL,
+                <if test="entity.stockOutDocunum != null">
+                    #{entity.stockOutDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    #{entity.documentDate},
+                </if>
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    #{entity.workPointName},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.audited != null">
+                    #{entity.audited},
+                </if>
+                <if test="entity.warehouseId != null">
+                    #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    #{entity.warehouseName},
+                </if>
+                <if test="entity.outboundType != null">
+                    #{entity.outboundType},
+                </if>
+                <if test="entity.purchReturnId != null">
+                    #{entity.purchReturnId},
+                </if>
+                <if test="entity.saleId != null">
+                    #{entity.saleId},
+                </if>
+                <if test="entity.transferOrderId != null">
+                    #{entity.transferOrderId},
+                </if>
+                <if test="entity.blitemId != null">
+                    #{entity.blitemId},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.documentsNote != null">
+                    #{entity.documentsNote},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.STOCK_OUT
+        <set>
+            <if test="stockOutDocunum != null">
+                STOCK_OUT_DOCUNUM = #{stockOutDocunum},
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE = #{documentDate},
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME = #{workPointName},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+            <if test="audited != null">
+                AUDITED = #{audited},
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID = #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME = #{warehouseName},
+            </if>
+            <if test="outboundType != null">
+                OUTBOUND_TYPE = #{outboundType},
+            </if>
+            <if test="purchReturnId != null">
+                PURCH_RETURN_ID = #{purchReturnId},
+            </if>
+            <if test="saleId != null">
+                SALE_ID = #{saleId},
+            </if>
+            <if test="transferOrderId != null">
+                TRANSFER_ORDER_ID = #{transferOrderId},
+            </if>
+            <if test="blitemId != null">
+                BLITEM_ID = #{blitemId},
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY = #{inventoryQuantity},
+            </if>
+            <if test="documentsNote != null">
+                DOCUMENTS_NOTE = #{documentsNote},
+            </if>
+        </set>
+        where STOCK_OUT_ID = #{stockOutId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.STOCK_OUT
+            <set>
+                <if test="entity.stockOutDocunum != null">
+                    STOCK_OUT_DOCUNUM = #{entity.stockOutDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE = #{entity.documentDate},
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME = #{entity.workPointName},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED = #{entity.audited},
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID = #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME = #{entity.warehouseName},
+                </if>
+                <if test="entity.outboundType != null">
+                    OUTBOUND_TYPE = #{entity.outboundType},
+                </if>
+                <if test="entity.purchReturnId != null">
+                    PURCH_RETURN_ID = #{entity.purchReturnId},
+                </if>
+                <if test="entity.saleId != null">
+                    SALE_ID = #{entity.saleId},
+                </if>
+                <if test="entity.transferOrderId != null">
+                    TRANSFER_ORDER_ID = #{entity.transferOrderId},
+                </if>
+                <if test="entity.blitemId != null">
+                    BLITEM_ID = #{entity.blitemId},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY = #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.documentsNote != null">
+                    DOCUMENTS_NOTE = #{entity.documentsNote},
+                </if>
+            </set>
+            where STOCK_OUT_ID = #{entity.stockOutId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.STOCK_OUT where STOCK_OUT_ID = #{stockOutId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.STOCK_OUT where STOCK_OUT_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.STOCK_OUT where STOCK_OUT_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.stockOutId}
+        </foreach>
+    </delete>
+</mapper>
+

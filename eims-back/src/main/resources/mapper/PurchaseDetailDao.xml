@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.PurchaseDetailDao">
+
+    <resultMap type="com.eims.mybatis.entity.PurchaseDetail" id="PurchaseDetailMap">
+        <result property="purchDetailId" column="PURCH_DETAIL_ID" jdbcType="INTEGER"/>
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+        <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+        <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+        <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
+        <result property="purchaseQuantity" column="PURCHASE_QUANTITY" jdbcType="INTEGER"/>
+        <result property="purchaseSubtotal" column="PURCHASE_SUBTOTAL" jdbcType="VARCHAR"/>
+        <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
+        <result property="paid" column="PAID" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="PurchaseDetailCol">
+        PURCH_DETAIL_ID, PURCH_ID, PURCH_DOCUNUM, PRODUCT_ID, PRODUCT_NAME, PRODUCT_PICTURE, SPEC_MODEL, PRODUCT_UNIT, PURCHASE_PRICE, PURCHASE_QUANTITY, PURCHASE_SUBTOTAL, RETURNED, PAID    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PurchaseDetailMap">
+        select
+        <include refid="PurchaseDetailCol"></include>
+        from EIMS.PURCHASE_DETAIL
+        where PURCH_DETAIL_ID = #{purchDetailId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="PurchaseDetailMap">
+        select
+        <include refid="PurchaseDetailCol"></include>
+        from EIMS.PURCHASE_DETAIL
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="PurchaseDetailMap">
+        select
+        <include refid="PurchaseDetailCol"></include>
+        from EIMS.PURCHASE_DETAIL
+        <where>
+            <if test="purchDetailId != null">
+                or PURCH_DETAIL_ID like '%'||#{purchDetailId}||'%'
+            </if>
+            <if test="purchId != null">
+                or PURCH_ID like '%'||#{purchId}||'%'
+            </if>
+            <if test="purchDocunum != null and purchDocunum != ''">
+                or PURCH_DOCUNUM like '%'||#{purchDocunum}||'%'
+            </if>
+            <if test="productId != null">
+                or PRODUCT_ID like '%'||#{productId}||'%'
+            </if>
+            <if test="productName != null and productName != ''">
+                or PRODUCT_NAME like '%'||#{productName}||'%'
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                or PRODUCT_PICTURE like '%'||#{productPicture}||'%'
+            </if>
+            <if test="specModel != null and specModel != ''">
+                or SPEC_MODEL like '%'||#{specModel}||'%'
+            </if>
+            <if test="productUnit != null and productUnit != ''">
+                or PRODUCT_UNIT like '%'||#{productUnit}||'%'
+            </if>
+            <if test="purchasePrice != null">
+                or PURCHASE_PRICE like '%'||#{purchasePrice}||'%'
+            </if>
+            <if test="purchaseQuantity != null">
+                or PURCHASE_QUANTITY like '%'||#{purchaseQuantity}||'%'
+            </if>
+            <if test="purchaseSubtotal != null">
+                or PURCHASE_SUBTOTAL like '%'||#{purchaseSubtotal}||'%'
+            </if>
+            <if test="returned != null">
+                or RETURNED like '%'||#{returned}||'%'
+            </if>
+            <if test="paid != null">
+                or PAID like '%'||#{paid}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="PurchaseDetailMap">
+        select
+        <include refid="PurchaseDetailCol"></include>
+        from EIMS.PURCHASE_DETAIL
+        <where>
+            <if test="purchDetailId != null">
+                and PURCH_DETAIL_ID = #{purchDetailId}
+            </if>
+            <if test="purchId != null">
+                and PURCH_ID = #{purchId}
+            </if>
+            <if test="purchDocunum != null and purchDocunum != ''">
+                and PURCH_DOCUNUM = #{purchDocunum}
+            </if>
+            <if test="productId != null">
+                and PRODUCT_ID = #{productId}
+            </if>
+            <if test="productName != null and productName != ''">
+                and PRODUCT_NAME = #{productName}
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                and PRODUCT_PICTURE = #{productPicture}
+            </if>
+            <if test="specModel != null and specModel != ''">
+                and SPEC_MODEL = #{specModel}
+            </if>
+            <if test="productUnit != null and productUnit != ''">
+                and PRODUCT_UNIT = #{productUnit}
+            </if>
+            <if test="purchasePrice != null">
+                and PURCHASE_PRICE = #{purchasePrice}
+            </if>
+            <if test="purchaseQuantity != null">
+                and PURCHASE_QUANTITY = #{purchaseQuantity}
+            </if>
+            <if test="purchaseSubtotal != null">
+                and PURCHASE_SUBTOTAL = #{purchaseSubtotal}
+            </if>
+            <if test="returned != null">
+                and RETURNED = #{returned}
+            </if>
+            <if test="paid != null">
+                and PAID = #{paid}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.PURCHASE_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            PURCH_DETAIL_ID,
+            <if test="purchId != null">
+                PURCH_ID,
+            </if>
+            <if test="purchDocunum != null">
+                PURCH_DOCUNUM,
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID,
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME,
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE,
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL,
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT,
+            </if>
+            <if test="purchasePrice != null">
+                PURCHASE_PRICE,
+            </if>
+            <if test="purchaseQuantity != null">
+                PURCHASE_QUANTITY,
+            </if>
+            <if test="purchaseSubtotal != null">
+                PURCHASE_SUBTOTAL,
+            </if>
+            <if test="returned != null">
+                RETURNED,
+            </if>
+            <if test="paid != null">
+                PAID,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{purchDetailId},
+            <if test="purchId != null">
+                #{purchId},
+            </if>
+            <if test="purchDocunum != null">
+                #{purchDocunum},
+            </if>
+            <if test="productId != null">
+                #{productId},
+            </if>
+            <if test="productName != null">
+                #{productName},
+            </if>
+            <if test="productPicture != null">
+                #{productPicture},
+            </if>
+            <if test="specModel != null">
+                #{specModel},
+            </if>
+            <if test="productUnit != null">
+                #{productUnit},
+            </if>
+            <if test="purchasePrice != null">
+                #{purchasePrice},
+            </if>
+            <if test="purchaseQuantity != null">
+                #{purchaseQuantity},
+            </if>
+            <if test="purchaseSubtotal != null">
+                #{purchaseSubtotal},
+            </if>
+            <if test="returned != null">
+                #{returned},
+            </if>
+            <if test="paid != null">
+                #{paid},
+            </if>
+        </trim>
+        <selectKey keyProperty="purchDetailId" resultType="INTEGER" order="BEFORE">
+            select SEQ_PURCHASE_DETAIL.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.PURCHASE_DETAIL
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                PURCH_DETAIL_ID,
+                <if test="entity.purchId != null">
+                    PURCH_ID,
+                </if>
+                <if test="entity.purchDocunum != null">
+                    PURCH_DOCUNUM,
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID,
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME,
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE,
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL,
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT,
+                </if>
+                <if test="entity.purchasePrice != null">
+                    PURCHASE_PRICE,
+                </if>
+                <if test="entity.purchaseQuantity != null">
+                    PURCHASE_QUANTITY,
+                </if>
+                <if test="entity.purchaseSubtotal != null">
+                    PURCHASE_SUBTOTAL,
+                </if>
+                <if test="entity.returned != null">
+                    RETURNED,
+                </if>
+                <if test="entity.paid != null">
+                    PAID,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_PURCHASE_DETAIL.NEXTVAL,
+                <if test="entity.purchId != null">
+                    #{entity.purchId},
+                </if>
+                <if test="entity.purchDocunum != null">
+                    #{entity.purchDocunum},
+                </if>
+                <if test="entity.productId != null">
+                    #{entity.productId},
+                </if>
+                <if test="entity.productName != null">
+                    #{entity.productName},
+                </if>
+                <if test="entity.productPicture != null">
+                    #{entity.productPicture},
+                </if>
+                <if test="entity.specModel != null">
+                    #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    #{entity.productUnit},
+                </if>
+                <if test="entity.purchasePrice != null">
+                    #{entity.purchasePrice},
+                </if>
+                <if test="entity.purchaseQuantity != null">
+                    #{entity.purchaseQuantity},
+                </if>
+                <if test="entity.purchaseSubtotal != null">
+                    #{entity.purchaseSubtotal},
+                </if>
+                <if test="entity.returned != null">
+                    #{entity.returned},
+                </if>
+                <if test="entity.paid != null">
+                    #{entity.paid},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.PURCHASE_DETAIL
+        <set>
+            <if test="purchId != null">
+                PURCH_ID = #{purchId},
+            </if>
+            <if test="purchDocunum != null">
+                PURCH_DOCUNUM = #{purchDocunum},
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID = #{productId},
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME = #{productName},
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE = #{productPicture},
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL = #{specModel},
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT = #{productUnit},
+            </if>
+            <if test="purchasePrice != null">
+                PURCHASE_PRICE = #{purchasePrice},
+            </if>
+            <if test="purchaseQuantity != null">
+                PURCHASE_QUANTITY = #{purchaseQuantity},
+            </if>
+            <if test="purchaseSubtotal != null">
+                PURCHASE_SUBTOTAL = #{purchaseSubtotal},
+            </if>
+            <if test="returned != null">
+                RETURNED = #{returned},
+            </if>
+            <if test="paid != null">
+                PAID = #{paid},
+            </if>
+        </set>
+        where PURCH_DETAIL_ID = #{purchDetailId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.PURCHASE_DETAIL
+            <set>
+                <if test="entity.purchId != null">
+                    PURCH_ID = #{entity.purchId},
+                </if>
+                <if test="entity.purchDocunum != null">
+                    PURCH_DOCUNUM = #{entity.purchDocunum},
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID = #{entity.productId},
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME = #{entity.productName},
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE = #{entity.productPicture},
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL = #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT = #{entity.productUnit},
+                </if>
+                <if test="entity.purchasePrice != null">
+                    PURCHASE_PRICE = #{entity.purchasePrice},
+                </if>
+                <if test="entity.purchaseQuantity != null">
+                    PURCHASE_QUANTITY = #{entity.purchaseQuantity},
+                </if>
+                <if test="entity.purchaseSubtotal != null">
+                    PURCHASE_SUBTOTAL = #{entity.purchaseSubtotal},
+                </if>
+                <if test="entity.returned != null">
+                    RETURNED = #{entity.returned},
+                </if>
+                <if test="entity.paid != null">
+                    PAID = #{entity.paid},
+                </if>
+            </set>
+            where PURCH_DETAIL_ID = #{entity.purchDetailId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from EIMS.PURCHASE_DETAIL where PURCH_DETAIL_ID = #{purchDetailId}
+    </delete>
+
+    <!--批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.PURCHASE_DETAIL where PURCH_DETAIL_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.PURCHASE_DETAIL where PURCH_DETAIL_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.purchDetailId}
+        </foreach>
+    </delete>
+
+    <!--删除同一采购单中，参数包含的主键id之外的明细 -->
+    <delete id="deleteByPurchIdAndNotInKeyIds" >
+        delete from (select <include refid="PurchaseDetailCol"></include> from EIMS.PURCHASE_DETAIL where PURCH_ID = #{purchId})
+        where PURCH_DETAIL_ID not in
+        <foreach collection="keyIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
+

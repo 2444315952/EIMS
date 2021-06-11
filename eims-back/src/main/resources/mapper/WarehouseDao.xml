@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.WarehouseDao">
+
+    <resultMap type="com.eims.mybatis.entity.Warehouse" id="WarehouseMap">
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="phone" column="PHONE" jdbcType="VARCHAR"/>
+        <result property="warehouseAddress" column="WAREHOUSE_ADDRESS" jdbcType="VARCHAR"/>
+        <result property="defaultWarehouse" column="DEFAULT_WAREHOUSE" jdbcType="INTEGER"/>
+        <result property="state" column="STATE" jdbcType="INTEGER"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="WarehouseCol">
+        WAREHOUSE_ID, WAREHOUSE_NAME, WORK_POINT_ID, WORK_POINT_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, PHONE, WAREHOUSE_ADDRESS, DEFAULT_WAREHOUSE, STATE, REMARK    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="WarehouseMap">
+        select
+        <include refid="WarehouseCol"></include>
+        from EIMS.WAREHOUSE
+        where WAREHOUSE_ID = #{warehouseId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="WarehouseMap">
+        select
+        <include refid="WarehouseCol"></include>
+        from (select * from EIMS.WAREHOUSE where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="WarehouseMap">
+        select
+        <include refid="WarehouseCol"></include>
+        from (select * from EIMS.WAREHOUSE where work_point_id = #{workPointId})
+        <where>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="phone != null and phone != ''">
+                or PHONE like '%'||#{phone}||'%'
+            </if>
+            <if test="warehouseAddress != null and warehouseAddress != ''">
+                or WAREHOUSE_ADDRESS like '%'||#{warehouseAddress}||'%'
+            </if>
+            <if test="defaultWarehouse != null">
+                or DEFAULT_WAREHOUSE like '%'||#{defaultWarehouse}||'%'
+            </if>
+            <if test="state != null">
+                or STATE like '%'||#{state}||'%'
+            </if>
+            <if test="remark != null and remark != ''">
+                or REMARK like '%'||#{remark}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="WarehouseMap">
+        select
+        <include refid="WarehouseCol"></include>
+        from EIMS.WAREHOUSE
+        <where>
+            <if test="warehouseId != null">
+                and WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                and WAREHOUSE_NAME = #{warehouseName}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                and WORK_POINT_NAME = #{workPointName}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+            <if test="phone != null and phone != ''">
+                and PHONE = #{phone}
+            </if>
+            <if test="warehouseAddress != null and warehouseAddress != ''">
+                and WAREHOUSE_ADDRESS = #{warehouseAddress}
+            </if>
+            <if test="defaultWarehouse != null">
+                and DEFAULT_WAREHOUSE = #{defaultWarehouse}
+            </if>
+            <if test="state != null">
+                and STATE = #{state}
+            </if>
+            <if test="remark != null and remark != ''">
+                and REMARK = #{remark}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.WAREHOUSE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            WAREHOUSE_ID,
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME,
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="phone != null">
+                PHONE,
+            </if>
+            <if test="warehouseAddress != null">
+                WAREHOUSE_ADDRESS,
+            </if>
+            <if test="defaultWarehouse != null">
+                DEFAULT_WAREHOUSE,
+            </if>
+            <if test="state != null">
+                STATE,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{warehouseId},
+            <if test="warehouseName != null">
+                #{warehouseName},
+            </if>
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                #{workPointName},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="warehouseAddress != null">
+                #{warehouseAddress},
+            </if>
+            <if test="defaultWarehouse != null">
+                #{defaultWarehouse},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+        </trim>
+        <selectKey keyProperty="warehouseId" resultType="INTEGER" order="BEFORE">
+            select SEQ_WAREHOUSE.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.WAREHOUSE
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                WAREHOUSE_ID,
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME,
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.phone != null">
+                    PHONE,
+                </if>
+                <if test="entity.warehouseAddress != null">
+                    WAREHOUSE_ADDRESS,
+                </if>
+                <if test="entity.defaultWarehouse != null">
+                    DEFAULT_WAREHOUSE,
+                </if>
+                <if test="entity.state != null">
+                    STATE,
+                </if>
+                <if test="entity.remark != null">
+                    REMARK,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_WAREHOUSE.NEXTVAL,
+                <if test="entity.warehouseName != null">
+                    #{entity.warehouseName},
+                </if>
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    #{entity.workPointName},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.phone != null">
+                    #{entity.phone},
+                </if>
+                <if test="entity.warehouseAddress != null">
+                    #{entity.warehouseAddress},
+                </if>
+                <if test="entity.defaultWarehouse != null">
+                    #{entity.defaultWarehouse},
+                </if>
+                <if test="entity.state != null">
+                    #{entity.state},
+                </if>
+                <if test="entity.remark != null">
+                    #{entity.remark},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.WAREHOUSE
+        <set>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME = #{warehouseName},
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="workPointName != null">
+                WORK_POINT_NAME = #{workPointName},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+            <if test="phone != null">
+                PHONE = #{phone},
+            </if>
+            <if test="warehouseAddress != null">
+                WAREHOUSE_ADDRESS = #{warehouseAddress},
+            </if>
+            <if test="defaultWarehouse != null">
+                DEFAULT_WAREHOUSE = #{defaultWarehouse},
+            </if>
+            <if test="state != null">
+                STATE = #{state},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark},
+            </if>
+        </set>
+        where WAREHOUSE_ID = #{warehouseId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.WAREHOUSE
+            <set>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME = #{entity.warehouseName},
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.workPointName != null">
+                    WORK_POINT_NAME = #{entity.workPointName},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.phone != null">
+                    PHONE = #{entity.phone},
+                </if>
+                <if test="entity.warehouseAddress != null">
+                    WAREHOUSE_ADDRESS = #{entity.warehouseAddress},
+                </if>
+                <if test="entity.defaultWarehouse != null">
+                    DEFAULT_WAREHOUSE = #{entity.defaultWarehouse},
+                </if>
+                <if test="entity.state != null">
+                    STATE = #{entity.state},
+                </if>
+                <if test="entity.remark != null">
+                    REMARK = #{entity.remark},
+                </if>
+            </set>
+            where WAREHOUSE_ID = #{entity.warehouseId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.WAREHOUSE where WAREHOUSE_ID = #{warehouseId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.WAREHOUSE where WAREHOUSE_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.WAREHOUSE where WAREHOUSE_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.warehouseId}
+        </foreach>
+    </delete>
+</mapper>
+

@@ -12,14 +12,14 @@ import lombok.ToString;
  * (Customer)实体类
  *
  * @author makejava
- * @since 2021-06-08 13:46:46
+ * @since 2021-06-11 21:24:34
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class Customer implements Serializable {
-    private static final long serialVersionUID = -66665677501551859L;
+    private static final long serialVersionUID = 532020568021174046L;
 
     private Integer customerId;
 
@@ -41,7 +41,5 @@ public class Customer implements Serializable {
 
     private String remark;
 
-    private Integer workPointId;
-
-    private String workPointName;
+    private Integer companyId;
 }

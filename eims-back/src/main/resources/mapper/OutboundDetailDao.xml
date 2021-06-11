@@ -30,14 +30,19 @@
     <select id="queryAll" resultMap="OutboundDetailMap">
         select
         <include refid="OutboundDetailCol"></include>
-        from (select * from EIMS.OUTBOUND_DETAIL where work_point_id = #{workPointId})
+        from (select <include refid="OutboundDetailCol"></include> from EIMS.OUTBOUND_DETAIL
+        <where>
+        </where>)
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="OutboundDetailMap">
         select
         <include refid="OutboundDetailCol"></include>
-        from (select * from EIMS.OUTBOUND_DETAIL where work_point_id = #{workPointId})
+        from (select <include refid="OutboundDetailCol"></include> from EIMS.OUTBOUND_DETAIL
+        <where>
+        </where>)
+
         <where>
             <if test="outboundDetailId != null">
                 or OUTBOUND_DETAIL_ID like '%'||#{outboundDetailId}||'%'
@@ -76,7 +81,10 @@
     <select id="queryAndByPojo" resultMap="OutboundDetailMap">
         select
         <include refid="OutboundDetailCol"></include>
-        from EIMS.OUTBOUND_DETAIL
+        from (select <include refid="OutboundDetailCol"></include> from EIMS.OUTBOUND_DETAIL
+        <where>
+        </where>)
+
         <where>
             <if test="outboundDetailId != null">
                 and OUTBOUND_DETAIL_ID = #{outboundDetailId}

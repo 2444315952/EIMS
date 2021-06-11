@@ -13,7 +13,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class StockOutQueryForm implements Serializable {
-    private static final long serialVersionUID = -87799325930232487L;
+    private static final long serialVersionUID = 391721129107337492L;
 
     private Integer stockOutId;
 
@@ -21,9 +21,9 @@ public class StockOutQueryForm implements Serializable {
 
     private Date documentDate;
 
-    private Integer workPointId;
+    private Integer companyId;
 
-    private String workPointName;
+    private Integer workPointId;
 
     private Integer employeeId;
 

@@ -11,7 +11,7 @@ import com.github.pagehelper.PageInfo;
  * (Warehouse)表服务接口
  *
  * @author makejava
- * @since 2021-06-04 18:20:02
+ * @since 2021-06-11 21:27:22
  */
 public interface WarehouseService {
 

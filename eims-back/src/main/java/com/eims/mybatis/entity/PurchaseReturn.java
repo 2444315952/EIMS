@@ -14,20 +14,20 @@ import lombok.ToString;
  * (PurchaseReturn)实体类
  *
  * @author makejava
- * @since 2021-06-04 18:19:58
+ * @since 2021-06-11 21:25:55
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class PurchaseReturn implements Serializable {
-    private static final long serialVersionUID = -24009772883495022L;
+    private static final long serialVersionUID = -73569023166102862L;
 
     private Integer purchReturnId;
 
-    private Integer workPointId;
+    private Integer companyId;
 
-    private String workPointName;
+    private Integer workPointId;
 
     private String purchReturnDocunum;
 

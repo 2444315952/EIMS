@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.SellReturnDao">
+
+    <resultMap type="com.eims.mybatis.entity.SellReturn" id="SellReturnMap">
+        <result property="sellReturnId" column="SELL_RETURN_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="sellReturnDocunum" column="SELL_RETURN_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="autited" column="AUTITED" jdbcType="INTEGER"/>
+        <result property="returnPaymentTerm" column="RETURN_PAYMENT_TERM" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+        <result property="customerId" column="CUSTOMER_ID" jdbcType="INTEGER"/>
+        <result property="customerName" column="CUSTOMER_NAME" jdbcType="VARCHAR"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="retPayAmount" column="RET_PAY_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="retPaidAmount" column="RET_PAID_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="retSellRemark" column="RET_SELL_REMARK" jdbcType="VARCHAR"/>
+        <result property="refunded" column="REFUNDED" jdbcType="INTEGER"/>
+        <result property="sellReturnHirthday" column="SELL_RETURN_HIRTHDAY" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="SellReturnCol">
+        SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, SELL_RETURN_HIRTHDAY    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SellReturnMap">
+        select
+        <include refid="SellReturnCol"></include>
+        from EIMS.SELL_RETURN
+        where SELL_RETURN_ID = #{sellReturnId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="SellReturnMap">
+        select
+        <include refid="SellReturnCol"></include>
+        from (select <include refid="SellReturnCol"></include> from EIMS.SELL_RETURN
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="SellReturnMap">
+        select
+        <include refid="SellReturnCol"></include>
+        from (select <include refid="SellReturnCol"></include> from EIMS.SELL_RETURN
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+
+        <where>
+            <if test="sellReturnId != null">
+                or SELL_RETURN_ID like '%'||#{sellReturnId}||'%'
+            </if>
+            <if test="sellReturnDocunum != null and sellReturnDocunum != ''">
+                or SELL_RETURN_DOCUNUM like '%'||#{sellReturnDocunum}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
+            </if>
+            <if test="autited != null">
+                or AUTITED like '%'||#{autited}||'%'
+            </if>
+            <if test="returnPaymentTerm != null and returnPaymentTerm != ''">
+                or RETURN_PAYMENT_TERM like '%'||#{returnPaymentTerm}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="sellId != null">
+                or SELL_ID like '%'||#{sellId}||'%'
+            </if>
+            <if test="customerId != null">
+                or CUSTOMER_ID like '%'||#{customerId}||'%'
+            </if>
+            <if test="customerName != null and customerName != ''">
+                or CUSTOMER_NAME like '%'||#{customerName}||'%'
+            </if>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="retPayAmount != null">
+                or RET_PAY_AMOUNT like '%'||#{retPayAmount}||'%'
+            </if>
+            <if test="retPaidAmount != null">
+                or RET_PAID_AMOUNT like '%'||#{retPaidAmount}||'%'
+            </if>
+            <if test="retSellRemark != null and retSellRemark != ''">
+                or RET_SELL_REMARK like '%'||#{retSellRemark}||'%'
+            </if>
+            <if test="refunded != null">
+                or REFUNDED like '%'||#{refunded}||'%'
+            </if>
+            <if test="sellReturnHirthday != null">
+                or SELL_RETURN_HIRTHDAY like '%'||#{sellReturnHirthday}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="SellReturnMap">
+        select
+        <include refid="SellReturnCol"></include>
+        from (select <include refid="SellReturnCol"></include> from EIMS.SELL_RETURN
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+
+        <where>
+            <if test="sellReturnId != null">
+                and SELL_RETURN_ID = #{sellReturnId}
+            </if>
+            <if test="sellReturnDocunum != null and sellReturnDocunum != ''">
+                and SELL_RETURN_DOCUNUM = #{sellReturnDocunum}
+            </if>
+            <if test="documentDate != null">
+                and DOCUMENT_DATE = #{documentDate}
+            </if>
+            <if test="autited != null">
+                and AUTITED = #{autited}
+            </if>
+            <if test="returnPaymentTerm != null and returnPaymentTerm != ''">
+                and RETURN_PAYMENT_TERM = #{returnPaymentTerm}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+            <if test="sellId != null">
+                and SELL_ID = #{sellId}
+            </if>
+            <if test="customerId != null">
+                and CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="customerName != null and customerName != ''">
+                and CUSTOMER_NAME = #{customerName}
+            </if>
+            <if test="warehouseId != null">
+                and WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                and WAREHOUSE_NAME = #{warehouseName}
+            </if>
+            <if test="retPayAmount != null">
+                and RET_PAY_AMOUNT = #{retPayAmount}
+            </if>
+            <if test="retPaidAmount != null">
+                and RET_PAID_AMOUNT = #{retPaidAmount}
+            </if>
+            <if test="retSellRemark != null and retSellRemark != ''">
+                and RET_SELL_REMARK = #{retSellRemark}
+            </if>
+            <if test="refunded != null">
+                and REFUNDED = #{refunded}
+            </if>
+            <if test="sellReturnHirthday != null">
+                and SELL_RETURN_HIRTHDAY = #{sellReturnHirthday}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.SELL_RETURN
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            SELL_RETURN_ID,
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="sellReturnDocunum != null">
+                SELL_RETURN_DOCUNUM,
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE,
+            </if>
+            <if test="autited != null">
+                AUTITED,
+            </if>
+            <if test="returnPaymentTerm != null">
+                RETURN_PAYMENT_TERM,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="sellId != null">
+                SELL_ID,
+            </if>
+            <if test="customerId != null">
+                CUSTOMER_ID,
+            </if>
+            <if test="customerName != null">
+                CUSTOMER_NAME,
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID,
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME,
+            </if>
+            <if test="retPayAmount != null">
+                RET_PAY_AMOUNT,
+            </if>
+            <if test="retPaidAmount != null">
+                RET_PAID_AMOUNT,
+            </if>
+            <if test="retSellRemark != null">
+                RET_SELL_REMARK,
+            </if>
+            <if test="refunded != null">
+                REFUNDED,
+            </if>
+            <if test="sellReturnHirthday != null">
+                SELL_RETURN_HIRTHDAY,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{sellReturnId},
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="sellReturnDocunum != null">
+                #{sellReturnDocunum},
+            </if>
+            <if test="documentDate != null">
+                #{documentDate},
+            </if>
+            <if test="autited != null">
+                #{autited},
+            </if>
+            <if test="returnPaymentTerm != null">
+                #{returnPaymentTerm},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+            <if test="sellId != null">
+                #{sellId},
+            </if>
+            <if test="customerId != null">
+                #{customerId},
+            </if>
+            <if test="customerName != null">
+                #{customerName},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                #{warehouseName},
+            </if>
+            <if test="retPayAmount != null">
+                #{retPayAmount},
+            </if>
+            <if test="retPaidAmount != null">
+                #{retPaidAmount},
+            </if>
+            <if test="retSellRemark != null">
+                #{retSellRemark},
+            </if>
+            <if test="refunded != null">
+                #{refunded},
+            </if>
+            <if test="sellReturnHirthday != null">
+                #{sellReturnHirthday},
+            </if>
+        </trim>
+        <selectKey keyProperty="sellReturnId" resultType="INTEGER" order="BEFORE">
+            select SEQ_SELL_RETURN.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.SELL_RETURN
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SELL_RETURN_ID,
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.sellReturnDocunum != null">
+                    SELL_RETURN_DOCUNUM,
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE,
+                </if>
+                <if test="entity.autited != null">
+                    AUTITED,
+                </if>
+                <if test="entity.returnPaymentTerm != null">
+                    RETURN_PAYMENT_TERM,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.sellId != null">
+                    SELL_ID,
+                </if>
+                <if test="entity.customerId != null">
+                    CUSTOMER_ID,
+                </if>
+                <if test="entity.customerName != null">
+                    CUSTOMER_NAME,
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID,
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME,
+                </if>
+                <if test="entity.retPayAmount != null">
+                    RET_PAY_AMOUNT,
+                </if>
+                <if test="entity.retPaidAmount != null">
+                    RET_PAID_AMOUNT,
+                </if>
+                <if test="entity.retSellRemark != null">
+                    RET_SELL_REMARK,
+                </if>
+                <if test="entity.refunded != null">
+                    REFUNDED,
+                </if>
+                <if test="entity.sellReturnHirthday != null">
+                    SELL_RETURN_HIRTHDAY,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_SELL_RETURN.NEXTVAL,
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.sellReturnDocunum != null">
+                    #{entity.sellReturnDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    #{entity.documentDate},
+                </if>
+                <if test="entity.autited != null">
+                    #{entity.autited},
+                </if>
+                <if test="entity.returnPaymentTerm != null">
+                    #{entity.returnPaymentTerm},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.sellId != null">
+                    #{entity.sellId},
+                </if>
+                <if test="entity.customerId != null">
+                    #{entity.customerId},
+                </if>
+                <if test="entity.customerName != null">
+                    #{entity.customerName},
+                </if>
+                <if test="entity.warehouseId != null">
+                    #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    #{entity.warehouseName},
+                </if>
+                <if test="entity.retPayAmount != null">
+                    #{entity.retPayAmount},
+                </if>
+                <if test="entity.retPaidAmount != null">
+                    #{entity.retPaidAmount},
+                </if>
+                <if test="entity.retSellRemark != null">
+                    #{entity.retSellRemark},
+                </if>
+                <if test="entity.refunded != null">
+                    #{entity.refunded},
+                </if>
+                <if test="entity.sellReturnHirthday != null">
+                    #{entity.sellReturnHirthday},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.SELL_RETURN
+        <set>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="sellReturnDocunum != null">
+                SELL_RETURN_DOCUNUM = #{sellReturnDocunum},
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE = #{documentDate},
+            </if>
+            <if test="autited != null">
+                AUTITED = #{autited},
+            </if>
+            <if test="returnPaymentTerm != null">
+                RETURN_PAYMENT_TERM = #{returnPaymentTerm},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+            <if test="sellId != null">
+                SELL_ID = #{sellId},
+            </if>
+            <if test="customerId != null">
+                CUSTOMER_ID = #{customerId},
+            </if>
+            <if test="customerName != null">
+                CUSTOMER_NAME = #{customerName},
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID = #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME = #{warehouseName},
+            </if>
+            <if test="retPayAmount != null">
+                RET_PAY_AMOUNT = #{retPayAmount},
+            </if>
+            <if test="retPaidAmount != null">
+                RET_PAID_AMOUNT = #{retPaidAmount},
+            </if>
+            <if test="retSellRemark != null">
+                RET_SELL_REMARK = #{retSellRemark},
+            </if>
+            <if test="refunded != null">
+                REFUNDED = #{refunded},
+            </if>
+            <if test="sellReturnHirthday != null">
+                SELL_RETURN_HIRTHDAY = #{sellReturnHirthday},
+            </if>
+        </set>
+        where SELL_RETURN_ID = #{sellReturnId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.SELL_RETURN
+            <set>
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.sellReturnDocunum != null">
+                    SELL_RETURN_DOCUNUM = #{entity.sellReturnDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE = #{entity.documentDate},
+                </if>
+                <if test="entity.autited != null">
+                    AUTITED = #{entity.autited},
+                </if>
+                <if test="entity.returnPaymentTerm != null">
+                    RETURN_PAYMENT_TERM = #{entity.returnPaymentTerm},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.sellId != null">
+                    SELL_ID = #{entity.sellId},
+                </if>
+                <if test="entity.customerId != null">
+                    CUSTOMER_ID = #{entity.customerId},
+                </if>
+                <if test="entity.customerName != null">
+                    CUSTOMER_NAME = #{entity.customerName},
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID = #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME = #{entity.warehouseName},
+                </if>
+                <if test="entity.retPayAmount != null">
+                    RET_PAY_AMOUNT = #{entity.retPayAmount},
+                </if>
+                <if test="entity.retPaidAmount != null">
+                    RET_PAID_AMOUNT = #{entity.retPaidAmount},
+                </if>
+                <if test="entity.retSellRemark != null">
+                    RET_SELL_REMARK = #{entity.retSellRemark},
+                </if>
+                <if test="entity.refunded != null">
+                    REFUNDED = #{entity.refunded},
+                </if>
+                <if test="entity.sellReturnHirthday != null">
+                    SELL_RETURN_HIRTHDAY = #{entity.sellReturnHirthday},
+                </if>
+            </set>
+            where SELL_RETURN_ID = #{entity.sellReturnId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.SELL_RETURN where SELL_RETURN_ID = #{sellReturnId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.SELL_RETURN where SELL_RETURN_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.SELL_RETURN where SELL_RETURN_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.sellReturnId}
+        </foreach>
+    </delete>
+</mapper>
+

@@ -6,8 +6,8 @@
         <result property="warehouseWarrantId" column="WAREHOUSE_WARRANT_ID" jdbcType="INTEGER"/>
         <result property="warehouseDocunum" column="WAREHOUSE_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
         <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
-        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
         <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
         <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
         <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
@@ -20,51 +20,15 @@
         <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
         <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
         <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
-    </resultMap>
-
-    <resultMap type="com.eims.mybatis.entity.WarehouseWarrant" id="WarehouseAndDetailMap">
-        <result property="warehouseWarrantId" column="WAREHOUSE_WARRANT_ID" jdbcType="INTEGER"/>
-        <result property="warehouseDocunum" column="WAREHOUSE_DOCUNUM" jdbcType="VARCHAR"/>
-        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
-        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
-        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
-        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
-        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
-        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
-        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
-        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
-        <result property="storageType" column="STORAGE_TYPE" jdbcType="VARCHAR"/>
-        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
-        <result property="saleReturnId" column="SALE_RETURN_ID" jdbcType="INTEGER"/>
-        <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
-        <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
-        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
-        <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
-
-        <collection property="warehousingDetailList" javaType="list" ofType="com.eims.mybatis.entity.WarehousingDetail">
-            <result property="warehousingDetailId" column="WAREHOUSING_DETAIL_ID" jdbcType="INTEGER"/>
-            <result property="warehouseWarrantId" column="WAREHOUSE_WARRANT_ID" jdbcType="INTEGER"/>
-            <result property="warehouseDocunum" column="WAREHOUSE_DOCUNUM" jdbcType="VARCHAR"/>
-            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
-            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
-            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
-            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
-            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
-            <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
-            <result property="commodityNote" column="COMMODITY_NOTE" jdbcType="VARCHAR"/>
-        </collection>
     </resultMap>
 
     <sql id="WarehouseWarrantCol">
-        WAREHOUSE_WARRANT_ID, WAREHOUSE_DOCUNUM, DOCUMENT_DATE, WORK_POINT_ID, WORK_POINT_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, AUDITED, WAREHOUSE_ID, WAREHOUSE_NAME, STORAGE_TYPE, PURCH_ID, SALE_RETURN_ID, TRANSFER_ORDER_ID, BLITEM_ID, INVENTORY_QUANTITY, DOCUMENTS_NOTE    </sql>
-
-    <sql id="WarehousingDetailCol">
-        WAREHOUSING_DETAIL_ID, WAREHOUSE_WARRANT_ID, WAREHOUSE_DOCUNUM, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, SPEC_MODEL, PRODUCT_UNIT, INVENTORY_QUANTITY, COMMODITY_NOTE    </sql>
+        WAREHOUSE_WARRANT_ID, WAREHOUSE_DOCUNUM, DOCUMENT_DATE, COMPANY_ID, WORK_POINT_ID, EMPLOYEE_ID, EMPLOYEE_NAME, AUDITED, WAREHOUSE_ID, WAREHOUSE_NAME, STORAGE_TYPE, PURCH_ID, SALE_RETURN_ID, TRANSFER_ORDER_ID, BLITEM_ID, INVENTORY_QUANTITY, DOCUMENTS_NOTE    </sql>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="WarehouseAndDetailMap">
+    <select id="queryById" resultMap="WarehouseWarrantMap">
         select
-        <include refid="WarehouseWarrantCol"></include>,<include refid="WarehousingDetailCol"></include>
+        <include refid="WarehouseWarrantCol"></include>
         from EIMS.WAREHOUSE_WARRANT
         where WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
     </select>
@@ -73,14 +37,25 @@
     <select id="queryAll" resultMap="WarehouseWarrantMap">
         select
         <include refid="WarehouseWarrantCol"></include>
-        from (select * from EIMS.WAREHOUSE_WARRANT where work_point_id = #{workPointId})
+        from (select <include refid="WarehouseWarrantCol"></include> from EIMS.WAREHOUSE_WARRANT
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="WarehouseWarrantMap">
         select
         <include refid="WarehouseWarrantCol"></include>
-        from (select * from EIMS.WAREHOUSE_WARRANT where work_point_id = #{workPointId})
+        from (select <include refid="WarehouseWarrantCol"></include> from EIMS.WAREHOUSE_WARRANT
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+
         <where>
             <if test="warehouseWarrantId != null">
                 or WAREHOUSE_WARRANT_ID like '%'||#{warehouseWarrantId}||'%'
@@ -90,9 +65,6 @@
             </if>
             <if test="documentDate != null">
                 or DOCUMENT_DATE like '%'||#{documentDate}||'%'
-            </if>
-            <if test="workPointName != null and workPointName != ''">
-                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
             </if>
             <if test="employeeId != null">
                 or EMPLOYEE_ID like '%'||#{employeeId}||'%'
@@ -137,7 +109,13 @@
     <select id="queryAndByPojo" resultMap="WarehouseWarrantMap">
         select
         <include refid="WarehouseWarrantCol"></include>
-        from EIMS.WAREHOUSE_WARRANT
+        from (select <include refid="WarehouseWarrantCol"></include> from EIMS.WAREHOUSE_WARRANT
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+
         <where>
             <if test="warehouseWarrantId != null">
                 and WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
@@ -147,12 +125,6 @@
             </if>
             <if test="documentDate != null">
                 and DOCUMENT_DATE = #{documentDate}
-            </if>
-            <if test="workPointId != null">
-                and WORK_POINT_ID = #{workPointId}
-            </if>
-            <if test="workPointName != null and workPointName != ''">
-                and WORK_POINT_NAME = #{workPointName}
             </if>
             <if test="employeeId != null">
                 and EMPLOYEE_ID = #{employeeId}
@@ -204,11 +176,11 @@
             <if test="documentDate != null">
                 DOCUMENT_DATE,
             </if>
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
             <if test="workPointId != null">
                 WORK_POINT_ID,
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME,
             </if>
             <if test="employeeId != null">
                 EMPLOYEE_ID,
@@ -256,11 +228,11 @@
             <if test="documentDate != null">
                 #{documentDate},
             </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
             <if test="workPointId != null">
                 #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                #{workPointName},
             </if>
             <if test="employeeId != null">
                 #{employeeId},
@@ -316,11 +288,11 @@
                 <if test="entity.documentDate != null">
                     DOCUMENT_DATE,
                 </if>
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
+                </if>
                 <if test="entity.workPointId != null">
                     WORK_POINT_ID,
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME,
                 </if>
                 <if test="entity.employeeId != null">
                     EMPLOYEE_ID,
@@ -368,11 +340,11 @@
                 <if test="entity.documentDate != null">
                     #{entity.documentDate},
                 </if>
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
+                </if>
                 <if test="entity.workPointId != null">
                     #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    #{entity.workPointName},
                 </if>
                 <if test="entity.employeeId != null">
                     #{entity.employeeId},
@@ -424,11 +396,11 @@
             <if test="documentDate != null">
                 DOCUMENT_DATE = #{documentDate},
             </if>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
+            </if>
             <if test="workPointId != null">
                 WORK_POINT_ID = #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME = #{workPointName},
             </if>
             <if test="employeeId != null">
                 EMPLOYEE_ID = #{employeeId},
@@ -481,11 +453,11 @@
                 <if test="entity.documentDate != null">
                     DOCUMENT_DATE = #{entity.documentDate},
                 </if>
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
+                </if>
                 <if test="entity.workPointId != null">
                     WORK_POINT_ID = #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME = #{entity.workPointName},
                 </if>
                 <if test="entity.employeeId != null">
                     EMPLOYEE_ID = #{entity.employeeId},

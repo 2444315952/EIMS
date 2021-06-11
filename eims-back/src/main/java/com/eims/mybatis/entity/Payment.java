@@ -14,20 +14,20 @@ import lombok.ToString;
  * (Payment)实体类
  *
  * @author makejava
- * @since 2021-06-08 11:58:17
+ * @since 2021-06-11 21:25:32
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class Payment implements Serializable {
-    private static final long serialVersionUID = 282463425291545890L;
+    private static final long serialVersionUID = 410026084600546604L;
 
     private Integer payId;
 
-    private Integer workPointId;
+    private Integer companyId;
 
-    private String workPointName;
+    private Integer workPointId;
 
     private String payDocunum;
 

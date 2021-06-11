@@ -10,10 +10,12 @@
         <result property="onJob" column="ON_JOB" jdbcType="INTEGER"/>
         <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
         <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="companyName" column="COMPANY_NAME" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="EmployeeCol">
-        EMPLOYEE_ID, EMPLOYEE_NAME, EMPLOYEE_PHONE, EMPLOYEE_PWD, ON_JOB, WORK_POINT_ID, WORK_POINT_NAME    </sql>
+        EMPLOYEE_ID, EMPLOYEE_NAME, EMPLOYEE_PHONE, EMPLOYEE_PWD, ON_JOB, WORK_POINT_ID, WORK_POINT_NAME, COMPANY_ID, COMPANY_NAME    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="EmployeeMap">
@@ -27,14 +29,25 @@
     <select id="queryAll" resultMap="EmployeeMap">
         select
         <include refid="EmployeeCol"></include>
-        from (select * from EIMS.EMPLOYEE where work_point_id = #{workPointId})
+        from (select <include refid="EmployeeCol"></include> from EIMS.EMPLOYEE
+        <where>
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+            company_id = #{companyId}
+        </where>
+        )
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="EmployeeMap">
         select
         <include refid="EmployeeCol"></include>
-        from (select * from EIMS.EMPLOYEE where work_point_id = #{workPointId})
+        from (select <include refid="EmployeeCol"></include> from EIMS.EMPLOYEE
+        <where>
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+            company_id = #{companyId}
+        </where>
+        )
+
         <where>
             <if test="employeeId != null">
                 or EMPLOYEE_ID like '%'||#{employeeId}||'%'
@@ -54,6 +67,9 @@
             <if test="workPointName != null and workPointName != ''">
                 or WORK_POINT_NAME like '%'||#{workPointName}||'%'
             </if>
+            <if test="companyName != null and companyName != ''">
+                or COMPANY_NAME like '%'||#{companyName}||'%'
+            </if>
         </where>
     </select>
 
@@ -61,7 +77,13 @@
     <select id="queryAndByPojo" resultMap="EmployeeMap">
         select
         <include refid="EmployeeCol"></include>
-        from EIMS.EMPLOYEE
+        from (select <include refid="EmployeeCol"></include> from EIMS.EMPLOYEE
+        <where>
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+            company_id = #{companyId}
+        </where>
+        )
+
         <where>
             <if test="employeeId != null">
                 and EMPLOYEE_ID = #{employeeId}
@@ -78,11 +100,11 @@
             <if test="onJob != null">
                 and ON_JOB = #{onJob}
             </if>
-            <if test="workPointId != null">
-                and WORK_POINT_ID = #{workPointId}
-            </if>
             <if test="workPointName != null and workPointName != ''">
                 and WORK_POINT_NAME = #{workPointName}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                and COMPANY_NAME = #{companyName}
             </if>
         </where>
     </select>
@@ -110,6 +132,12 @@
             <if test="workPointName != null">
                 WORK_POINT_NAME,
             </if>
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
+            <if test="companyName != null">
+                COMPANY_NAME,
+            </if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -131,6 +159,12 @@
             </if>
             <if test="workPointName != null">
                 #{workPointName},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="companyName != null">
+                #{companyName},
             </if>
         </trim>
         <selectKey keyProperty="employeeId" resultType="INTEGER" order="BEFORE">
@@ -162,6 +196,12 @@
                 <if test="entity.workPointName != null">
                     WORK_POINT_NAME,
                 </if>
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
+                </if>
+                <if test="entity.companyName != null">
+                    COMPANY_NAME,
+                </if>
             </trim>
             values
             <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -183,6 +223,12 @@
                 </if>
                 <if test="entity.workPointName != null">
                     #{entity.workPointName},
+                </if>
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
+                </if>
+                <if test="entity.companyName != null">
+                    #{entity.companyName},
                 </if>
             </trim>
         </foreach>
@@ -210,6 +256,12 @@
             <if test="workPointName != null">
                 WORK_POINT_NAME = #{workPointName},
             </if>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
+            </if>
+            <if test="companyName != null">
+                COMPANY_NAME = #{companyName},
+            </if>
         </set>
         where EMPLOYEE_ID = #{employeeId}
     </update>
@@ -236,6 +288,12 @@
                 </if>
                 <if test="entity.workPointName != null">
                     WORK_POINT_NAME = #{entity.workPointName},
+                </if>
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
+                </if>
+                <if test="entity.companyName != null">
+                    COMPANY_NAME = #{entity.companyName},
                 </if>
             </set>
             where EMPLOYEE_ID = #{entity.employeeId}

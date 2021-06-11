@@ -3,7 +3,6 @@ package com.eims.mybatis.entity;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.io.Serializable;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,14 +13,14 @@ import lombok.ToString;
  * (WarehouseWarrant)实体类
  *
  * @author makejava
- * @since 2021-06-08 09:48:20
+ * @since 2021-06-11 21:27:23
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class WarehouseWarrant implements Serializable {
-    private static final long serialVersionUID = -42613448795635719L;
+    private static final long serialVersionUID = 623303657524880377L;
 
     private Integer warehouseWarrantId;
 
@@ -29,9 +28,9 @@ public class WarehouseWarrant implements Serializable {
 
     private Date documentDate;
 
-    private Integer workPointId;
+    private Integer companyId;
 
-    private String workPointName;
+    private Integer workPointId;
 
     private Integer employeeId;
 
@@ -56,6 +55,4 @@ public class WarehouseWarrant implements Serializable {
     private Integer inventoryQuantity;
 
     private String documentsNote;
-
-    private List<WarehousingDetail> warehousingDetailList;
 }

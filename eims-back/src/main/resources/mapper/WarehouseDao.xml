@@ -5,8 +5,7 @@
     <resultMap type="com.eims.mybatis.entity.Warehouse" id="WarehouseMap">
         <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
         <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
-        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
-        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
         <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
         <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
         <result property="phone" column="PHONE" jdbcType="VARCHAR"/>
@@ -17,7 +16,7 @@
     </resultMap>
 
     <sql id="WarehouseCol">
-        WAREHOUSE_ID, WAREHOUSE_NAME, WORK_POINT_ID, WORK_POINT_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, PHONE, WAREHOUSE_ADDRESS, DEFAULT_WAREHOUSE, STATE, REMARK    </sql>
+        WAREHOUSE_ID, WAREHOUSE_NAME, COMPANY_ID, EMPLOYEE_ID, EMPLOYEE_NAME, PHONE, WAREHOUSE_ADDRESS, DEFAULT_WAREHOUSE, STATE, REMARK    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="WarehouseMap">
@@ -31,23 +30,27 @@
     <select id="queryAll" resultMap="WarehouseMap">
         select
         <include refid="WarehouseCol"></include>
-        from (select * from EIMS.WAREHOUSE where work_point_id = #{workPointId})
+        from (select <include refid="WarehouseCol"></include> from EIMS.WAREHOUSE
+        <where>
+            company_id = #{companyId}
+        </where>)
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="WarehouseMap">
         select
         <include refid="WarehouseCol"></include>
-        from (select * from EIMS.WAREHOUSE where work_point_id = #{workPointId})
+        from (select <include refid="WarehouseCol"></include> from EIMS.WAREHOUSE
+        <where>
+            company_id = #{companyId}
+        </where>)
+
         <where>
             <if test="warehouseId != null">
                 or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
             </if>
             <if test="warehouseName != null and warehouseName != ''">
                 or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
-            </if>
-            <if test="workPointName != null and workPointName != ''">
-                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
             </if>
             <if test="employeeId != null">
                 or EMPLOYEE_ID like '%'||#{employeeId}||'%'
@@ -77,19 +80,17 @@
     <select id="queryAndByPojo" resultMap="WarehouseMap">
         select
         <include refid="WarehouseCol"></include>
-        from EIMS.WAREHOUSE
+        from (select <include refid="WarehouseCol"></include> from EIMS.WAREHOUSE
+        <where>
+            company_id = #{companyId}
+        </where>)
+
         <where>
             <if test="warehouseId != null">
                 and WAREHOUSE_ID = #{warehouseId}
             </if>
             <if test="warehouseName != null and warehouseName != ''">
                 and WAREHOUSE_NAME = #{warehouseName}
-            </if>
-            <if test="workPointId != null">
-                and WORK_POINT_ID = #{workPointId}
-            </if>
-            <if test="workPointName != null and workPointName != ''">
-                and WORK_POINT_NAME = #{workPointName}
             </if>
             <if test="employeeId != null">
                 and EMPLOYEE_ID = #{employeeId}
@@ -123,11 +124,8 @@
             <if test="warehouseName != null">
                 WAREHOUSE_NAME,
             </if>
-            <if test="workPointId != null">
-                WORK_POINT_ID,
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME,
+            <if test="companyId != null">
+                COMPANY_ID,
             </if>
             <if test="employeeId != null">
                 EMPLOYEE_ID,
@@ -157,11 +155,8 @@
             <if test="warehouseName != null">
                 #{warehouseName},
             </if>
-            <if test="workPointId != null">
-                #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                #{workPointName},
+            <if test="companyId != null">
+                #{companyId},
             </if>
             <if test="employeeId != null">
                 #{employeeId},
@@ -199,11 +194,8 @@
                 <if test="entity.warehouseName != null">
                     WAREHOUSE_NAME,
                 </if>
-                <if test="entity.workPointId != null">
-                    WORK_POINT_ID,
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME,
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
                 </if>
                 <if test="entity.employeeId != null">
                     EMPLOYEE_ID,
@@ -233,11 +225,8 @@
                 <if test="entity.warehouseName != null">
                     #{entity.warehouseName},
                 </if>
-                <if test="entity.workPointId != null">
-                    #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    #{entity.workPointName},
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
                 </if>
                 <if test="entity.employeeId != null">
                     #{entity.employeeId},
@@ -271,11 +260,8 @@
             <if test="warehouseName != null">
                 WAREHOUSE_NAME = #{warehouseName},
             </if>
-            <if test="workPointId != null">
-                WORK_POINT_ID = #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME = #{workPointName},
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
             </if>
             <if test="employeeId != null">
                 EMPLOYEE_ID = #{employeeId},
@@ -310,11 +296,8 @@
                 <if test="entity.warehouseName != null">
                     WAREHOUSE_NAME = #{entity.warehouseName},
                 </if>
-                <if test="entity.workPointId != null">
-                    WORK_POINT_ID = #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME = #{entity.workPointName},
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
                 </if>
                 <if test="entity.employeeId != null">
                     EMPLOYEE_ID = #{entity.employeeId},

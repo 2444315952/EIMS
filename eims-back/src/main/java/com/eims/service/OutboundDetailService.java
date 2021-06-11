@@ -11,7 +11,7 @@ import com.github.pagehelper.PageInfo;
  * (OutboundDetail)表服务接口
  *
  * @author makejava
- * @since 2021-06-08 09:47:42
+ * @since 2021-06-11 21:25:31
  */
 public interface OutboundDetailService {
 

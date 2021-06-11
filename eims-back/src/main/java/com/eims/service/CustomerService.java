@@ -11,7 +11,7 @@ import com.github.pagehelper.PageInfo;
  * (Customer)表服务接口
  *
  * @author makejava
- * @since 2021-06-08 13:46:48
+ * @since 2021-06-11 21:24:34
  */
 public interface CustomerService {
 
@@ -47,8 +47,6 @@ public interface CustomerService {
      */
     PageInfo<Customer> queryByScreen(CustomerQueryForm customerQueryForm);
 
-    PageInfo<Customer> queryAllXyj(int currentPage, int pageSize, String customerName, int workPointId, String is_enabled );
-
     /**
      * 新增数据
      *
@@ -80,10 +78,6 @@ public interface CustomerService {
      * @return 影响行数
      */
     boolean updateBatch(List<Customer> customerList);
-
-    int updateStop(List<Integer> customerId);
-
-    int UpdateOpen(List<Integer> customerId);
 
     /**
      * 通过主键删除数据

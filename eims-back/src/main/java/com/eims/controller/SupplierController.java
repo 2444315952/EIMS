@@ -15,7 +15,7 @@ import java.util.List;
  * (Supplier)表控制层
  *
  * @author makejava
- * @since 2021-06-04 18:20:01
+ * @since 2021-06-11 21:26:55
  */
 @RestController
 public class SupplierController {
@@ -44,7 +44,7 @@ public class SupplierController {
      */
     @GetMapping("/supplier")
     public PageInfo<Supplier> queryAll(SupplierQueryForm supplierQueryForm) {
-        supplierQueryForm.setWorkPointId(1);
+        supplierQueryForm.setCompanyId(1);
         return this.supplierService.queryAll(supplierQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class SupplierController {
      */
     @GetMapping("/supplier/search")
     public PageInfo<Supplier> queryBySearch(SupplierQueryForm supplierQueryForm) {
-        supplierQueryForm.setWorkPointId(1);
+        supplierQueryForm.setCompanyId(1);
         return this.supplierService.queryBySearch(supplierQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class SupplierController {
      */
     @GetMapping("/supplier/screen")
     public PageInfo<Supplier> queryByScreen(SupplierQueryForm supplierQueryForm) {
-        supplierQueryForm.setWorkPointId(1);
+        supplierQueryForm.setCompanyId(1);
         return this.supplierService.queryByScreen(supplierQueryForm);
     }
 
@@ -80,8 +80,7 @@ public class SupplierController {
      */
     @PostMapping("/supplier")
     public Supplier insert(@RequestBody Supplier supplier) {
-        supplier.setWorkPointId(1);
-        supplier.setWorkPointName("示例工作点");
+        supplier.setCompanyId(1);
         return this.supplierService.insert(supplier);
     }
 

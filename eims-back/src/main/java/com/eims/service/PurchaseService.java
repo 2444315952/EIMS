@@ -6,13 +6,12 @@ import com.eims.vo.form.PurchaseQueryForm;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * (Purchase)表服务接口
  *
  * @author makejava
- * @since 2021-06-04 18:19:56
+ * @since 2021-06-11 21:25:53
  */
 public interface PurchaseService {
 
@@ -49,12 +48,6 @@ public interface PurchaseService {
     PageInfo<Purchase> queryByScreen(PurchaseQueryForm purchaseQueryForm);
 
     /**
-     * 根据采购单据编号，查询单据条数
-     * @return
-     */
-    int queryCountByDocuNum(Integer workPointId, String purchDocunum);
-
-    /**
      * 新增数据
      *
      * @param purchase 实例对象
@@ -77,14 +70,6 @@ public interface PurchaseService {
      * @return 实例对象
      */
     Purchase update(Purchase purchase);
-
-    /**
-     * 通过主键id修改审核状态
-     * @param audited
-     * @param purchId
-     * @return 是否成功
-     */
-    boolean updateAuditedById(Integer audited,Integer purchId);
 
     /**
      * 批量修改数据

@@ -32,14 +32,19 @@
     <select id="queryAll" resultMap="PurchaseReturnDetailMap">
         select
         <include refid="PurchaseReturnDetailCol"></include>
-        from (select * from EIMS.PURCHASE_RETURN_DETAIL where work_point_id = #{workPointId})
+        from (select <include refid="PurchaseReturnDetailCol"></include> from EIMS.PURCHASE_RETURN_DETAIL
+        <where>
+        </where>)
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="PurchaseReturnDetailMap">
         select
         <include refid="PurchaseReturnDetailCol"></include>
-        from (select * from EIMS.PURCHASE_RETURN_DETAIL where work_point_id = #{workPointId})
+        from (select <include refid="PurchaseReturnDetailCol"></include> from EIMS.PURCHASE_RETURN_DETAIL
+        <where>
+        </where>)
+
         <where>
             <if test="purchReturnDetailId != null">
                 or PURCH_RETURN_DETAIL_ID like '%'||#{purchReturnDetailId}||'%'
@@ -84,7 +89,10 @@
     <select id="queryAndByPojo" resultMap="PurchaseReturnDetailMap">
         select
         <include refid="PurchaseReturnDetailCol"></include>
-        from EIMS.PURCHASE_RETURN_DETAIL
+        from (select <include refid="PurchaseReturnDetailCol"></include> from EIMS.PURCHASE_RETURN_DETAIL
+        <where>
+        </where>)
+
         <where>
             <if test="purchReturnDetailId != null">
                 and PURCH_RETURN_DETAIL_ID = #{purchReturnDetailId}

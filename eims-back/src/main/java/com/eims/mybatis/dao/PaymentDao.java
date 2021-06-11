@@ -11,7 +11,7 @@ import java.util.List;
  * (Payment)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-08 11:58:18
+ * @since 2021-06-11 21:25:32
  */
 @Mapper
 public interface PaymentDao {

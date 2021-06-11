@@ -6,13 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * (PurchaseDetail)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-04 18:19:57
+ * @since 2021-06-11 21:25:54
  */
 @Mapper
 public interface PurchaseDetailDao {
@@ -104,14 +103,5 @@ public interface PurchaseDetailDao {
      * @return 影响行数
      */
     int deleteBatchByEntities(List<PurchaseDetail> purchaseDetailList);
-
-    /**
-     * 删除同一采购单中，参数包含的主键id之外的明细
-     *
-     * @param purchIdAndKeyIds 采购单id和采购明细id列表
-     * @return 影响行数
-     */
-    int deleteByPurchIdAndNotInKeyIds(Map<String,Object> purchIdAndKeyIds);
-
 }
 

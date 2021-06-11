@@ -11,7 +11,7 @@ import java.util.List;
  * (OutboundDetail)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-08 09:47:42
+ * @since 2021-06-11 21:25:31
  */
 @Mapper
 public interface OutboundDetailDao {

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.CompanyDao">
+
+    <resultMap type="com.eims.mybatis.entity.Company" id="CompanyMap">
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="companyName" column="COMPANY_NAME" jdbcType="VARCHAR"/>
+        <result property="contactAddress" column="CONTACT_ADDRESS" jdbcType="VARCHAR"/>
+        <result property="contactNumber" column="CONTACT_NUMBER" jdbcType="VARCHAR"/>
+        <result property="contactEmail" column="CONTACT_EMAIL" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="CompanyCol">
+        COMPANY_ID, COMPANY_NAME, CONTACT_ADDRESS, CONTACT_NUMBER, CONTACT_EMAIL, EMPLOYEE_ID, EMPLOYEE_NAME    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="CompanyMap">
+        select
+        <include refid="CompanyCol"></include>
+        from EIMS.COMPANY
+        where COMPANY_ID = #{companyId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="CompanyMap">
+        select
+        <include refid="CompanyCol"></include>
+        from (select <include refid="CompanyCol"></include> from EIMS.COMPANY
+        <where>
+            company_id = #{companyId}
+        </where>)
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="CompanyMap">
+        select
+        <include refid="CompanyCol"></include>
+        from (select <include refid="CompanyCol"></include> from EIMS.COMPANY
+        <where>
+            company_id = #{companyId}
+        </where>)
+
+        <where>
+            <if test="companyName != null and companyName != ''">
+                or COMPANY_NAME like '%'||#{companyName}||'%'
+            </if>
+            <if test="contactAddress != null and contactAddress != ''">
+                or CONTACT_ADDRESS like '%'||#{contactAddress}||'%'
+            </if>
+            <if test="contactNumber != null and contactNumber != ''">
+                or CONTACT_NUMBER like '%'||#{contactNumber}||'%'
+            </if>
+            <if test="contactEmail != null and contactEmail != ''">
+                or CONTACT_EMAIL like '%'||#{contactEmail}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="CompanyMap">
+        select
+        <include refid="CompanyCol"></include>
+        from (select <include refid="CompanyCol"></include> from EIMS.COMPANY
+        <where>
+            company_id = #{companyId}
+        </where>)
+
+        <where>
+            <if test="companyName != null and companyName != ''">
+                and COMPANY_NAME = #{companyName}
+            </if>
+            <if test="contactAddress != null and contactAddress != ''">
+                and CONTACT_ADDRESS = #{contactAddress}
+            </if>
+            <if test="contactNumber != null and contactNumber != ''">
+                and CONTACT_NUMBER = #{contactNumber}
+            </if>
+            <if test="contactEmail != null and contactEmail != ''">
+                and CONTACT_EMAIL = #{contactEmail}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.COMPANY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            COMPANY_ID,
+            <if test="companyName != null">
+                COMPANY_NAME,
+            </if>
+            <if test="contactAddress != null">
+                CONTACT_ADDRESS,
+            </if>
+            <if test="contactNumber != null">
+                CONTACT_NUMBER,
+            </if>
+            <if test="contactEmail != null">
+                CONTACT_EMAIL,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{companyId},
+            <if test="companyName != null">
+                #{companyName},
+            </if>
+            <if test="contactAddress != null">
+                #{contactAddress},
+            </if>
+            <if test="contactNumber != null">
+                #{contactNumber},
+            </if>
+            <if test="contactEmail != null">
+                #{contactEmail},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+        </trim>
+        <selectKey keyProperty="companyId" resultType="INTEGER" order="BEFORE">
+            select SEQ_COMPANY.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.COMPANY
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                COMPANY_ID,
+                <if test="entity.companyName != null">
+                    COMPANY_NAME,
+                </if>
+                <if test="entity.contactAddress != null">
+                    CONTACT_ADDRESS,
+                </if>
+                <if test="entity.contactNumber != null">
+                    CONTACT_NUMBER,
+                </if>
+                <if test="entity.contactEmail != null">
+                    CONTACT_EMAIL,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_COMPANY.NEXTVAL,
+                <if test="entity.companyName != null">
+                    #{entity.companyName},
+                </if>
+                <if test="entity.contactAddress != null">
+                    #{entity.contactAddress},
+                </if>
+                <if test="entity.contactNumber != null">
+                    #{entity.contactNumber},
+                </if>
+                <if test="entity.contactEmail != null">
+                    #{entity.contactEmail},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.COMPANY
+        <set>
+            <if test="companyName != null">
+                COMPANY_NAME = #{companyName},
+            </if>
+            <if test="contactAddress != null">
+                CONTACT_ADDRESS = #{contactAddress},
+            </if>
+            <if test="contactNumber != null">
+                CONTACT_NUMBER = #{contactNumber},
+            </if>
+            <if test="contactEmail != null">
+                CONTACT_EMAIL = #{contactEmail},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+        </set>
+        where COMPANY_ID = #{companyId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.COMPANY
+            <set>
+                <if test="entity.companyName != null">
+                    COMPANY_NAME = #{entity.companyName},
+                </if>
+                <if test="entity.contactAddress != null">
+                    CONTACT_ADDRESS = #{entity.contactAddress},
+                </if>
+                <if test="entity.contactNumber != null">
+                    CONTACT_NUMBER = #{entity.contactNumber},
+                </if>
+                <if test="entity.contactEmail != null">
+                    CONTACT_EMAIL = #{entity.contactEmail},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+            </set>
+            where COMPANY_ID = #{entity.companyId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.COMPANY where COMPANY_ID = #{companyId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.COMPANY where COMPANY_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.COMPANY where COMPANY_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.companyId}
+        </foreach>
+    </delete>
+</mapper>
+

@@ -11,7 +11,7 @@ import java.util.List;
  * (Product)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-04 18:19:54
+ * @since 2021-06-11 21:25:52
  */
 @Mapper
 public interface ProductDao {
@@ -47,8 +47,6 @@ public interface ProductDao {
      * @return 对象列表
      */
     List<Product> queryAndByPojo(ProductQueryForm productQueryForm);
-
-    List<Product> queryByAllLike(@Param("comm_type_name") String comm_type_name,@Param("product_name") String product_name,@Param("is_enabled") String is_enabled) ;
 
     /**
      * 新增数据

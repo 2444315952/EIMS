@@ -15,7 +15,7 @@ import java.util.List;
  * (WarehousingDetail)表控制层
  *
  * @author makejava
- * @since 2021-06-08 09:48:36
+ * @since 2021-06-11 21:27:24
  */
 @RestController
 public class WarehousingDetailController {

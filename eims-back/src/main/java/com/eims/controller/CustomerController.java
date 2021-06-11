@@ -15,7 +15,7 @@ import java.util.List;
  * (Customer)表控制层
  *
  * @author makejava
- * @since 2021-06-08 13:46:48
+ * @since 2021-06-11 21:24:35
  */
 @RestController
 public class CustomerController {
@@ -44,7 +44,7 @@ public class CustomerController {
      */
     @GetMapping("/customer")
     public PageInfo<Customer> queryAll(CustomerQueryForm customerQueryForm) {
-        customerQueryForm.setWorkPointId(1);
+        customerQueryForm.setCompanyId(1);
         return this.customerService.queryAll(customerQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class CustomerController {
      */
     @GetMapping("/customer/search")
     public PageInfo<Customer> queryBySearch(CustomerQueryForm customerQueryForm) {
-        customerQueryForm.setWorkPointId(1);
+        customerQueryForm.setCompanyId(1);
         return this.customerService.queryBySearch(customerQueryForm);
     }
 
@@ -68,15 +68,8 @@ public class CustomerController {
      */
     @GetMapping("/customer/screen")
     public PageInfo<Customer> queryByScreen(CustomerQueryForm customerQueryForm) {
-        customerQueryForm.setWorkPointId(1);
+        customerQueryForm.setCompanyId(1);
         return this.customerService.queryByScreen(customerQueryForm);
-    }
-
-    @GetMapping("/customer/xyj")
-    public PageInfo<Customer> selectAllXyj(int currentPage, int pageSize, String customerName, int workPointId, String isEnabled ) {
-        System.out.println(customerName+"--"+workPointId+"--"+isEnabled);
-        PageInfo<Customer> page=this.customerService.queryAllXyj(currentPage, pageSize, customerName,workPointId,isEnabled  );
-        return page;
     }
 
     /**
@@ -87,8 +80,7 @@ public class CustomerController {
      */
     @PostMapping("/customer")
     public Customer insert(@RequestBody Customer customer) {
-        customer.setWorkPointId(1);
-        customer.setWorkPointName("示例工作点");
+        customer.setCompanyId(1);
         return this.customerService.insert(customer);
     }
 
@@ -123,22 +115,6 @@ public class CustomerController {
     @PutMapping("/customer/batch")
     public boolean updateBatch(@RequestBody List<Customer> customerList) {
         return this.customerService.updateBatch(customerList);
-    }
-
-    @DeleteMapping("/stopcustomer")
-    public int UpdateBatchStop(@RequestBody List<Integer> multipleSelection) {
-        System.out.println(multipleSelection.get(0));
-
-        this.customerService.updateStop(multipleSelection);
-        return 0;
-    }
-
-    @DeleteMapping("opendateallopen")
-    public int UpdateBatchOpen(@RequestBody List<Integer> multipleSelection) {
-        System.out.println(multipleSelection.get(0));
-
-        this.customerService.UpdateOpen(multipleSelection);
-        return 0;
     }
 
     /**

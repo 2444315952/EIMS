@@ -15,7 +15,7 @@ import java.util.List;
  * (Employee)表控制层
  *
  * @author makejava
- * @since 2021-06-04 18:19:53
+ * @since 2021-06-11 21:24:36
  */
 @RestController
 public class EmployeeController {
@@ -44,7 +44,7 @@ public class EmployeeController {
      */
     @GetMapping("/employee")
     public PageInfo<Employee> queryAll(EmployeeQueryForm employeeQueryForm) {
-        employeeQueryForm.setWorkPointId(1);
+        employeeQueryForm.setCompanyId(1);
         return this.employeeService.queryAll(employeeQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class EmployeeController {
      */
     @GetMapping("/employee/search")
     public PageInfo<Employee> queryBySearch(EmployeeQueryForm employeeQueryForm) {
-        employeeQueryForm.setWorkPointId(1);
+        employeeQueryForm.setCompanyId(1);
         return this.employeeService.queryBySearch(employeeQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class EmployeeController {
      */
     @GetMapping("/employee/screen")
     public PageInfo<Employee> queryByScreen(EmployeeQueryForm employeeQueryForm) {
-        employeeQueryForm.setWorkPointId(1);
+        employeeQueryForm.setCompanyId(1);
         return this.employeeService.queryByScreen(employeeQueryForm);
     }
 
@@ -81,7 +81,7 @@ public class EmployeeController {
     @PostMapping("/employee")
     public Employee insert(@RequestBody Employee employee) {
         employee.setWorkPointId(1);
-        employee.setWorkPointName("示例工作点");
+        employee.setCompanyId(1);
         return this.employeeService.insert(employee);
     }
 

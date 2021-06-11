@@ -11,7 +11,7 @@ import java.util.List;
  * (Supplier)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-04 18:20:01
+ * @since 2021-06-11 21:26:55
  */
 @Mapper
 public interface SupplierDao {

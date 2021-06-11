@@ -15,7 +15,7 @@ import java.util.List;
  * (Warehouse)表控制层
  *
  * @author makejava
- * @since 2021-06-04 18:20:02
+ * @since 2021-06-11 21:27:22
  */
 @RestController
 public class WarehouseController {
@@ -44,7 +44,7 @@ public class WarehouseController {
      */
     @GetMapping("/warehouse")
     public PageInfo<Warehouse> queryAll(WarehouseQueryForm warehouseQueryForm) {
-        warehouseQueryForm.setWorkPointId(1);
+        warehouseQueryForm.setCompanyId(1);
         return this.warehouseService.queryAll(warehouseQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class WarehouseController {
      */
     @GetMapping("/warehouse/search")
     public PageInfo<Warehouse> queryBySearch(WarehouseQueryForm warehouseQueryForm) {
-        warehouseQueryForm.setWorkPointId(1);
+        warehouseQueryForm.setCompanyId(1);
         return this.warehouseService.queryBySearch(warehouseQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class WarehouseController {
      */
     @GetMapping("/warehouse/screen")
     public PageInfo<Warehouse> queryByScreen(WarehouseQueryForm warehouseQueryForm) {
-        warehouseQueryForm.setWorkPointId(1);
+        warehouseQueryForm.setCompanyId(1);
         return this.warehouseService.queryByScreen(warehouseQueryForm);
     }
 
@@ -80,8 +80,7 @@ public class WarehouseController {
      */
     @PostMapping("/warehouse")
     public Warehouse insert(@RequestBody Warehouse warehouse) {
-        warehouse.setWorkPointId(1);
-        warehouse.setWorkPointName("示例工作点");
+        warehouse.setCompanyId(1);
         return this.warehouseService.insert(warehouse);
     }
 

@@ -1,36 +1,28 @@
 package com.eims.service.impl;
 
-import com.eims.mybatis.dao.PurchaseDetailDao;
 import com.eims.mybatis.entity.Purchase;
-import com.eims.mybatis.entity.PurchaseDetail;
 import com.eims.vo.form.PurchaseQueryForm;
 import com.eims.mybatis.dao.PurchaseDao;
 import com.eims.service.PurchaseService;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.List;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * (Purchase)表服务实现类
  *
  * @author makejava
- * @since 2021-06-04 10:28:55
+ * @since 2021-06-11 21:25:53
  */
 @Service("purchaseService")
-@Log4j2
-class PurchaseServiceImpl implements PurchaseService {
+public class PurchaseServiceImpl implements PurchaseService {
     @Resource
     private PurchaseDao purchaseDao;
-
-    @Resource
-    private PurchaseDetailDao purchaseDetailDao;
 
     /**
      * 通过ID查询单条数据
@@ -82,11 +74,6 @@ class PurchaseServiceImpl implements PurchaseService {
         return new PageInfo<>(purchaseList);
     }
 
-    @Override
-    public int queryCountByDocuNum(Integer workPointId, String purchDocunum) {
-        return this.purchaseDao.selectCountByDocuNumAndWorkPointId(purchDocunum,workPointId);
-    }
-
     /**
      * 新增数据
      *
@@ -94,18 +81,8 @@ class PurchaseServiceImpl implements PurchaseService {
      * @return 实例对象
      */
     @Override
-    @Transactional
     public Purchase insert(Purchase purchase) {
         this.purchaseDao.insert(purchase);
-
-        //新增采购单明细
-        List<PurchaseDetail> purchaseDetailList = purchase.getPurchaseDetailList();
-        if(purchaseDetailList!=null){
-            for(PurchaseDetail detail:purchaseDetailList)
-                detail.setPurchId(purchase.getPurchId());
-            purchaseDetailDao.insertBatch(purchaseDetailList);
-        }
-
         return this.queryById(purchase.getPurchId());
     }
 
@@ -127,64 +104,9 @@ class PurchaseServiceImpl implements PurchaseService {
      * @return 实例对象
      */
     @Override
-    @Transactional
     public Purchase update(Purchase purchase) {
-
-        log.debug(purchase.toString());
-
-        if(purchase.getAudited()==1)
-            return null;
-
         this.purchaseDao.update(purchase);
-
-        List<PurchaseDetail> updateDetails = purchase.getPurchaseDetailList();
-        List<PurchaseDetail> addDetails = new ArrayList<>();
-
-        List<Integer> keyIds = new ArrayList();
-
-        for(Iterator<PurchaseDetail> it = updateDetails.iterator();it.hasNext();){
-            PurchaseDetail detail = it.next();
-
-            //purchDetailId未null时为要新增的明细数据，不为null为要修改的数据
-            if (detail.getPurchDetailId() == null) {
-                it.remove();
-                addDetails.add(detail);
-            } else {
-                keyIds.add(detail.getPurchDetailId());
-            }
-        }
-
-        //修改明细信息
-        if(updateDetails!=null)
-            this.purchaseDetailDao.updateBatch(updateDetails);
-
-        //删除不存在的明细
-        if(keyIds.size()>0){
-            Map<String,Object> purchIdAndKeyIds = new HashMap<>();
-            purchIdAndKeyIds.put("purchId",purchase.getPurchId());
-            purchIdAndKeyIds.put("keyIds",keyIds);
-            purchaseDetailDao.deleteByPurchIdAndNotInKeyIds(purchIdAndKeyIds);
-        }
-
-        //新增新明细
-        if(addDetails.size()>0){
-            for(PurchaseDetail detail:addDetails)
-                detail.setPurchId(purchase.getPurchId());
-            this.purchaseDetailDao.insertBatch(addDetails);
-        }
-
         return this.queryById(purchase.getPurchId());
-    }
-
-    /**
-     * 通过主键id修改审核状态
-     * @param audited
-     * @param purchId
-     * @return 是否成功
-     */
-    @Override
-    public boolean updateAuditedById(Integer audited, Integer purchId) {
-        return this.purchaseDao.updateAuditedById(audited,purchId) > 0;
     }
 
     /**
@@ -217,18 +139,6 @@ class PurchaseServiceImpl implements PurchaseService {
      */
     @Override
     public boolean deleteBatch(List<Integer> ids) {
-        for(Integer id:ids){
-            Purchase purchase = purchaseDao.queryById(id);
-
-            //有已审核数据不能删除
-            if(purchase.getAudited()==1)
-                return false;
-
-            //删除明细数据
-            if(purchase.getPurchaseDetailList()!=null)
-                this.purchaseDetailDao.deleteBatchByEntities(purchase.getPurchaseDetailList());
-        }
-
         int row = this.purchaseDao.deleteBatch(ids);
         return ids.size() == row;
     }

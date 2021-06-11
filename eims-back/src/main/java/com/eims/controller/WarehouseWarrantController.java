@@ -15,7 +15,7 @@ import java.util.List;
  * (WarehouseWarrant)表控制层
  *
  * @author makejava
- * @since 2021-06-08 09:48:21
+ * @since 2021-06-11 21:27:23
  */
 @RestController
 public class WarehouseWarrantController {
@@ -44,7 +44,7 @@ public class WarehouseWarrantController {
      */
     @GetMapping("/warehouseWarrant")
     public PageInfo<WarehouseWarrant> queryAll(WarehouseWarrantQueryForm warehouseWarrantQueryForm) {
-        warehouseWarrantQueryForm.setWorkPointId(1);
+        warehouseWarrantQueryForm.setCompanyId(1);
         return this.warehouseWarrantService.queryAll(warehouseWarrantQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class WarehouseWarrantController {
      */
     @GetMapping("/warehouseWarrant/search")
     public PageInfo<WarehouseWarrant> queryBySearch(WarehouseWarrantQueryForm warehouseWarrantQueryForm) {
-        warehouseWarrantQueryForm.setWorkPointId(1);
+        warehouseWarrantQueryForm.setCompanyId(1);
         return this.warehouseWarrantService.queryBySearch(warehouseWarrantQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class WarehouseWarrantController {
      */
     @GetMapping("/warehouseWarrant/screen")
     public PageInfo<WarehouseWarrant> queryByScreen(WarehouseWarrantQueryForm warehouseWarrantQueryForm) {
-        warehouseWarrantQueryForm.setWorkPointId(1);
+        warehouseWarrantQueryForm.setCompanyId(1);
         return this.warehouseWarrantService.queryByScreen(warehouseWarrantQueryForm);
     }
 
@@ -80,8 +80,8 @@ public class WarehouseWarrantController {
      */
     @PostMapping("/warehouseWarrant")
     public WarehouseWarrant insert(@RequestBody WarehouseWarrant warehouseWarrant) {
+        warehouseWarrant.setCompanyId(1);
         warehouseWarrant.setWorkPointId(1);
-        warehouseWarrant.setWorkPointName("示例工作点");
         return this.warehouseWarrantService.insert(warehouseWarrant);
     }
 

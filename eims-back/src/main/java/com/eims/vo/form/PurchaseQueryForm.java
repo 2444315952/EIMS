@@ -14,13 +14,13 @@ import lombok.ToString;
 @Data
 @ToString
 public class PurchaseQueryForm implements Serializable {
-    private static final long serialVersionUID = -68202022466670926L;
+    private static final long serialVersionUID = -75504909022625823L;
 
     private Integer purchId;
 
-    private Integer workPointId;
+    private Integer companyId;
 
-    private String workPointName;
+    private Integer workPointId;
 
     private String purchDocunum;
 

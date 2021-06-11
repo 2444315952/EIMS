@@ -11,7 +11,7 @@ import java.util.List;
  * (Purchase)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-04 18:19:56
+ * @since 2021-06-11 21:25:53
  */
 @Mapper
 public interface PurchaseDao {
@@ -39,8 +39,6 @@ public interface PurchaseDao {
      * @return 对象列表
      */
     List<Purchase> queryOrByPojo(PurchaseQueryForm purchaseQueryForm);
-
-    int selectCountByDocuNumAndWorkPointId(@Param("docuNum") String docuNum,@Param("workPointId") Integer workPointId);
 
     /**
      * 通过实体作为并且条件查询
@@ -83,14 +81,6 @@ public interface PurchaseDao {
     int updateBatch(List<Purchase> purchaseList);
 
     /**
-     * 通过主键id修改审核状态
-     * @param audited
-     * @param purchId
-     * @return
-     */
-    int updateAuditedById(@Param("audited") Integer audited,@Param("purchId") Integer purchId);
-
-    /**
      * 通过主键删除数据
      *
      * @param purchId 主键
@@ -113,7 +103,5 @@ public interface PurchaseDao {
      * @return 影响行数
      */
     int deleteBatchByEntities(List<Purchase> purchaseList);
-
-
 }
 

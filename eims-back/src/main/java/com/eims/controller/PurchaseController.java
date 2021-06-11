@@ -3,7 +3,6 @@ package com.eims.controller;
 import com.eims.mybatis.entity.Purchase;
 import com.eims.vo.form.PurchaseQueryForm;
 import com.eims.service.PurchaseService;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -16,10 +15,9 @@ import java.util.List;
  * (Purchase)表控制层
  *
  * @author makejava
- * @since 2021-06-04 18:19:56
+ * @since 2021-06-11 21:25:53
  */
 @RestController
-@Log4j2
 public class PurchaseController {
     /**
      * 服务对象
@@ -46,7 +44,7 @@ public class PurchaseController {
      */
     @GetMapping("/purchase")
     public PageInfo<Purchase> queryAll(PurchaseQueryForm purchaseQueryForm) {
-        purchaseQueryForm.setWorkPointId(1);
+        purchaseQueryForm.setCompanyId(1);
         return this.purchaseService.queryAll(purchaseQueryForm);
     }
 
@@ -58,7 +56,7 @@ public class PurchaseController {
      */
     @GetMapping("/purchase/search")
     public PageInfo<Purchase> queryBySearch(PurchaseQueryForm purchaseQueryForm) {
-        purchaseQueryForm.setWorkPointId(1);
+        purchaseQueryForm.setCompanyId(1);
         return this.purchaseService.queryBySearch(purchaseQueryForm);
     }
 
@@ -70,17 +68,8 @@ public class PurchaseController {
      */
     @GetMapping("/purchase/screen")
     public PageInfo<Purchase> queryByScreen(PurchaseQueryForm purchaseQueryForm) {
-        purchaseQueryForm.setWorkPointId(1);
+        purchaseQueryForm.setCompanyId(1);
         return this.purchaseService.queryByScreen(purchaseQueryForm);
-    }
-
-    /**
-     * 根据采购单据编号，查询单据条数
-     * @return
-     */
-    @GetMapping("/purchase/docuNumCount")
-    public int queryCountByDocuNum(String purchDocunum){
-        return this.purchaseService.queryCountByDocuNum(1,purchDocunum);
     }
 
     /**
@@ -91,8 +80,8 @@ public class PurchaseController {
      */
     @PostMapping("/purchase")
     public Purchase insert(@RequestBody Purchase purchase) {
+        purchase.setCompanyId(1);
         purchase.setWorkPointId(1);
-        purchase.setWorkPointName("示例工作点");
         return this.purchaseService.insert(purchase);
     }
 
@@ -126,19 +115,7 @@ public class PurchaseController {
      */
     @PutMapping("/purchase/batch")
     public boolean updateBatch(@RequestBody List<Purchase> purchaseList) {
-        log.debug(purchaseList.toString());
         return this.purchaseService.updateBatch(purchaseList);
-    }
-
-    /**
-     * 通过主键id修改审核状态
-     * @param audited
-     * @param purchId
-     * @return 是否成功
-     */
-    @PutMapping("/purchase/audit")
-    public boolean updateAuditedById(Integer audited,Integer purchId){
-        return this.purchaseService.updateAuditedById(audited, purchId);
     }
 
     /**

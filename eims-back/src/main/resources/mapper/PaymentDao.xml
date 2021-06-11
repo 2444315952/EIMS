@@ -4,8 +4,8 @@
 
     <resultMap type="com.eims.mybatis.entity.Payment" id="PaymentMap">
         <result property="payId" column="PAY_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
         <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
-        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
         <result property="payDocunum" column="PAY_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
         <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
@@ -21,7 +21,7 @@
     </resultMap>
 
     <sql id="PaymentCol">
-        PAY_ID, WORK_POINT_ID, WORK_POINT_NAME, PAY_DOCUNUM, DOCUMENT_DATE, PURCH_ID, PURCH_DOCUNUM, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, PAYMENT_AMOUNT, REMARK, AUDITED, CLEARING_FORM    </sql>
+        PAY_ID, COMPANY_ID, WORK_POINT_ID, PAY_DOCUNUM, DOCUMENT_DATE, PURCH_ID, PURCH_DOCUNUM, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, PAYMENT_AMOUNT, REMARK, AUDITED, CLEARING_FORM    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="PaymentMap">
@@ -35,20 +35,28 @@
     <select id="queryAll" resultMap="PaymentMap">
         select
         <include refid="PaymentCol"></include>
-        from (select * from EIMS.PAYMENT where work_point_id = #{workPointId})
+        from (select <include refid="PaymentCol"></include> from EIMS.PAYMENT
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="PaymentMap">
         select
         <include refid="PaymentCol"></include>
-        from (select * from EIMS.PAYMENT where work_point_id = #{workPointId})
+        from (select <include refid="PaymentCol"></include> from EIMS.PAYMENT
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+
         <where>
             <if test="payId != null">
                 or PAY_ID like '%'||#{payId}||'%'
-            </if>
-            <if test="workPointName != null and workPointName != ''">
-                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
             </if>
             <if test="payDocunum != null and payDocunum != ''">
                 or PAY_DOCUNUM like '%'||#{payDocunum}||'%'
@@ -93,16 +101,16 @@
     <select id="queryAndByPojo" resultMap="PaymentMap">
         select
         <include refid="PaymentCol"></include>
-        from EIMS.PAYMENT
+        from (select <include refid="PaymentCol"></include> from EIMS.PAYMENT
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+
         <where>
             <if test="payId != null">
                 and PAY_ID = #{payId}
-            </if>
-            <if test="workPointId != null">
-                and WORK_POINT_ID = #{workPointId}
-            </if>
-            <if test="workPointName != null and workPointName != ''">
-                and WORK_POINT_NAME = #{workPointName}
             </if>
             <if test="payDocunum != null and payDocunum != ''">
                 and PAY_DOCUNUM = #{payDocunum}
@@ -148,11 +156,11 @@
         insert into EIMS.PAYMENT
         <trim prefix="(" suffix=")" suffixOverrides=",">
             PAY_ID,
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
             <if test="workPointId != null">
                 WORK_POINT_ID,
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME,
             </if>
             <if test="payDocunum != null">
                 PAY_DOCUNUM,
@@ -194,11 +202,11 @@
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{payId},
+            <if test="companyId != null">
+                #{companyId},
+            </if>
             <if test="workPointId != null">
                 #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                #{workPointName},
             </if>
             <if test="payDocunum != null">
                 #{payDocunum},
@@ -248,11 +256,11 @@
             insert into EIMS.PAYMENT
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 PAY_ID,
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
+                </if>
                 <if test="entity.workPointId != null">
                     WORK_POINT_ID,
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME,
                 </if>
                 <if test="entity.payDocunum != null">
                     PAY_DOCUNUM,
@@ -294,11 +302,11 @@
             values
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 SEQ_PAYMENT.NEXTVAL,
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
+                </if>
                 <if test="entity.workPointId != null">
                     #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    #{entity.workPointName},
                 </if>
                 <if test="entity.payDocunum != null">
                     #{entity.payDocunum},
@@ -344,11 +352,11 @@
     <update id="update">
         update EIMS.PAYMENT
         <set>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
+            </if>
             <if test="workPointId != null">
                 WORK_POINT_ID = #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME = #{workPointName},
             </if>
             <if test="payDocunum != null">
                 PAY_DOCUNUM = #{payDocunum},
@@ -395,11 +403,11 @@
         <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
             update EIMS.PAYMENT
             <set>
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
+                </if>
                 <if test="entity.workPointId != null">
                     WORK_POINT_ID = #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME = #{entity.workPointName},
                 </if>
                 <if test="entity.payDocunum != null">
                     PAY_DOCUNUM = #{entity.payDocunum},

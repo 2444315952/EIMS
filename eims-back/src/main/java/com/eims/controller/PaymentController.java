@@ -15,7 +15,7 @@ import java.util.List;
  * (Payment)表控制层
  *
  * @author makejava
- * @since 2021-06-08 11:58:18
+ * @since 2021-06-11 21:25:33
  */
 @RestController
 public class PaymentController {
@@ -44,7 +44,7 @@ public class PaymentController {
      */
     @GetMapping("/payment")
     public PageInfo<Payment> queryAll(PaymentQueryForm paymentQueryForm) {
-        paymentQueryForm.setWorkPointId(1);
+        paymentQueryForm.setCompanyId(1);
         return this.paymentService.queryAll(paymentQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class PaymentController {
      */
     @GetMapping("/payment/search")
     public PageInfo<Payment> queryBySearch(PaymentQueryForm paymentQueryForm) {
-        paymentQueryForm.setWorkPointId(1);
+        paymentQueryForm.setCompanyId(1);
         return this.paymentService.queryBySearch(paymentQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class PaymentController {
      */
     @GetMapping("/payment/screen")
     public PageInfo<Payment> queryByScreen(PaymentQueryForm paymentQueryForm) {
-        paymentQueryForm.setWorkPointId(1);
+        paymentQueryForm.setCompanyId(1);
         return this.paymentService.queryByScreen(paymentQueryForm);
     }
 
@@ -80,8 +80,8 @@ public class PaymentController {
      */
     @PostMapping("/payment")
     public Payment insert(@RequestBody Payment payment) {
+        payment.setCompanyId(1);
         payment.setWorkPointId(1);
-        payment.setWorkPointName("示例工作点");
         return this.paymentService.insert(payment);
     }
 

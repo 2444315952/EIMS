@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.SellOrderBillDao">
+
+    <resultMap type="com.eims.mybatis.entity.SellOrderBill" id="SellOrderBillMap">
+        <result property="sellOrderId" column="SELL_ORDER_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="sellOrderDocunum" column="SELL_ORDER_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="sellOrderDate" column="SELL_ORDER_DATE" jdbcType="TIMESTAMP"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="customerId" column="CUSTOMER_ID" jdbcType="INTEGER"/>
+        <result property="customerName" column="CUSTOMER_NAME" jdbcType="VARCHAR"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="orderPayAmount" column="ORDER_PAY_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="orderPaidAmount" column="ORDER_PAID_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="orderSellDiscounts" column="ORDER_SELL_DISCOUNTS" jdbcType="VARCHAR"/>
+        <result property="sellOrderRemark" column="SELL_ORDER_REMARK" jdbcType="VARCHAR"/>
+        <result property="sellOrderAddress" column="SELL_ORDER_ADDRESS" jdbcType="VARCHAR"/>
+        <result property="sellOrderHirthday" column="SELL_ORDER_HIRTHDAY" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="SellOrderBillCol">
+        SELL_ORDER_ID, COMPANY_ID, WORK_POINT_ID, SELL_ORDER_DOCUNUM, SELL_ORDER_DATE, AUDITED, EMPLOYEE_ID, EMPLOYEE_NAME, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, ORDER_PAY_AMOUNT, ORDER_PAID_AMOUNT, ORDER_SELL_DISCOUNTS, SELL_ORDER_REMARK, SELL_ORDER_ADDRESS, SELL_ORDER_HIRTHDAY    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SellOrderBillMap">
+        select
+        <include refid="SellOrderBillCol"></include>
+        from EIMS.SELL_ORDER_BILL
+        where SELL_ORDER_ID = #{sellOrderId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="SellOrderBillMap">
+        select
+        <include refid="SellOrderBillCol"></include>
+        from (select <include refid="SellOrderBillCol"></include> from EIMS.SELL_ORDER_BILL
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="SellOrderBillMap">
+        select
+        <include refid="SellOrderBillCol"></include>
+        from (select <include refid="SellOrderBillCol"></include> from EIMS.SELL_ORDER_BILL
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+
+        <where>
+            <if test="sellOrderId != null">
+                or SELL_ORDER_ID like '%'||#{sellOrderId}||'%'
+            </if>
+            <if test="sellOrderDocunum != null and sellOrderDocunum != ''">
+                or SELL_ORDER_DOCUNUM like '%'||#{sellOrderDocunum}||'%'
+            </if>
+            <if test="sellOrderDate != null">
+                or SELL_ORDER_DATE like '%'||#{sellOrderDate}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="customerId != null">
+                or CUSTOMER_ID like '%'||#{customerId}||'%'
+            </if>
+            <if test="customerName != null and customerName != ''">
+                or CUSTOMER_NAME like '%'||#{customerName}||'%'
+            </if>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="orderPayAmount != null">
+                or ORDER_PAY_AMOUNT like '%'||#{orderPayAmount}||'%'
+            </if>
+            <if test="orderPaidAmount != null">
+                or ORDER_PAID_AMOUNT like '%'||#{orderPaidAmount}||'%'
+            </if>
+            <if test="orderSellDiscounts != null">
+                or ORDER_SELL_DISCOUNTS like '%'||#{orderSellDiscounts}||'%'
+            </if>
+            <if test="sellOrderRemark != null and sellOrderRemark != ''">
+                or SELL_ORDER_REMARK like '%'||#{sellOrderRemark}||'%'
+            </if>
+            <if test="sellOrderAddress != null and sellOrderAddress != ''">
+                or SELL_ORDER_ADDRESS like '%'||#{sellOrderAddress}||'%'
+            </if>
+            <if test="sellOrderHirthday != null">
+                or SELL_ORDER_HIRTHDAY like '%'||#{sellOrderHirthday}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="SellOrderBillMap">
+        select
+        <include refid="SellOrderBillCol"></include>
+        from (select <include refid="SellOrderBillCol"></include> from EIMS.SELL_ORDER_BILL
+        <where>
+            company_id = #{companyId}
+            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+        </where>
+        )
+
+        <where>
+            <if test="sellOrderId != null">
+                and SELL_ORDER_ID = #{sellOrderId}
+            </if>
+            <if test="sellOrderDocunum != null and sellOrderDocunum != ''">
+                and SELL_ORDER_DOCUNUM = #{sellOrderDocunum}
+            </if>
+            <if test="sellOrderDate != null">
+                and SELL_ORDER_DATE = #{sellOrderDate}
+            </if>
+            <if test="audited != null">
+                and AUDITED = #{audited}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+            <if test="customerId != null">
+                and CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="customerName != null and customerName != ''">
+                and CUSTOMER_NAME = #{customerName}
+            </if>
+            <if test="warehouseId != null">
+                and WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                and WAREHOUSE_NAME = #{warehouseName}
+            </if>
+            <if test="orderPayAmount != null">
+                and ORDER_PAY_AMOUNT = #{orderPayAmount}
+            </if>
+            <if test="orderPaidAmount != null">
+                and ORDER_PAID_AMOUNT = #{orderPaidAmount}
+            </if>
+            <if test="orderSellDiscounts != null">
+                and ORDER_SELL_DISCOUNTS = #{orderSellDiscounts}
+            </if>
+            <if test="sellOrderRemark != null and sellOrderRemark != ''">
+                and SELL_ORDER_REMARK = #{sellOrderRemark}
+            </if>
+            <if test="sellOrderAddress != null and sellOrderAddress != ''">
+                and SELL_ORDER_ADDRESS = #{sellOrderAddress}
+            </if>
+            <if test="sellOrderHirthday != null">
+                and SELL_ORDER_HIRTHDAY = #{sellOrderHirthday}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.SELL_ORDER_BILL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            SELL_ORDER_ID,
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="sellOrderDocunum != null">
+                SELL_ORDER_DOCUNUM,
+            </if>
+            <if test="sellOrderDate != null">
+                SELL_ORDER_DATE,
+            </if>
+            <if test="audited != null">
+                AUDITED,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="customerId != null">
+                CUSTOMER_ID,
+            </if>
+            <if test="customerName != null">
+                CUSTOMER_NAME,
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID,
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME,
+            </if>
+            <if test="orderPayAmount != null">
+                ORDER_PAY_AMOUNT,
+            </if>
+            <if test="orderPaidAmount != null">
+                ORDER_PAID_AMOUNT,
+            </if>
+            <if test="orderSellDiscounts != null">
+                ORDER_SELL_DISCOUNTS,
+            </if>
+            <if test="sellOrderRemark != null">
+                SELL_ORDER_REMARK,
+            </if>
+            <if test="sellOrderAddress != null">
+                SELL_ORDER_ADDRESS,
+            </if>
+            <if test="sellOrderHirthday != null">
+                SELL_ORDER_HIRTHDAY,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{sellOrderId},
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="sellOrderDocunum != null">
+                #{sellOrderDocunum},
+            </if>
+            <if test="sellOrderDate != null">
+                #{sellOrderDate},
+            </if>
+            <if test="audited != null">
+                #{audited},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+            <if test="customerId != null">
+                #{customerId},
+            </if>
+            <if test="customerName != null">
+                #{customerName},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                #{warehouseName},
+            </if>
+            <if test="orderPayAmount != null">
+                #{orderPayAmount},
+            </if>
+            <if test="orderPaidAmount != null">
+                #{orderPaidAmount},
+            </if>
+            <if test="orderSellDiscounts != null">
+                #{orderSellDiscounts},
+            </if>
+            <if test="sellOrderRemark != null">
+                #{sellOrderRemark},
+            </if>
+            <if test="sellOrderAddress != null">
+                #{sellOrderAddress},
+            </if>
+            <if test="sellOrderHirthday != null">
+                #{sellOrderHirthday},
+            </if>
+        </trim>
+        <selectKey keyProperty="sellOrderId" resultType="INTEGER" order="BEFORE">
+            select SEQ_SELL_ORDER_BILL.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.SELL_ORDER_BILL
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SELL_ORDER_ID,
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.sellOrderDocunum != null">
+                    SELL_ORDER_DOCUNUM,
+                </if>
+                <if test="entity.sellOrderDate != null">
+                    SELL_ORDER_DATE,
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.customerId != null">
+                    CUSTOMER_ID,
+                </if>
+                <if test="entity.customerName != null">
+                    CUSTOMER_NAME,
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID,
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME,
+                </if>
+                <if test="entity.orderPayAmount != null">
+                    ORDER_PAY_AMOUNT,
+                </if>
+                <if test="entity.orderPaidAmount != null">
+                    ORDER_PAID_AMOUNT,
+                </if>
+                <if test="entity.orderSellDiscounts != null">
+                    ORDER_SELL_DISCOUNTS,
+                </if>
+                <if test="entity.sellOrderRemark != null">
+                    SELL_ORDER_REMARK,
+                </if>
+                <if test="entity.sellOrderAddress != null">
+                    SELL_ORDER_ADDRESS,
+                </if>
+                <if test="entity.sellOrderHirthday != null">
+                    SELL_ORDER_HIRTHDAY,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_SELL_ORDER_BILL.NEXTVAL,
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.sellOrderDocunum != null">
+                    #{entity.sellOrderDocunum},
+                </if>
+                <if test="entity.sellOrderDate != null">
+                    #{entity.sellOrderDate},
+                </if>
+                <if test="entity.audited != null">
+                    #{entity.audited},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.customerId != null">
+                    #{entity.customerId},
+                </if>
+                <if test="entity.customerName != null">
+                    #{entity.customerName},
+                </if>
+                <if test="entity.warehouseId != null">
+                    #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    #{entity.warehouseName},
+                </if>
+                <if test="entity.orderPayAmount != null">
+                    #{entity.orderPayAmount},
+                </if>
+                <if test="entity.orderPaidAmount != null">
+                    #{entity.orderPaidAmount},
+                </if>
+                <if test="entity.orderSellDiscounts != null">
+                    #{entity.orderSellDiscounts},
+                </if>
+                <if test="entity.sellOrderRemark != null">
+                    #{entity.sellOrderRemark},
+                </if>
+                <if test="entity.sellOrderAddress != null">
+                    #{entity.sellOrderAddress},
+                </if>
+                <if test="entity.sellOrderHirthday != null">
+                    #{entity.sellOrderHirthday},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.SELL_ORDER_BILL
+        <set>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="sellOrderDocunum != null">
+                SELL_ORDER_DOCUNUM = #{sellOrderDocunum},
+            </if>
+            <if test="sellOrderDate != null">
+                SELL_ORDER_DATE = #{sellOrderDate},
+            </if>
+            <if test="audited != null">
+                AUDITED = #{audited},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+            <if test="customerId != null">
+                CUSTOMER_ID = #{customerId},
+            </if>
+            <if test="customerName != null">
+                CUSTOMER_NAME = #{customerName},
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID = #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME = #{warehouseName},
+            </if>
+            <if test="orderPayAmount != null">
+                ORDER_PAY_AMOUNT = #{orderPayAmount},
+            </if>
+            <if test="orderPaidAmount != null">
+                ORDER_PAID_AMOUNT = #{orderPaidAmount},
+            </if>
+            <if test="orderSellDiscounts != null">
+                ORDER_SELL_DISCOUNTS = #{orderSellDiscounts},
+            </if>
+            <if test="sellOrderRemark != null">
+                SELL_ORDER_REMARK = #{sellOrderRemark},
+            </if>
+            <if test="sellOrderAddress != null">
+                SELL_ORDER_ADDRESS = #{sellOrderAddress},
+            </if>
+            <if test="sellOrderHirthday != null">
+                SELL_ORDER_HIRTHDAY = #{sellOrderHirthday},
+            </if>
+        </set>
+        where SELL_ORDER_ID = #{sellOrderId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.SELL_ORDER_BILL
+            <set>
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.sellOrderDocunum != null">
+                    SELL_ORDER_DOCUNUM = #{entity.sellOrderDocunum},
+                </if>
+                <if test="entity.sellOrderDate != null">
+                    SELL_ORDER_DATE = #{entity.sellOrderDate},
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED = #{entity.audited},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.customerId != null">
+                    CUSTOMER_ID = #{entity.customerId},
+                </if>
+                <if test="entity.customerName != null">
+                    CUSTOMER_NAME = #{entity.customerName},
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID = #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME = #{entity.warehouseName},
+                </if>
+                <if test="entity.orderPayAmount != null">
+                    ORDER_PAY_AMOUNT = #{entity.orderPayAmount},
+                </if>
+                <if test="entity.orderPaidAmount != null">
+                    ORDER_PAID_AMOUNT = #{entity.orderPaidAmount},
+                </if>
+                <if test="entity.orderSellDiscounts != null">
+                    ORDER_SELL_DISCOUNTS = #{entity.orderSellDiscounts},
+                </if>
+                <if test="entity.sellOrderRemark != null">
+                    SELL_ORDER_REMARK = #{entity.sellOrderRemark},
+                </if>
+                <if test="entity.sellOrderAddress != null">
+                    SELL_ORDER_ADDRESS = #{entity.sellOrderAddress},
+                </if>
+                <if test="entity.sellOrderHirthday != null">
+                    SELL_ORDER_HIRTHDAY = #{entity.sellOrderHirthday},
+                </if>
+            </set>
+            where SELL_ORDER_ID = #{entity.sellOrderId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.SELL_ORDER_BILL where SELL_ORDER_ID = #{sellOrderId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.SELL_ORDER_BILL where SELL_ORDER_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.SELL_ORDER_BILL where SELL_ORDER_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.sellOrderId}
+        </foreach>
+    </delete>
+</mapper>
+

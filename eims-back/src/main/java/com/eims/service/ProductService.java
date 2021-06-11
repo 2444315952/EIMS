@@ -11,7 +11,7 @@ import com.github.pagehelper.PageInfo;
  * (Product)表服务接口
  *
  * @author makejava
- * @since 2021-06-04 18:19:54
+ * @since 2021-06-11 21:25:52
  */
 public interface ProductService {
 
@@ -46,8 +46,6 @@ public interface ProductService {
      * @return 对象列表
      */
     PageInfo<Product> queryByScreen(ProductQueryForm productQueryForm);
-
-    PageInfo<Product> queryByAllLike(int currentPage, int pageSize,String comm_type_name,String is_enabled, String product_name) ;
 
     /**
      * 新增数据

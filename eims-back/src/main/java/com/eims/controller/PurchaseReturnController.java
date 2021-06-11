@@ -15,7 +15,7 @@ import java.util.List;
  * (PurchaseReturn)表控制层
  *
  * @author makejava
- * @since 2021-06-04 18:19:59
+ * @since 2021-06-11 21:25:56
  */
 @RestController
 public class PurchaseReturnController {
@@ -44,7 +44,7 @@ public class PurchaseReturnController {
      */
     @GetMapping("/purchaseReturn")
     public PageInfo<PurchaseReturn> queryAll(PurchaseReturnQueryForm purchaseReturnQueryForm) {
-        purchaseReturnQueryForm.setWorkPointId(1);
+        purchaseReturnQueryForm.setCompanyId(1);
         return this.purchaseReturnService.queryAll(purchaseReturnQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class PurchaseReturnController {
      */
     @GetMapping("/purchaseReturn/search")
     public PageInfo<PurchaseReturn> queryBySearch(PurchaseReturnQueryForm purchaseReturnQueryForm) {
-        purchaseReturnQueryForm.setWorkPointId(1);
+        purchaseReturnQueryForm.setCompanyId(1);
         return this.purchaseReturnService.queryBySearch(purchaseReturnQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class PurchaseReturnController {
      */
     @GetMapping("/purchaseReturn/screen")
     public PageInfo<PurchaseReturn> queryByScreen(PurchaseReturnQueryForm purchaseReturnQueryForm) {
-        purchaseReturnQueryForm.setWorkPointId(1);
+        purchaseReturnQueryForm.setCompanyId(1);
         return this.purchaseReturnService.queryByScreen(purchaseReturnQueryForm);
     }
 
@@ -80,8 +80,8 @@ public class PurchaseReturnController {
      */
     @PostMapping("/purchaseReturn")
     public PurchaseReturn insert(@RequestBody PurchaseReturn purchaseReturn) {
+        purchaseReturn.setCompanyId(1);
         purchaseReturn.setWorkPointId(1);
-        purchaseReturn.setWorkPointName("示例工作点");
         return this.purchaseReturnService.insert(purchaseReturn);
     }
 

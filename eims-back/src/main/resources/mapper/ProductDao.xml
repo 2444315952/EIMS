@@ -15,12 +15,11 @@
         <result property="minimumStock" column="MINIMUM_STOCK" jdbcType="INTEGER"/>
         <result property="isEnabled" column="IS_ENABLED" jdbcType="INTEGER"/>
         <result property="remake" column="REMAKE" jdbcType="VARCHAR"/>
-        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
-        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="ProductCol">
-        PRODUCT_ID, PRODUCT_NUMBER, PRODUCT_NAME, PRODUCT_PICTURE, SPEC_MODEL, PRODUCT_UNIT, REFER_COST, MARKET_PRICE, COMM_ID, MINIMUM_STOCK, IS_ENABLED, REMAKE, WORK_POINT_ID, WORK_POINT_NAME    </sql>
+        PRODUCT_ID, PRODUCT_NUMBER, PRODUCT_NAME, PRODUCT_PICTURE, SPEC_MODEL, PRODUCT_UNIT, REFER_COST, MARKET_PRICE, COMM_ID, MINIMUM_STOCK, IS_ENABLED, REMAKE, COMPANY_ID    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="ProductMap">
@@ -34,14 +33,21 @@
     <select id="queryAll" resultMap="ProductMap">
         select
         <include refid="ProductCol"></include>
-        from (select * from EIMS.PRODUCT where work_point_id = #{workPointId})
+        from (select <include refid="ProductCol"></include> from EIMS.PRODUCT
+        <where>
+            company_id = #{companyId}
+        </where>)
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="ProductMap">
         select
         <include refid="ProductCol"></include>
-        from (select * from EIMS.PRODUCT where work_point_id = #{workPointId})
+        from (select <include refid="ProductCol"></include> from EIMS.PRODUCT
+        <where>
+            company_id = #{companyId}
+        </where>)
+
         <where>
             <if test="productId != null">
                 or PRODUCT_ID like '%'||#{productId}||'%'
@@ -79,9 +85,6 @@
             <if test="remake != null and remake != ''">
                 or REMAKE like '%'||#{remake}||'%'
             </if>
-            <if test="workPointName != null and workPointName != ''">
-                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
-            </if>
         </where>
     </select>
 
@@ -89,7 +92,11 @@
     <select id="queryAndByPojo" resultMap="ProductMap">
         select
         <include refid="ProductCol"></include>
-        from EIMS.PRODUCT
+        from (select <include refid="ProductCol"></include> from EIMS.PRODUCT
+        <where>
+            company_id = #{companyId}
+        </where>)
+
         <where>
             <if test="productId != null">
                 and PRODUCT_ID = #{productId}
@@ -127,42 +134,6 @@
             <if test="remake != null and remake != ''">
                 and REMAKE = #{remake}
             </if>
-            <if test="workPointId != null">
-                and WORK_POINT_ID = #{workPointId}
-            </if>
-            <if test="workPointName != null and workPointName != ''">
-                and WORK_POINT_NAME = #{workPointName}
-            </if>
-        </where>
-    </select>
-
-    <!--查询-->
-    <select id="queryByAllLike" resultMap="ProductMap" >
-        select
-        p.PRODUCT_ID, p.PRODUCT_NUMBER, p.PRODUCT_NAME, p.PRODUCT_PICTURE,p.COMM_ID, p.SPEC_MODEL, p.PRODUCT_UNIT, p.REFER_COST, p.MARKET_PRICE, p.IS_ENABLED, p.REMAKE, p.WORK_POINT_ID, p.WORK_POINT_NAME, c.COMM_TYPE_NAME
-        from EIMS.PRODUCT p
-        INNER JOIN EIMS.COMMODITY_TYPE c
-        on p.COMM_ID = c.COMM_ID
-
-        <where>
-            <if test='comm_type_name != null and comm_type_name != " " and comm_type_name != ""'>
-                and COMM_TYPE_NAME = #{comm_type_name}
-            </if>
-
-            <if test='product_name != null and product_name != " " and product_name !=""'>
-                and PRODUCT_NAME like concat(concat('%',#{product_name}),'%')
-                or SPEC_MODEL like  concat(concat('%',#{product_name}),'%')
-                or PRODUCT_NUMBER like  concat( concat('%',#{product_name}),'%')
-            </if>
-            <if test='is_enabled == "正常" '>
-                and IS_ENABLED = 0
-
-            </if>
-            <if test='is_enabled == "禁用" '>
-                and IS_ENABLED = 1
-
-            </if>
-
         </where>
     </select>
 
@@ -204,11 +175,8 @@
             <if test="remake != null">
                 REMAKE,
             </if>
-            <if test="workPointId != null">
-                WORK_POINT_ID,
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME,
+            <if test="companyId != null">
+                COMPANY_ID,
             </if>
         </trim>
         values
@@ -247,11 +215,8 @@
             <if test="remake != null">
                 #{remake},
             </if>
-            <if test="workPointId != null">
-                #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                #{workPointName},
+            <if test="companyId != null">
+                #{companyId},
             </if>
         </trim>
         <selectKey keyProperty="productId" resultType="INTEGER" order="BEFORE">
@@ -298,11 +263,8 @@
                 <if test="entity.remake != null">
                     REMAKE,
                 </if>
-                <if test="entity.workPointId != null">
-                    WORK_POINT_ID,
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME,
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
                 </if>
             </trim>
             values
@@ -341,11 +303,8 @@
                 <if test="entity.remake != null">
                     #{entity.remake},
                 </if>
-                <if test="entity.workPointId != null">
-                    #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    #{entity.workPointName},
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
                 </if>
             </trim>
         </foreach>
@@ -388,11 +347,8 @@
             <if test="remake != null">
                 REMAKE = #{remake},
             </if>
-            <if test="workPointId != null">
-                WORK_POINT_ID = #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME = #{workPointName},
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
             </if>
         </set>
         where PRODUCT_ID = #{productId}
@@ -436,11 +392,8 @@
                 <if test="entity.remake != null">
                     REMAKE = #{entity.remake},
                 </if>
-                <if test="entity.workPointId != null">
-                    WORK_POINT_ID = #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME = #{entity.workPointName},
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
                 </if>
             </set>
             where PRODUCT_ID = #{entity.productId}

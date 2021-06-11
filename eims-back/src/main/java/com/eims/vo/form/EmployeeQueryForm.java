@@ -12,7 +12,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class EmployeeQueryForm implements Serializable {
-    private static final long serialVersionUID = 678975774068457731L;
+    private static final long serialVersionUID = -17423129836314278L;
 
     private Integer employeeId;
 
@@ -27,6 +27,10 @@ public class EmployeeQueryForm implements Serializable {
     private Integer workPointId;
 
     private String workPointName;
+
+    private Integer companyId;
+
+    private String companyName;
 
     private Integer pageNum;    //当前页
     private Integer pageSize;   //页大小

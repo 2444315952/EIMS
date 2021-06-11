@@ -13,14 +13,14 @@ import lombok.ToString;
  * (Product)实体类
  *
  * @author makejava
- * @since 2021-06-08 19:11:06
+ * @since 2021-06-11 21:25:52
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class Product implements Serializable {
-    private static final long serialVersionUID = -65159361489302602L;
+    private static final long serialVersionUID = -89997552698457092L;
 
     private Integer productId;
 
@@ -46,9 +46,5 @@ public class Product implements Serializable {
 
     private String remake;
 
-    private Integer workPointId;
-
-    private String workPointName;
-
-    private CommodityType commodityType;
+    private Integer companyId;
 }

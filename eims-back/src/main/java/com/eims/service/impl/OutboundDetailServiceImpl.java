@@ -17,7 +17,7 @@ import com.github.pagehelper.PageInfo;
  * (OutboundDetail)表服务实现类
  *
  * @author makejava
- * @since 2021-06-08 09:47:42
+ * @since 2021-06-11 21:25:32
  */
 @Service("outboundDetailService")
 public class OutboundDetailServiceImpl implements OutboundDetailService {

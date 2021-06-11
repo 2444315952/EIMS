@@ -3,7 +3,6 @@ package com.eims.mybatis.entity;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.io.Serializable;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,14 +13,14 @@ import lombok.ToString;
  * (StockOut)实体类
  *
  * @author makejava
- * @since 2021-06-08 09:48:07
+ * @since 2021-06-11 21:26:53
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class StockOut implements Serializable {
-    private static final long serialVersionUID = 847702488348017038L;
+    private static final long serialVersionUID = 809460499839569152L;
 
     private Integer stockOutId;
 
@@ -29,9 +28,9 @@ public class StockOut implements Serializable {
 
     private Date documentDate;
 
-    private Integer workPointId;
+    private Integer companyId;
 
-    private String workPointName;
+    private Integer workPointId;
 
     private Integer employeeId;
 
@@ -56,6 +55,4 @@ public class StockOut implements Serializable {
     private Integer inventoryQuantity;
 
     private String documentsNote;
-
-    private List<OutboundDetail> outboundDetailList;
 }

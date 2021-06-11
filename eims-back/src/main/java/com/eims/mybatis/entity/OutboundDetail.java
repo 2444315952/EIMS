@@ -12,14 +12,14 @@ import lombok.ToString;
  * (OutboundDetail)实体类
  *
  * @author makejava
- * @since 2021-06-08 09:47:42
+ * @since 2021-06-11 21:25:31
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class OutboundDetail implements Serializable {
-    private static final long serialVersionUID = 610795005462477680L;
+    private static final long serialVersionUID = -15646642819201222L;
 
     private Integer outboundDetailId;
 

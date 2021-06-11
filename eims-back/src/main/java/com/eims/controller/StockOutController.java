@@ -15,7 +15,7 @@ import java.util.List;
  * (StockOut)表控制层
  *
  * @author makejava
- * @since 2021-06-08 09:48:08
+ * @since 2021-06-11 21:26:54
  */
 @RestController
 public class StockOutController {
@@ -44,7 +44,7 @@ public class StockOutController {
      */
     @GetMapping("/stockOut")
     public PageInfo<StockOut> queryAll(StockOutQueryForm stockOutQueryForm) {
-        stockOutQueryForm.setWorkPointId(1);
+        stockOutQueryForm.setCompanyId(1);
         return this.stockOutService.queryAll(stockOutQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class StockOutController {
      */
     @GetMapping("/stockOut/search")
     public PageInfo<StockOut> queryBySearch(StockOutQueryForm stockOutQueryForm) {
-        stockOutQueryForm.setWorkPointId(1);
+        stockOutQueryForm.setCompanyId(1);
         return this.stockOutService.queryBySearch(stockOutQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class StockOutController {
      */
     @GetMapping("/stockOut/screen")
     public PageInfo<StockOut> queryByScreen(StockOutQueryForm stockOutQueryForm) {
-        stockOutQueryForm.setWorkPointId(1);
+        stockOutQueryForm.setCompanyId(1);
         return this.stockOutService.queryByScreen(stockOutQueryForm);
     }
 
@@ -80,8 +80,8 @@ public class StockOutController {
      */
     @PostMapping("/stockOut")
     public StockOut insert(@RequestBody StockOut stockOut) {
+        stockOut.setCompanyId(1);
         stockOut.setWorkPointId(1);
-        stockOut.setWorkPointName("示例工作点");
         return this.stockOutService.insert(stockOut);
     }
 

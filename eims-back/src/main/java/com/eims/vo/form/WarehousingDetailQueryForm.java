@@ -12,7 +12,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class WarehousingDetailQueryForm implements Serializable {
-    private static final long serialVersionUID = 986401227100307048L;
+    private static final long serialVersionUID = -20526836409984387L;
 
     private Integer warehousingDetailId;
 

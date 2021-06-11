@@ -13,12 +13,11 @@
         <result property="contactEmaill" column="CONTACT_EMAILL" jdbcType="VARCHAR"/>
         <result property="isEnabled" column="IS_ENABLED" jdbcType="INTEGER"/>
         <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
-        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
-        <result property="workPointName" column="WORK_POINT_NAME" jdbcType="VARCHAR"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="CustomerCol">
-        CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_TYPE, CUSTOMER_LEVEL, CONTACT, CONTACT_ADDRESS, CONTACT_NUMBER, CONTACT_EMAILL, IS_ENABLED, REMARK, WORK_POINT_ID, WORK_POINT_NAME    </sql>
+        CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_TYPE, CUSTOMER_LEVEL, CONTACT, CONTACT_ADDRESS, CONTACT_NUMBER, CONTACT_EMAILL, IS_ENABLED, REMARK, COMPANY_ID    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="CustomerMap">
@@ -32,14 +31,21 @@
     <select id="queryAll" resultMap="CustomerMap">
         select
         <include refid="CustomerCol"></include>
-        from (select * from EIMS.CUSTOMER where work_point_id = #{workPointId})
+        from (select <include refid="CustomerCol"></include> from EIMS.CUSTOMER
+        <where>
+            company_id = #{companyId}
+        </where>)
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="CustomerMap">
         select
         <include refid="CustomerCol"></include>
-        from (select * from EIMS.CUSTOMER where work_point_id = #{workPointId})
+        from (select <include refid="CustomerCol"></include> from EIMS.CUSTOMER
+        <where>
+            company_id = #{companyId}
+        </where>)
+
         <where>
             <if test="customerId != null">
                 or CUSTOMER_ID like '%'||#{customerId}||'%'
@@ -71,9 +77,6 @@
             <if test="remark != null and remark != ''">
                 or REMARK like '%'||#{remark}||'%'
             </if>
-            <if test="workPointName != null and workPointName != ''">
-                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
-            </if>
         </where>
     </select>
 
@@ -81,7 +84,11 @@
     <select id="queryAndByPojo" resultMap="CustomerMap">
         select
         <include refid="CustomerCol"></include>
-        from EIMS.CUSTOMER
+        from (select <include refid="CustomerCol"></include> from EIMS.CUSTOMER
+        <where>
+            company_id = #{companyId}
+        </where>)
+
         <where>
             <if test="customerId != null">
                 and CUSTOMER_ID = #{customerId}
@@ -113,49 +120,7 @@
             <if test="remark != null and remark != ''">
                 and REMARK = #{remark}
             </if>
-            <if test="workPointId != null">
-                and WORK_POINT_ID = #{workPointId}
-            </if>
-            <if test="workPointName != null and workPointName != ''">
-                and WORK_POINT_NAME = #{workPointName}
-            </if>
         </where>
-    </select>
-
-    <!--通过实体作为筛选条件查询-->
-    <select id="queryAllXyj" resultMap="CustomerMap">
-        select
-        CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_TYPE, CUSTOMER_LEVEL, CONTACT, CONTACT_ADDRESS, CONTACT_NUMBER,
-        CONTACT_EMAILL, IS_ENABLED, REMARK, WORK_POINT_ID, WORK_POINT_NAME
-        from EIMS.CUSTOMER
-
-        <where>
-
-
-            <if test='customerName != null and customerName != " " and customerName != ""'>
-
-                and CUSTOMER_NAME like concat(concat('%',#{customerName}),'%')
-                or CONTACT like  concat(concat('%',#{customerName}),'%')
-                or CONTACT_NUMBER like  concat( concat('%',#{customerName}),'%')
-                or CUSTOMER_TYPE like  concat( concat('%',#{customerName}),'%')
-
-            </if>
-
-            <if test='is_enabled == "正常" '>
-                and IS_ENABLED = 0
-
-            </if>
-            <if test='is_enabled == "禁用" '>
-                and IS_ENABLED = 1
-
-            </if>
-
-
-
-
-
-        </where>
-
     </select>
 
     <!--新增所有列-->
@@ -190,11 +155,8 @@
             <if test="remark != null">
                 REMARK,
             </if>
-            <if test="workPointId != null">
-                WORK_POINT_ID,
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME,
+            <if test="companyId != null">
+                COMPANY_ID,
             </if>
         </trim>
         values
@@ -227,11 +189,8 @@
             <if test="remark != null">
                 #{remark},
             </if>
-            <if test="workPointId != null">
-                #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                #{workPointName},
+            <if test="companyId != null">
+                #{companyId},
             </if>
         </trim>
         <selectKey keyProperty="customerId" resultType="INTEGER" order="BEFORE">
@@ -272,11 +231,8 @@
                 <if test="entity.remark != null">
                     REMARK,
                 </if>
-                <if test="entity.workPointId != null">
-                    WORK_POINT_ID,
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME,
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
                 </if>
             </trim>
             values
@@ -309,11 +265,8 @@
                 <if test="entity.remark != null">
                     #{entity.remark},
                 </if>
-                <if test="entity.workPointId != null">
-                    #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    #{entity.workPointName},
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
                 </if>
             </trim>
         </foreach>
@@ -350,11 +303,8 @@
             <if test="remark != null">
                 REMARK = #{remark},
             </if>
-            <if test="workPointId != null">
-                WORK_POINT_ID = #{workPointId},
-            </if>
-            <if test="workPointName != null">
-                WORK_POINT_NAME = #{workPointName},
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
             </if>
         </set>
         where CUSTOMER_ID = #{customerId}
@@ -392,40 +342,11 @@
                 <if test="entity.remark != null">
                     REMARK = #{entity.remark},
                 </if>
-                <if test="entity.workPointId != null">
-                    WORK_POINT_ID = #{entity.workPointId},
-                </if>
-                <if test="entity.workPointName != null">
-                    WORK_POINT_NAME = #{entity.workPointName},
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
                 </if>
             </set>
             where CUSTOMER_ID = #{entity.customerId}
-        </foreach>
-    </update>
-
-    <!--通过主键多条修改-->
-
-    <update id="updateStop">
-        update EIMS.CUSTOMER
-        <set>
-            IS_ENABLED = 1,
-        </set>
-        where CUSTOMER_ID in
-        <foreach collection="list" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-
-    </update>
-
-    <!--通过主键多条修改-->
-    <update id="updateOpen">
-        update EIMS.CUSTOMER
-        <set>
-            IS_ENABLED = 0,
-        </set>
-        where CUSTOMER_ID in
-        <foreach collection="list" item="id" open="(" separator="," close=")">
-            #{id}
         </foreach>
     </update>
 

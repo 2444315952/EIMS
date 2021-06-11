@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.InventoryDao">
+
+    <resultMap type="com.eims.mybatis.entity.Inventory" id="InventoryMap">
+        <result property="inventoryId" column="INVENTORY_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
+        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
+        <result property="totalCost" column="TOTAL_COST" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="InventoryCol">
+        INVENTORY_ID, COMPANY_ID, WAREHOUSE_ID, WAREHOUSE_NAME, PRODUCT_ID, PRODUCT_NAME, PURCHASE_PRICE, INVENTORY_QUANTITY, MARKET_PRICE, TOTAL_COST    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="InventoryMap">
+        select
+        <include refid="InventoryCol"></include>
+        from EIMS.INVENTORY
+        where INVENTORY_ID = #{inventoryId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="InventoryMap">
+        select
+        <include refid="InventoryCol"></include>
+        from (select <include refid="InventoryCol"></include> from EIMS.INVENTORY
+        <where>
+            company_id = #{companyId}
+        </where>)
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="InventoryMap">
+        select
+        <include refid="InventoryCol"></include>
+        from (select <include refid="InventoryCol"></include> from EIMS.INVENTORY
+        <where>
+            company_id = #{companyId}
+        </where>)
+
+        <where>
+            <if test="inventoryId != null">
+                or INVENTORY_ID like '%'||#{inventoryId}||'%'
+            </if>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="productId != null">
+                or PRODUCT_ID like '%'||#{productId}||'%'
+            </if>
+            <if test="productName != null and productName != ''">
+                or PRODUCT_NAME like '%'||#{productName}||'%'
+            </if>
+            <if test="purchasePrice != null">
+                or PURCHASE_PRICE like '%'||#{purchasePrice}||'%'
+            </if>
+            <if test="inventoryQuantity != null">
+                or INVENTORY_QUANTITY like '%'||#{inventoryQuantity}||'%'
+            </if>
+            <if test="marketPrice != null">
+                or MARKET_PRICE like '%'||#{marketPrice}||'%'
+            </if>
+            <if test="totalCost != null">
+                or TOTAL_COST like '%'||#{totalCost}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="InventoryMap">
+        select
+        <include refid="InventoryCol"></include>
+        from (select <include refid="InventoryCol"></include> from EIMS.INVENTORY
+        <where>
+            company_id = #{companyId}
+        </where>)
+
+        <where>
+            <if test="inventoryId != null">
+                and INVENTORY_ID = #{inventoryId}
+            </if>
+            <if test="warehouseId != null">
+                and WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                and WAREHOUSE_NAME = #{warehouseName}
+            </if>
+            <if test="productId != null">
+                and PRODUCT_ID = #{productId}
+            </if>
+            <if test="productName != null and productName != ''">
+                and PRODUCT_NAME = #{productName}
+            </if>
+            <if test="purchasePrice != null">
+                and PURCHASE_PRICE = #{purchasePrice}
+            </if>
+            <if test="inventoryQuantity != null">
+                and INVENTORY_QUANTITY = #{inventoryQuantity}
+            </if>
+            <if test="marketPrice != null">
+                and MARKET_PRICE = #{marketPrice}
+            </if>
+            <if test="totalCost != null">
+                and TOTAL_COST = #{totalCost}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.INVENTORY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            INVENTORY_ID,
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID,
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME,
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID,
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME,
+            </if>
+            <if test="purchasePrice != null">
+                PURCHASE_PRICE,
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY,
+            </if>
+            <if test="marketPrice != null">
+                MARKET_PRICE,
+            </if>
+            <if test="totalCost != null">
+                TOTAL_COST,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{inventoryId},
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                #{warehouseName},
+            </if>
+            <if test="productId != null">
+                #{productId},
+            </if>
+            <if test="productName != null">
+                #{productName},
+            </if>
+            <if test="purchasePrice != null">
+                #{purchasePrice},
+            </if>
+            <if test="inventoryQuantity != null">
+                #{inventoryQuantity},
+            </if>
+            <if test="marketPrice != null">
+                #{marketPrice},
+            </if>
+            <if test="totalCost != null">
+                #{totalCost},
+            </if>
+        </trim>
+        <selectKey keyProperty="inventoryId" resultType="INTEGER" order="BEFORE">
+            select SEQ_INVENTORY.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.INVENTORY
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                INVENTORY_ID,
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID,
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME,
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID,
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME,
+                </if>
+                <if test="entity.purchasePrice != null">
+                    PURCHASE_PRICE,
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY,
+                </if>
+                <if test="entity.marketPrice != null">
+                    MARKET_PRICE,
+                </if>
+                <if test="entity.totalCost != null">
+                    TOTAL_COST,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_INVENTORY.NEXTVAL,
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
+                </if>
+                <if test="entity.warehouseId != null">
+                    #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    #{entity.warehouseName},
+                </if>
+                <if test="entity.productId != null">
+                    #{entity.productId},
+                </if>
+                <if test="entity.productName != null">
+                    #{entity.productName},
+                </if>
+                <if test="entity.purchasePrice != null">
+                    #{entity.purchasePrice},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.marketPrice != null">
+                    #{entity.marketPrice},
+                </if>
+                <if test="entity.totalCost != null">
+                    #{entity.totalCost},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.INVENTORY
+        <set>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID = #{warehouseId},
+            </if>
+            <if test="warehouseName != null">
+                WAREHOUSE_NAME = #{warehouseName},
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID = #{productId},
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME = #{productName},
+            </if>
+            <if test="purchasePrice != null">
+                PURCHASE_PRICE = #{purchasePrice},
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY = #{inventoryQuantity},
+            </if>
+            <if test="marketPrice != null">
+                MARKET_PRICE = #{marketPrice},
+            </if>
+            <if test="totalCost != null">
+                TOTAL_COST = #{totalCost},
+            </if>
+        </set>
+        where INVENTORY_ID = #{inventoryId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.INVENTORY
+            <set>
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
+                </if>
+                <if test="entity.warehouseId != null">
+                    WAREHOUSE_ID = #{entity.warehouseId},
+                </if>
+                <if test="entity.warehouseName != null">
+                    WAREHOUSE_NAME = #{entity.warehouseName},
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID = #{entity.productId},
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME = #{entity.productName},
+                </if>
+                <if test="entity.purchasePrice != null">
+                    PURCHASE_PRICE = #{entity.purchasePrice},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY = #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.marketPrice != null">
+                    MARKET_PRICE = #{entity.marketPrice},
+                </if>
+                <if test="entity.totalCost != null">
+                    TOTAL_COST = #{entity.totalCost},
+                </if>
+            </set>
+            where INVENTORY_ID = #{entity.inventoryId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.INVENTORY where INVENTORY_ID = #{inventoryId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.INVENTORY where INVENTORY_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.INVENTORY where INVENTORY_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.inventoryId}
+        </foreach>
+    </delete>
+</mapper>
+

@@ -13,7 +13,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class WarehouseWarrantQueryForm implements Serializable {
-    private static final long serialVersionUID = -95491076129865078L;
+    private static final long serialVersionUID = 840507691053095819L;
 
     private Integer warehouseWarrantId;
 
@@ -21,9 +21,9 @@ public class WarehouseWarrantQueryForm implements Serializable {
 
     private Date documentDate;
 
-    private Integer workPointId;
+    private Integer companyId;
 
-    private String workPointName;
+    private Integer workPointId;
 
     private Integer employeeId;
 

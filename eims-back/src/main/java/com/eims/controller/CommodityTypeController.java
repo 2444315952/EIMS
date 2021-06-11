@@ -15,7 +15,7 @@ import java.util.List;
  * (CommodityType)表控制层
  *
  * @author makejava
- * @since 2021-06-08 13:46:21
+ * @since 2021-06-11 21:24:31
  */
 @RestController
 public class CommodityTypeController {

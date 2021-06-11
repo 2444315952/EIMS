@@ -11,7 +11,7 @@ import com.github.pagehelper.PageInfo;
  * (StockOut)表服务接口
  *
  * @author makejava
- * @since 2021-06-08 09:48:07
+ * @since 2021-06-11 21:26:54
  */
 public interface StockOutService {
 

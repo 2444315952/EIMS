@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.io.Serializable;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -15,20 +14,20 @@ import lombok.ToString;
  * (Purchase)实体类
  *
  * @author makejava
- * @since 2021-06-04 18:19:56
+ * @since 2021-06-11 21:25:53
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class Purchase implements Serializable {
-    private static final long serialVersionUID = -62700250045914782L;
+    private static final long serialVersionUID = -21710743490537465L;
 
     private Integer purchId;
 
-    private Integer workPointId;
+    private Integer companyId;
 
-    private String workPointName;
+    private Integer workPointId;
 
     private String purchDocunum;
 
@@ -57,6 +56,4 @@ public class Purchase implements Serializable {
     private BigDecimal transactionAmount;
 
     private Integer isOnline;
-
-    private List<PurchaseDetail> purchaseDetailList;
 }

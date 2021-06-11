@@ -11,7 +11,7 @@ import java.util.List;
  * (Customer)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-08 13:46:48
+ * @since 2021-06-11 21:24:34
  */
 @Mapper
 public interface CustomerDao {
@@ -48,8 +48,6 @@ public interface CustomerDao {
      */
     List<Customer> queryAndByPojo(CustomerQueryForm customerQueryForm);
 
-    List<Customer> queryAllXyj( @Param("customerName") String customerName,@Param("workPointId") int workPointId,@Param("is_enabled") String is_enabled );
-
     /**
      * 新增数据
      *
@@ -81,10 +79,6 @@ public interface CustomerDao {
      * @return 影响行数
      */
     int updateBatch(List<Customer> customerList);
-
-    int updateStop(List<Integer> customerId);
-
-    int updateOpen(List<Integer> customerId);
 
     /**
      * 通过主键删除数据

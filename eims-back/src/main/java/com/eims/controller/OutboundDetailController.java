@@ -15,7 +15,7 @@ import java.util.List;
  * (OutboundDetail)表控制层
  *
  * @author makejava
- * @since 2021-06-08 09:47:43
+ * @since 2021-06-11 21:25:32
  */
 @RestController
 public class OutboundDetailController {

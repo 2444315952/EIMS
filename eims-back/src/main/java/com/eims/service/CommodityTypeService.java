@@ -11,7 +11,7 @@ import com.github.pagehelper.PageInfo;
  * (CommodityType)表服务接口
  *
  * @author makejava
- * @since 2021-06-08 13:46:21
+ * @since 2021-06-11 21:24:30
  */
 public interface CommodityTypeService {
 

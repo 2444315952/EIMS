@@ -13,14 +13,14 @@ import lombok.ToString;
  * (PurchaseDetail)实体类
  *
  * @author makejava
- * @since 2021-06-04 18:19:57
+ * @since 2021-06-11 21:25:54
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class PurchaseDetail implements Serializable {
-    private static final long serialVersionUID = 857422009608760642L;
+    private static final long serialVersionUID = 240694043322578986L;
 
     private Integer purchDetailId;
 

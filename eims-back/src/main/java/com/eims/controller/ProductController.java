@@ -3,7 +3,6 @@ package com.eims.controller;
 import com.eims.mybatis.entity.Product;
 import com.eims.vo.form.ProductQueryForm;
 import com.eims.service.ProductService;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -16,10 +15,9 @@ import java.util.List;
  * (Product)表控制层
  *
  * @author makejava
- * @since 2021-06-04 18:19:55
+ * @since 2021-06-11 21:25:52
  */
 @RestController
-@Log4j2
 public class ProductController {
     /**
      * 服务对象
@@ -46,7 +44,7 @@ public class ProductController {
      */
     @GetMapping("/product")
     public PageInfo<Product> queryAll(ProductQueryForm productQueryForm) {
-        productQueryForm.setWorkPointId(1);
+        productQueryForm.setCompanyId(1);
         return this.productService.queryAll(productQueryForm);
     }
 
@@ -58,7 +56,7 @@ public class ProductController {
      */
     @GetMapping("/product/search")
     public PageInfo<Product> queryBySearch(ProductQueryForm productQueryForm) {
-        productQueryForm.setWorkPointId(1);
+        productQueryForm.setCompanyId(1);
         return this.productService.queryBySearch(productQueryForm);
     }
 
@@ -70,18 +68,8 @@ public class ProductController {
      */
     @GetMapping("/product/screen")
     public PageInfo<Product> queryByScreen(ProductQueryForm productQueryForm) {
-        productQueryForm.setWorkPointId(1);
+        productQueryForm.setCompanyId(1);
         return this.productService.queryByScreen(productQueryForm);
-    }
-
-    //
-    @GetMapping("/product/xyj")
-    public PageInfo<Product> pageproduct(int currentPage, int pageSize, String comm_type_name, String product_name,String is_enabled ){
-        System.out.println(currentPage+"--"+pageSize+"--"+comm_type_name+"--"+product_name+"--"+is_enabled);
-        PageInfo<Product> page = this.productService.queryByAllLike(currentPage,pageSize,comm_type_name,is_enabled,product_name);
-
-        return page;
-
     }
 
     /**
@@ -92,11 +80,7 @@ public class ProductController {
      */
     @PostMapping("/product")
     public Product insert(@RequestBody Product product) {
-        product.setWorkPointId(1);
-        product.setWorkPointName("示例工作点");
-
-        log.debug("产品是：{}",product.toString());
-        /*return null;*/
+        product.setCompanyId(1);
         return this.productService.insert(product);
     }
 

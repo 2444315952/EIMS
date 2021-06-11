@@ -33,14 +33,19 @@
     <select id="queryAll" resultMap="PurchaseDetailMap">
         select
         <include refid="PurchaseDetailCol"></include>
-        from EIMS.PURCHASE_DETAIL
+        from (select <include refid="PurchaseDetailCol"></include> from EIMS.PURCHASE_DETAIL
+        <where>
+        </where>)
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="PurchaseDetailMap">
         select
         <include refid="PurchaseDetailCol"></include>
-        from EIMS.PURCHASE_DETAIL
+        from (select <include refid="PurchaseDetailCol"></include> from EIMS.PURCHASE_DETAIL
+        <where>
+        </where>)
+
         <where>
             <if test="purchDetailId != null">
                 or PURCH_DETAIL_ID like '%'||#{purchDetailId}||'%'
@@ -88,7 +93,10 @@
     <select id="queryAndByPojo" resultMap="PurchaseDetailMap">
         select
         <include refid="PurchaseDetailCol"></include>
-        from EIMS.PURCHASE_DETAIL
+        from (select <include refid="PurchaseDetailCol"></include> from EIMS.PURCHASE_DETAIL
+        <where>
+        </where>)
+
         <where>
             <if test="purchDetailId != null">
                 and PURCH_DETAIL_ID = #{purchDetailId}
@@ -395,12 +403,12 @@
         </foreach>
     </update>
 
-    <!--通过主键删除-->
+    <!--通过主键删除数据-->
     <delete id="deleteById">
         delete from EIMS.PURCHASE_DETAIL where PURCH_DETAIL_ID = #{purchDetailId}
     </delete>
 
-    <!--批量删除数据-->
+    <!--通过主键列表批量删除数据-->
     <delete id="deleteBatch">
         delete from EIMS.PURCHASE_DETAIL where PURCH_DETAIL_ID in
         <foreach collection="list" item="id" open="(" separator="," close=")">
@@ -413,15 +421,6 @@
         delete from EIMS.PURCHASE_DETAIL where PURCH_DETAIL_ID in
         <foreach collection="list" item="entity" open="(" separator="," close=")">
             #{entity.purchDetailId}
-        </foreach>
-    </delete>
-
-    <!--删除同一采购单中，参数包含的主键id之外的明细 -->
-    <delete id="deleteByPurchIdAndNotInKeyIds" >
-        delete from (select <include refid="PurchaseDetailCol"></include> from EIMS.PURCHASE_DETAIL where PURCH_ID = #{purchId})
-        where PURCH_DETAIL_ID not in
-        <foreach collection="keyIds" item="id" open="(" separator="," close=")">
-            #{id}
         </foreach>
     </delete>
 </mapper>

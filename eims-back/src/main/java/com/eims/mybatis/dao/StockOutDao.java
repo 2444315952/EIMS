@@ -11,7 +11,7 @@ import java.util.List;
  * (StockOut)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-08 09:48:07
+ * @since 2021-06-11 21:26:53
  */
 @Mapper
 public interface StockOutDao {

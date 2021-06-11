@@ -22,14 +22,19 @@
     <select id="queryAll" resultMap="CommodityTypeMap">
         select
         <include refid="CommodityTypeCol"></include>
-        from EIMS.COMMODITY_TYPE
+        from (select <include refid="CommodityTypeCol"></include> from EIMS.COMMODITY_TYPE
+        <where>
+        </where>)
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="CommodityTypeMap">
         select
         <include refid="CommodityTypeCol"></include>
-        from EIMS.COMMODITY_TYPE
+        from (select <include refid="CommodityTypeCol"></include> from EIMS.COMMODITY_TYPE
+        <where>
+        </where>)
+
         <where>
             <if test="commId != null">
                 or COMM_ID like '%'||#{commId}||'%'
@@ -44,7 +49,10 @@
     <select id="queryAndByPojo" resultMap="CommodityTypeMap">
         select
         <include refid="CommodityTypeCol"></include>
-        from EIMS.COMMODITY_TYPE
+        from (select <include refid="CommodityTypeCol"></include> from EIMS.COMMODITY_TYPE
+        <where>
+        </where>)
+
         <where>
             <if test="commId != null">
                 and COMM_ID = #{commId}

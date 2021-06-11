@@ -17,7 +17,7 @@ import com.github.pagehelper.PageInfo;
  * (Customer)表服务实现类
  *
  * @author makejava
- * @since 2021-06-08 13:46:48
+ * @since 2021-06-11 21:24:34
  */
 @Service("customerService")
 public class CustomerServiceImpl implements CustomerService {
@@ -74,43 +74,6 @@ public class CustomerServiceImpl implements CustomerService {
         return new PageInfo<>(customerList);
     }
 
-    @Override
-    public PageInfo<Customer> queryAllXyj(int currentPage, int pageSize, String customerName, int workPointId, String isEnabled ) {
-
-//        if(isEnabled.equals("正常")){
-//            isEnabled="0";
-//        }else if(isEnabled.equals("禁用")){
-//            isEnabled="1";
-//        }else{
-//
-//        }
-//        System.out.println(isEnabled+"------------");
-//        if(isEnabled.equals("正常") & isEnabled.equals(" ") & isEnabled.equals(null)){
-        List<Customer> list1 = customerDao.queryAllXyj(customerName, workPointId, isEnabled);
-        System.out.println(currentPage);
-
-        Page<Customer> page = PageHelper.startPage(currentPage, pageSize, true);
-        List<Customer> list = customerDao.queryAllXyj(customerName, workPointId, isEnabled);
-        PageInfo<Customer> info = new PageInfo<>(list);
-        return info;
-
-
-//        }else {
-//            List<Customer> list1 = customerDao.queryAll1(customerName, workPointId);
-//            System.out.println(currentPage);
-//
-//            Page<Customer> page = PageHelper.startPage(currentPage, pageSize, true);
-//            List<Customer> list = customerDao.queryAll1(customerName, workPointId);
-//            List<CustomerVo> vos = new ArrayList<>();
-//            BeanTools.copyList(list, vos, CustomerVo.class);
-//            PageInfo<CustomerVo> info = new PageInfo<>(vos);
-//            info.setTotal(list1.size());
-//            return info;
-//
-//        }
-
-    }
-
     /**
      * 新增数据
      *
@@ -155,16 +118,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public boolean updateBatch(List<Customer> customerList) {
         return this.customerDao.updateBatch(customerList) == -1;
-    }
-
-    @Override
-    public int updateStop(List<Integer> customerId) {
-        return this.customerDao.updateStop(customerId);
-    }
-
-    @Override
-    public int UpdateOpen(List<Integer> customerId) {
-        return this.customerDao.updateOpen(customerId);
     }
 
     /**

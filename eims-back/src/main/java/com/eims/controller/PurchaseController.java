@@ -108,6 +108,17 @@ public class PurchaseController {
     }
 
     /**
+     * 修改采购单以明细数据
+     *
+     * @param purchase 实例对象（包含明细列表）
+     * @return 实例对象
+     */
+    @PutMapping("/purchase/detail")
+    public Purchase updatePurchAndDetail(@RequestBody Purchase purchase) {
+        return this.purchaseService.updatePurchAndDetail(purchase);
+    }
+
+    /**
      * 批量修改数据
      *
      * @param purchaseList 实例对象列表

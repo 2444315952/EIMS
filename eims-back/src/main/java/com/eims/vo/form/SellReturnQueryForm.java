@@ -14,7 +14,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class SellReturnQueryForm implements Serializable {
-    private static final long serialVersionUID = -98760550896267950L;
+    private static final long serialVersionUID = -25560463886591072L;
 
     private Integer sellReturnId;
 
@@ -51,6 +51,8 @@ public class SellReturnQueryForm implements Serializable {
     private String retSellRemark;
 
     private Integer refunded;
+
+    private Integer inStorage;
 
     private Date sellReturnHirthday;
 

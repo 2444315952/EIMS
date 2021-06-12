@@ -423,5 +423,14 @@
             #{entity.purchDetailId}
         </foreach>
     </delete>
+
+    <!--删除同一采购单中，参数包含的主键id之外的明细 -->
+    <delete id="deleteByPurchIdAndNotInKeyIds" >
+        delete from (select <include refid="PurchaseDetailCol"></include> from EIMS.PURCHASE_DETAIL where PURCH_ID = #{purchId})
+        where PURCH_DETAIL_ID not in
+        <foreach collection="keyIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
 

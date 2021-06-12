@@ -11,7 +11,7 @@ import java.util.List;
  * (SellReturn)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-11 21:26:52
+ * @since 2021-06-12 10:28:43
  */
 @Mapper
 public interface SellReturnDao {

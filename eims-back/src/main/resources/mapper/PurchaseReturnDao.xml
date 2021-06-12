@@ -14,17 +14,18 @@
         <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
         <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
         <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
-        <result property="inRefund" column="IN_REFUND" jdbcType="INTEGER"/>
         <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
         <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
-        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
         <result property="transactionAmount" column="TRANSACTION_AMOUNT" jdbcType="VARCHAR"/>
         <result property="refundAmount" column="REFUND_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="inRefund" column="IN_REFUND" jdbcType="INTEGER"/>
+        <result property="isOut" column="IS_OUT" jdbcType="INTEGER"/>
         <result property="isOnline" column="IS_ONLINE" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="PurchaseReturnCol">
-        PURCH_RETURN_ID, COMPANY_ID, WORK_POINT_ID, PURCH_RETURN_DOCUNUM, PURCH_ID, PURCH_DOCUNUM, DOCUMENT_DATE, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, IN_REFUND, WAREHOUSE_ID, WAREHOUSE_NAME, AUDITED, TRANSACTION_AMOUNT, REFUND_AMOUNT, IS_ONLINE    </sql>
+        PURCH_RETURN_ID, COMPANY_ID, WORK_POINT_ID, PURCH_RETURN_DOCUNUM, PURCH_ID, PURCH_DOCUNUM, DOCUMENT_DATE, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, TRANSACTION_AMOUNT, REFUND_AMOUNT, AUDITED, IN_REFUND, IS_OUT, IS_ONLINE    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="PurchaseReturnMap">
@@ -85,23 +86,26 @@
             <if test="employeeName != null and employeeName != ''">
                 or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
             </if>
-            <if test="inRefund != null">
-                or IN_REFUND like '%'||#{inRefund}||'%'
-            </if>
             <if test="warehouseId != null">
                 or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
             </if>
             <if test="warehouseName != null and warehouseName != ''">
                 or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
             </if>
-            <if test="audited != null">
-                or AUDITED like '%'||#{audited}||'%'
-            </if>
             <if test="transactionAmount != null">
                 or TRANSACTION_AMOUNT like '%'||#{transactionAmount}||'%'
             </if>
             <if test="refundAmount != null">
                 or REFUND_AMOUNT like '%'||#{refundAmount}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="inRefund != null">
+                or IN_REFUND like '%'||#{inRefund}||'%'
+            </if>
+            <if test="isOut != null">
+                or IS_OUT like '%'||#{isOut}||'%'
             </if>
             <if test="isOnline != null">
                 or IS_ONLINE like '%'||#{isOnline}||'%'
@@ -148,23 +152,26 @@
             <if test="employeeName != null and employeeName != ''">
                 and EMPLOYEE_NAME = #{employeeName}
             </if>
-            <if test="inRefund != null">
-                and IN_REFUND = #{inRefund}
-            </if>
             <if test="warehouseId != null">
                 and WAREHOUSE_ID = #{warehouseId}
             </if>
             <if test="warehouseName != null and warehouseName != ''">
                 and WAREHOUSE_NAME = #{warehouseName}
             </if>
-            <if test="audited != null">
-                and AUDITED = #{audited}
-            </if>
             <if test="transactionAmount != null">
                 and TRANSACTION_AMOUNT = #{transactionAmount}
             </if>
             <if test="refundAmount != null">
                 and REFUND_AMOUNT = #{refundAmount}
+            </if>
+            <if test="audited != null">
+                and AUDITED = #{audited}
+            </if>
+            <if test="inRefund != null">
+                and IN_REFUND = #{inRefund}
+            </if>
+            <if test="isOut != null">
+                and IS_OUT = #{isOut}
             </if>
             <if test="isOnline != null">
                 and IS_ONLINE = #{isOnline}
@@ -207,23 +214,26 @@
             <if test="employeeName != null">
                 EMPLOYEE_NAME,
             </if>
-            <if test="inRefund != null">
-                IN_REFUND,
-            </if>
             <if test="warehouseId != null">
                 WAREHOUSE_ID,
             </if>
             <if test="warehouseName != null">
                 WAREHOUSE_NAME,
             </if>
-            <if test="audited != null">
-                AUDITED,
-            </if>
             <if test="transactionAmount != null">
                 TRANSACTION_AMOUNT,
             </if>
             <if test="refundAmount != null">
                 REFUND_AMOUNT,
+            </if>
+            <if test="audited != null">
+                AUDITED,
+            </if>
+            <if test="inRefund != null">
+                IN_REFUND,
+            </if>
+            <if test="isOut != null">
+                IS_OUT,
             </if>
             <if test="isOnline != null">
                 IS_ONLINE,
@@ -262,23 +272,26 @@
             <if test="employeeName != null">
                 #{employeeName},
             </if>
-            <if test="inRefund != null">
-                #{inRefund},
-            </if>
             <if test="warehouseId != null">
                 #{warehouseId},
             </if>
             <if test="warehouseName != null">
                 #{warehouseName},
             </if>
-            <if test="audited != null">
-                #{audited},
-            </if>
             <if test="transactionAmount != null">
                 #{transactionAmount},
             </if>
             <if test="refundAmount != null">
                 #{refundAmount},
+            </if>
+            <if test="audited != null">
+                #{audited},
+            </if>
+            <if test="inRefund != null">
+                #{inRefund},
+            </if>
+            <if test="isOut != null">
+                #{isOut},
             </if>
             <if test="isOnline != null">
                 #{isOnline},
@@ -325,23 +338,26 @@
                 <if test="entity.employeeName != null">
                     EMPLOYEE_NAME,
                 </if>
-                <if test="entity.inRefund != null">
-                    IN_REFUND,
-                </if>
                 <if test="entity.warehouseId != null">
                     WAREHOUSE_ID,
                 </if>
                 <if test="entity.warehouseName != null">
                     WAREHOUSE_NAME,
                 </if>
-                <if test="entity.audited != null">
-                    AUDITED,
-                </if>
                 <if test="entity.transactionAmount != null">
                     TRANSACTION_AMOUNT,
                 </if>
                 <if test="entity.refundAmount != null">
                     REFUND_AMOUNT,
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED,
+                </if>
+                <if test="entity.inRefund != null">
+                    IN_REFUND,
+                </if>
+                <if test="entity.isOut != null">
+                    IS_OUT,
                 </if>
                 <if test="entity.isOnline != null">
                     IS_ONLINE,
@@ -380,23 +396,26 @@
                 <if test="entity.employeeName != null">
                     #{entity.employeeName},
                 </if>
-                <if test="entity.inRefund != null">
-                    #{entity.inRefund},
-                </if>
                 <if test="entity.warehouseId != null">
                     #{entity.warehouseId},
                 </if>
                 <if test="entity.warehouseName != null">
                     #{entity.warehouseName},
                 </if>
-                <if test="entity.audited != null">
-                    #{entity.audited},
-                </if>
                 <if test="entity.transactionAmount != null">
                     #{entity.transactionAmount},
                 </if>
                 <if test="entity.refundAmount != null">
                     #{entity.refundAmount},
+                </if>
+                <if test="entity.audited != null">
+                    #{entity.audited},
+                </if>
+                <if test="entity.inRefund != null">
+                    #{entity.inRefund},
+                </if>
+                <if test="entity.isOut != null">
+                    #{entity.isOut},
                 </if>
                 <if test="entity.isOnline != null">
                     #{entity.isOnline},
@@ -439,23 +458,26 @@
             <if test="employeeName != null">
                 EMPLOYEE_NAME = #{employeeName},
             </if>
-            <if test="inRefund != null">
-                IN_REFUND = #{inRefund},
-            </if>
             <if test="warehouseId != null">
                 WAREHOUSE_ID = #{warehouseId},
             </if>
             <if test="warehouseName != null">
                 WAREHOUSE_NAME = #{warehouseName},
             </if>
-            <if test="audited != null">
-                AUDITED = #{audited},
-            </if>
             <if test="transactionAmount != null">
                 TRANSACTION_AMOUNT = #{transactionAmount},
             </if>
             <if test="refundAmount != null">
                 REFUND_AMOUNT = #{refundAmount},
+            </if>
+            <if test="audited != null">
+                AUDITED = #{audited},
+            </if>
+            <if test="inRefund != null">
+                IN_REFUND = #{inRefund},
+            </if>
+            <if test="isOut != null">
+                IS_OUT = #{isOut},
             </if>
             <if test="isOnline != null">
                 IS_ONLINE = #{isOnline},
@@ -499,23 +521,26 @@
                 <if test="entity.employeeName != null">
                     EMPLOYEE_NAME = #{entity.employeeName},
                 </if>
-                <if test="entity.inRefund != null">
-                    IN_REFUND = #{entity.inRefund},
-                </if>
                 <if test="entity.warehouseId != null">
                     WAREHOUSE_ID = #{entity.warehouseId},
                 </if>
                 <if test="entity.warehouseName != null">
                     WAREHOUSE_NAME = #{entity.warehouseName},
                 </if>
-                <if test="entity.audited != null">
-                    AUDITED = #{entity.audited},
-                </if>
                 <if test="entity.transactionAmount != null">
                     TRANSACTION_AMOUNT = #{entity.transactionAmount},
                 </if>
                 <if test="entity.refundAmount != null">
                     REFUND_AMOUNT = #{entity.refundAmount},
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED = #{entity.audited},
+                </if>
+                <if test="entity.inRefund != null">
+                    IN_REFUND = #{entity.inRefund},
+                </if>
+                <if test="entity.isOut != null">
+                    IS_OUT = #{entity.isOut},
                 </if>
                 <if test="entity.isOnline != null">
                     IS_ONLINE = #{entity.isOnline},

@@ -11,7 +11,7 @@ import java.util.List;
  * (PurchaseReturn)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-11 21:25:55
+ * @since 2021-06-12 10:28:02
  */
 @Mapper
 public interface PurchaseReturnDao {

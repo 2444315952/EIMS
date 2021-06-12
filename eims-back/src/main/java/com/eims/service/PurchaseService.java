@@ -72,6 +72,14 @@ public interface PurchaseService {
     Purchase update(Purchase purchase);
 
     /**
+     * 修改采购单以明细数据
+     *
+     * @param purchase 实例对象（包含明细列表）
+     * @return 实例对象
+     */
+    Purchase updatePurchAndDetail(Purchase purchase);
+
+    /**
      * 批量修改数据
      *
      * @param purchaseList 实例对象列表

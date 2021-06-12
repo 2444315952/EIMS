@@ -22,15 +22,57 @@
         <result property="isOnline" column="IS_ONLINE" jdbcType="INTEGER"/>
     </resultMap>
 
+    <resultMap type="com.eims.mybatis.entity.Purchase" id="PurchaseAndDetailMap">
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="inStorage" column="IN_STORAGE" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="paymentStatus" column="PAYMENT_STATUS" jdbcType="INTEGER"/>
+        <result property="returnState" column="RETURN_STATE" jdbcType="INTEGER"/>
+        <result property="transactionAmount" column="TRANSACTION_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="isOnline" column="IS_ONLINE" jdbcType="INTEGER"/>
+
+        <collection property="purchaseDetailList" javaType="list" ofType="com.eims.mybatis.entity.PurchaseDetail">
+            <result property="purchDetailId" column="PURCH_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+            <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
+            <result property="purchaseQuantity" column="PURCHASE_QUANTITY" jdbcType="INTEGER"/>
+            <result property="purchaseSubtotal" column="PURCHASE_SUBTOTAL" jdbcType="VARCHAR"/>
+            <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
+            <result property="paid" column="PAID" jdbcType="INTEGER"/>
+        </collection>
+    </resultMap>
+
     <sql id="PurchaseCol">
         PURCH_ID, COMPANY_ID, WORK_POINT_ID, PURCH_DOCUNUM, DOCUMENT_DATE, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, IN_STORAGE, WAREHOUSE_ID, WAREHOUSE_NAME, AUDITED, PAYMENT_STATUS, RETURN_STATE, TRANSACTION_AMOUNT, IS_ONLINE    </sql>
 
+    <sql id="PurchaseJoinCol">
+        P.PURCH_ID, P.COMPANY_ID, P.WORK_POINT_ID, P.PURCH_DOCUNUM, P.DOCUMENT_DATE, P.SUPPLIER_ID, P.SUPPLIER_NAME, P.EMPLOYEE_ID, P.EMPLOYEE_NAME, P.IN_STORAGE, P.WAREHOUSE_ID, P.WAREHOUSE_NAME, P.AUDITED, P.PAYMENT_STATUS, P.RETURN_STATE, P.TRANSACTION_AMOUNT, P.IS_ONLINE    </sql>
+
+    <sql id="PurchaseDetailJoinCol">
+        D.PURCH_DETAIL_ID, D.PURCH_ID, D.PURCH_DOCUNUM, D.PRODUCT_ID, D.PRODUCT_NAME, D.PRODUCT_PICTURE, D.SPEC_MODEL, D.PRODUCT_UNIT, D.PURCHASE_PRICE, D.PURCHASE_QUANTITY, D.PURCHASE_SUBTOTAL, D.RETURNED, D.PAID    </sql>
+
     <!--查询单个-->
-    <select id="queryById" resultMap="PurchaseMap">
+    <select id="queryById" resultMap="PurchaseAndDetailMap">
         select
-        <include refid="PurchaseCol"></include>
-        from EIMS.PURCHASE
-        where PURCH_ID = #{purchId}
+        <include refid="PurchaseJoinCol"></include>,<include refid="PurchaseDetailJoinCol"></include>
+        from EIMS.PURCHASE P LEFT JOIN EIMS.PURCHASE_DETAIL D ON P.PURCH_ID = D.PURCH_ID
+        where P.PURCH_ID = #{purchId}
     </select>
 
     <!--查询所有-->

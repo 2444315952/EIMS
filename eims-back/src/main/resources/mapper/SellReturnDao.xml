@@ -21,11 +21,12 @@
         <result property="retPaidAmount" column="RET_PAID_AMOUNT" jdbcType="VARCHAR"/>
         <result property="retSellRemark" column="RET_SELL_REMARK" jdbcType="VARCHAR"/>
         <result property="refunded" column="REFUNDED" jdbcType="INTEGER"/>
+        <result property="inStorage" column="IN_STORAGE" jdbcType="INTEGER"/>
         <result property="sellReturnHirthday" column="SELL_RETURN_HIRTHDAY" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="SellReturnCol">
-        SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, SELL_RETURN_HIRTHDAY    </sql>
+        SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, IN_STORAGE, SELL_RETURN_HIRTHDAY    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="SellReturnMap">
@@ -107,6 +108,9 @@
             <if test="refunded != null">
                 or REFUNDED like '%'||#{refunded}||'%'
             </if>
+            <if test="inStorage != null">
+                or IN_STORAGE like '%'||#{inStorage}||'%'
+            </if>
             <if test="sellReturnHirthday != null">
                 or SELL_RETURN_HIRTHDAY like '%'||#{sellReturnHirthday}||'%'
             </if>
@@ -173,6 +177,9 @@
             <if test="refunded != null">
                 and REFUNDED = #{refunded}
             </if>
+            <if test="inStorage != null">
+                and IN_STORAGE = #{inStorage}
+            </if>
             <if test="sellReturnHirthday != null">
                 and SELL_RETURN_HIRTHDAY = #{sellReturnHirthday}
             </if>
@@ -235,6 +242,9 @@
             <if test="refunded != null">
                 REFUNDED,
             </if>
+            <if test="inStorage != null">
+                IN_STORAGE,
+            </if>
             <if test="sellReturnHirthday != null">
                 SELL_RETURN_HIRTHDAY,
             </if>
@@ -292,6 +302,9 @@
             </if>
             <if test="refunded != null">
                 #{refunded},
+            </if>
+            <if test="inStorage != null">
+                #{inStorage},
             </if>
             <if test="sellReturnHirthday != null">
                 #{sellReturnHirthday},
@@ -359,6 +372,9 @@
                 <if test="entity.refunded != null">
                     REFUNDED,
                 </if>
+                <if test="entity.inStorage != null">
+                    IN_STORAGE,
+                </if>
                 <if test="entity.sellReturnHirthday != null">
                     SELL_RETURN_HIRTHDAY,
                 </if>
@@ -416,6 +432,9 @@
                 </if>
                 <if test="entity.refunded != null">
                     #{entity.refunded},
+                </if>
+                <if test="entity.inStorage != null">
+                    #{entity.inStorage},
                 </if>
                 <if test="entity.sellReturnHirthday != null">
                     #{entity.sellReturnHirthday},
@@ -479,6 +498,9 @@
             <if test="refunded != null">
                 REFUNDED = #{refunded},
             </if>
+            <if test="inStorage != null">
+                IN_STORAGE = #{inStorage},
+            </if>
             <if test="sellReturnHirthday != null">
                 SELL_RETURN_HIRTHDAY = #{sellReturnHirthday},
             </if>
@@ -541,6 +563,9 @@
                 </if>
                 <if test="entity.refunded != null">
                     REFUNDED = #{entity.refunded},
+                </if>
+                <if test="entity.inStorage != null">
+                    IN_STORAGE = #{entity.inStorage},
                 </if>
                 <if test="entity.sellReturnHirthday != null">
                     SELL_RETURN_HIRTHDAY = #{entity.sellReturnHirthday},

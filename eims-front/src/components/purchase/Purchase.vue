@@ -589,7 +589,7 @@
 							}
 						
 							this.axios({
-								url:'http://localhost:8089/eims/purchase',
+								url:'http://localhost:8089/eims/purchase/detail',
 								method:'put',
 								data:this.ruleForm
 							}).then(response=>{

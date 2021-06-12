@@ -246,14 +246,10 @@
 					cancelButtonTest: '取消',
 					type: 'warning'
 				}).then(() => {
-					var fd = new FormData();
-					fd.append("purchId",val)
-					fd.append("audited",1)
-					
 					this.axios({
-						url: "http://localhost:8089/eims/purchase/audit",
+						url: "http://localhost:8089/eims/purchase",
 						method: "put",
-						data: fd
+						data: {purchId:val,audited:1}
 					}).then(response => {
 						this.loadData()
 						this.$message({
@@ -275,10 +271,29 @@
 				var isHaveAudited = false
 				
 				for(var i=0;i<this.multipleSelection.length;i++){
-					if (this.multipleSelection[i].audited == 1) {
+					
+					if(this.multipleSelection[i].audited == 1){
 						this.$message({
-							type: 'info',
-							message: '无法删除已审核的数据'
+							type:'info',
+							message:'已审核的数据无法删除'
+						})
+						return false
+					}else if(this.multipleSelection[i].inStorage == 1){
+						this.$message({
+							type:'info',
+							message:'已入库的数据无法删除'
+						})
+						return false
+					}else if(this.multipleSelection[i].paymentStatus == 1 || this.multipleSelection[i].paymentStatus == 2){
+						this.$message({
+							type:'info',
+							message:'已付款的数据无法删除'
+						})
+						return false
+					}else if(this.multipleSelection[i].returnState == 1 || this.multipleSelection[i].returnState == 2){
+						this.$message({
+							type:'info',
+							message:'已退货的数据无法删除'
 						})
 						return false
 					}

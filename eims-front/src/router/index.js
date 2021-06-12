@@ -1,5 +1,6 @@
 import {createRouter,createWebHistory} from 'vue-router'
 
+import Login from '../components/Login.vue'
 import PurchaseList from '../components/purchase/PurchaseList.vue'
 import Purchase from '../components/purchase/Purchase.vue' 
 import PurchaseReturnList from '../components/purchase/PurchaseReturnList.vue'
@@ -23,7 +24,12 @@ import Product from '../components/basicData/Product.vue'
 const routes = [
 	{
 		path:'/',
-		component:PurchaseList
+		redirect:'/Login'
+	},
+	{
+		path:'/Login',
+		name:"Login",
+		component:Login
 	},
 	{
 		path:'/PurchaseList',

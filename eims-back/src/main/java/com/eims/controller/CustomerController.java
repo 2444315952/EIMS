@@ -73,6 +73,23 @@ public class CustomerController {
     }
 
     /**
+     * 特殊查询
+     * @param currentPage
+     * @param pageSize
+     * @param customerName
+     * @param workPointId
+     * @param isEnabled
+     * @return
+     */
+
+    @GetMapping("/customer/xyj")
+    public PageInfo<Customer> selectAllXyj(int currentPage, int pageSize, String customerName, int workPointId, String isEnabled ) {
+        System.out.println(customerName+"--"+workPointId+"--"+isEnabled);
+        PageInfo<Customer> page=this.customerService.queryAllXyj(currentPage, pageSize, customerName,workPointId,isEnabled  );
+        return page;
+    }
+
+    /**
      * 新增数据
      *
      * @param customer 实例对象

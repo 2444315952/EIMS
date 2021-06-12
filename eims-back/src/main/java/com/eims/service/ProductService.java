@@ -31,6 +31,12 @@ public interface ProductService {
      */
     PageInfo<Product> queryAll(ProductQueryForm productQueryForm);
 
+
+
+
+    PageInfo<Product> queryByAllLike(int currentPage, int pageSize,String comm_type_name,String is_enabled, String product_name) ;
+
+
     /**
      * 根据查询条件搜索数据
      *

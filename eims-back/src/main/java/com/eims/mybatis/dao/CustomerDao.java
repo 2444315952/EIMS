@@ -48,6 +48,10 @@ public interface CustomerDao {
      */
     List<Customer> queryAndByPojo(CustomerQueryForm customerQueryForm);
 
+
+    List<Customer> queryAllXyj( @Param("customerName") String customerName,@Param("workPointId") int workPointId,@Param("is_enabled") String is_enabled );
+
+
     /**
      * 新增数据
      *

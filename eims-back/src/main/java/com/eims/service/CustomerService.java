@@ -47,12 +47,16 @@ public interface CustomerService {
      */
     PageInfo<Customer> queryByScreen(CustomerQueryForm customerQueryForm);
 
+
+    PageInfo<Customer> queryAllXyj(int currentPage, int pageSize, String customerName, int workPointId, String is_enabled );
     /**
      * 新增数据
      *
      * @param customer 实例对象
      * @return 实例对象
      */
+
+
     Customer insert(Customer customer);
 
     /**

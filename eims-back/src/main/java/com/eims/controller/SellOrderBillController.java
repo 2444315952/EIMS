@@ -44,7 +44,7 @@ public class SellOrderBillController {
      */
     @GetMapping("/sellOrderBill")
     public PageInfo<SellOrderBill> queryAll(SellOrderBillQueryForm sellOrderBillQueryForm) {
-        sellOrderBillQueryForm.setCompanyId(1);
+       
         return this.sellOrderBillService.queryAll(sellOrderBillQueryForm);
     }
 

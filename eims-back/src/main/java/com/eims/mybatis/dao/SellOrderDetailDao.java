@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * (SellOrderDetail)表数据库访问层
@@ -103,5 +104,7 @@ public interface SellOrderDetailDao {
      * @return 影响行数
      */
     int deleteBatchByEntities(List<SellOrderDetail> sellOrderDetailList);
+
+    int deleteByPurchIdAndNotInKeyIds( Map<String, Object> sellOrderDetailList);
 }
 

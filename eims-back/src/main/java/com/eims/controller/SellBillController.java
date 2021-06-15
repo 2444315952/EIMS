@@ -80,9 +80,9 @@ public class SellBillController {
      */
     @PostMapping("/sellBill")
     public SellBill insert(@RequestBody SellBill sellBill) {
-        sellBill.setCompanyId(1);
-        sellBill.setWorkPointId(1);
-        return this.sellBillService.insert(sellBill);
+        System.out.println(sellBill);
+//        return this.sellBillService.insert(sellBill);
+        return null;
     }
 
     /**
@@ -104,6 +104,18 @@ public class SellBillController {
      */
     @PutMapping("/sellBill")
     public SellBill update(@RequestBody SellBill sellBill) {
+        return this.sellBillService.update(sellBill);
+    }
+
+
+    /**
+     * 修改数据
+     *
+     * @param sellBill 实例对象
+     * @return 实例对象
+     */
+    @PutMapping("/sellBill/detail")
+    public SellBill updateSellAndDetail(@RequestBody SellBill sellBill) {
         return this.sellBillService.update(sellBill);
     }
 

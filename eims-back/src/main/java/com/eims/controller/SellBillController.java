@@ -56,7 +56,8 @@ public class SellBillController {
      */
     @GetMapping("/sellBill/search")
     public PageInfo<SellBill> queryBySearch(SellBillQueryForm sellBillQueryForm) {
-        sellBillQueryForm.setCompanyId(1);
+
+        System.out.println("条件查询"+sellBillQueryForm);
         return this.sellBillService.queryBySearch(sellBillQueryForm);
     }
 
@@ -80,7 +81,7 @@ public class SellBillController {
      */
     @PostMapping("/sellBill")
     public SellBill insert(@RequestBody SellBill sellBill) {
-        System.out.println(sellBill);
+        System.out.println("-------新增------"+sellBill);
 //        return this.sellBillService.insert(sellBill);
         return null;
     }
@@ -104,7 +105,10 @@ public class SellBillController {
      */
     @PutMapping("/sellBill")
     public SellBill update(@RequestBody SellBill sellBill) {
+
         return this.sellBillService.update(sellBill);
+
+
     }
 
 
@@ -116,7 +120,9 @@ public class SellBillController {
      */
     @PutMapping("/sellBill/detail")
     public SellBill updateSellAndDetail(@RequestBody SellBill sellBill) {
-        return this.sellBillService.update(sellBill);
+        System.out.println("-------修改-------"+sellBill);
+//        return this.sellBillService.update(sellBill);
+        return  null;
     }
 
     /**

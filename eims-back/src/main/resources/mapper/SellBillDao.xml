@@ -8,7 +8,7 @@
         <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
         <result property="sellDocunum" column="SELL_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="billsType" column="BILLS_TYPE" jdbcType="VARCHAR"/>
-        <result property="sellDate" column="SELL_DATE" jdbcType="VARCHAR"/>
+        <result property="sellDate" column="SELL_DATE" jdbcType="TIMESTAMP"/>
         <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
         <result property="paymentTerm" column="PAYMENT_TERM" jdbcType="VARCHAR"/>
         <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
@@ -25,46 +25,65 @@
         <result property="isRetail" column="IS_RETAIL" jdbcType="INTEGER"/>
         <result property="received" column="RECEIVED" jdbcType="INTEGER"/>
         <result property="sellAddress" column="SELL_ADDRESS" jdbcType="VARCHAR"/>
-        <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
+        <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="TIMESTAMP"/>
+        <result property="outStorage" column="OUT_STORAGE" jdbcType="INTEGER"/>
+        <collection property="sellDetails" ofType="com.eims.mybatis.entity.SellDetail" column="sellId">
+            <result property="sellDetailId" column="SELL_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productModel" column="PRODUCT_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
+            <result property="sellPrice" column="SELL_PRICE" jdbcType="VARCHAR"/>
+            <result property="sellQuantity" column="SELL_QUANTITY" jdbcType="INTEGER"/>
+            <result property="detailPayAmount" column="DETAIL_PAY_AMOUNT" jdbcType="VARCHAR"/>
+            <result property="detailPaidAmount" column="DETAIL_PAID_AMOUNT" jdbcType="VARCHAR"/>
+            <result property="detailDiscounts" column="DETAIL_DISCOUNTS" jdbcType="VARCHAR"/>
+            <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
+        </collection>
     </resultMap>
 
     <sql id="SellBillCol">
-        SELL_ID, COMPANY_ID, WORK_POINT_ID, SELL_DOCUNUM, BILLS_TYPE, SELL_DATE, AUDITED, PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, BILL_PAY_AMOUNT, BILL_PAID_AMOUNT, SELL_DISCOUNTS, SELL_REMARK, RETURN_STATE, IS_RETAIL, RECEIVED, SELL_ADDRESS, SELL_HIRTHDAY    </sql>
+        SELL_ID, COMPANY_ID, WORK_POINT_ID, SELL_DOCUNUM, BILLS_TYPE, SELL_DATE, AUDITED, PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, BILL_PAY_AMOUNT, BILL_PAID_AMOUNT, SELL_DISCOUNTS, SELL_REMARK, RETURN_STATE, IS_RETAIL, RECEIVED, SELL_ADDRESS, SELL_HIRTHDAY, OUT_STORAGE    </sql>
+
+    <sql id="SellBillCol1">
+        S.SELL_ID, S.COMPANY_ID, S.WORK_POINT_ID, S.SELL_DOCUNUM, S.BILLS_TYPE, S.SELL_DATE, S.AUDITED, S.PAYMENT_TERM, S.EMPLOYEE_ID, S.EMPLOYEE_NAME, S.CUSTOMER_ID, S.CUSTOMER_NAME, S.WAREHOUSE_ID, S.WAREHOUSE_NAME, S.BILL_PAY_AMOUNT, S.BILL_PAID_AMOUNT, S.SELL_DISCOUNTS, S.SELL_REMARK, S.RETURN_STATE, S.IS_RETAIL, S.RECEIVED, S.SELL_ADDRESS, S.SELL_HIRTHDAY, S.OUT_STORAGE ,   </sql>
+
+    <sql id="SellDetailCol">
+        D.SELL_DETAIL_ID, D.PRODUCT_ID, D.PRODUCT_PICTURE, D.PRODUCT_NAME, D.PRODUCT_MODEL, D.PRODUCT_UNIT, D.MARKET_PRICE, D.SELL_PRICE, D.SELL_QUANTITY, D.DETAIL_PAY_AMOUNT, D.DETAIL_PAID_AMOUNT, D.DETAIL_DISCOUNTS, D.RETURNED    </sql>
+
 
     <!--查询单个-->
     <select id="queryById" resultMap="SellBillMap">
         select
-        <include refid="SellBillCol"></include>
-        from EIMS.SELL_BILL
-        where SELL_ID = #{sellId}
+        <include refid="SellBillCol1"></include>
+        <include refid="SellDetailCol"></include>
+        from EIMS.SELL_BILL S
+        INNER JOIN EIMS.SELL_DETAIL D
+        on S.SELL_ID=D.SELL_ID
+        where S.SELL_ID = #{sellId}
     </select>
 
     <!--查询所有-->
     <select id="queryAll" resultMap="SellBillMap">
         select
         <include refid="SellBillCol"></include>
-        from (select <include refid="SellBillCol"></include> from EIMS.SELL_BILL
-        <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
-        </where>
-        )
+        from  EIMS.SELL_BILL
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="SellBillMap">
         select
         <include refid="SellBillCol"></include>
-        from (select <include refid="SellBillCol"></include> from EIMS.SELL_BILL
-        <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
-        </where>
-        )
-
+        from EIMS.SELL_BILL
         <where>
             <if test="sellId != null">
                 or SELL_ID like '%'||#{sellId}||'%'
+            </if>
+            <if test="companyId != null">
+                or COMPANY_ID like '%'||#{companyId}||'%'
             </if>
             <if test="sellDocunum != null and sellDocunum != ''">
                 or SELL_DOCUNUM like '%'||#{sellDocunum}||'%'
@@ -126,6 +145,9 @@
             <if test="sellHirthday != null">
                 or SELL_HIRTHDAY like '%'||#{sellHirthday}||'%'
             </if>
+            <if test="outStorage != null">
+                or OUT_STORAGE like '%'||#{outStorage}||'%'
+            </if>
         </where>
     </select>
 
@@ -133,16 +155,16 @@
     <select id="queryAndByPojo" resultMap="SellBillMap">
         select
         <include refid="SellBillCol"></include>
-        from (select <include refid="SellBillCol"></include> from EIMS.SELL_BILL
-        <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
-        </where>
-        )
-
+        from EIMS.SELL_BILL
         <where>
             <if test="sellId != null">
                 and SELL_ID = #{sellId}
+            </if>
+            <if test="companyId != null">
+                and COMPANY_ID = #{companyId}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
             </if>
             <if test="sellDocunum != null and sellDocunum != ''">
                 and SELL_DOCUNUM = #{sellDocunum}
@@ -203,6 +225,9 @@
             </if>
             <if test="sellHirthday != null">
                 and SELL_HIRTHDAY = #{sellHirthday}
+            </if>
+            <if test="outStorage != null">
+                and OUT_STORAGE = #{outStorage}
             </if>
         </where>
     </select>
@@ -278,6 +303,9 @@
             <if test="sellHirthday != null">
                 SELL_HIRTHDAY,
             </if>
+            <if test="outStorage != null">
+                OUT_STORAGE,
+            </if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -347,6 +375,9 @@
             </if>
             <if test="sellHirthday != null">
                 #{sellHirthday},
+            </if>
+            <if test="outStorage != null">
+                #{outStorage},
             </if>
         </trim>
         <selectKey keyProperty="sellId" resultType="INTEGER" order="BEFORE">
@@ -426,6 +457,9 @@
                 <if test="entity.sellHirthday != null">
                     SELL_HIRTHDAY,
                 </if>
+                <if test="entity.outStorage != null">
+                    OUT_STORAGE,
+                </if>
             </trim>
             values
             <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -495,6 +529,9 @@
                 </if>
                 <if test="entity.sellHirthday != null">
                     #{entity.sellHirthday},
+                </if>
+                <if test="entity.outStorage != null">
+                    #{entity.outStorage},
                 </if>
             </trim>
         </foreach>
@@ -570,6 +607,9 @@
             <if test="sellHirthday != null">
                 SELL_HIRTHDAY = #{sellHirthday},
             </if>
+            <if test="outStorage != null">
+                OUT_STORAGE = #{outStorage},
+            </if>
         </set>
         where SELL_ID = #{sellId}
     </update>
@@ -644,6 +684,9 @@
                 </if>
                 <if test="entity.sellHirthday != null">
                     SELL_HIRTHDAY = #{entity.sellHirthday},
+                </if>
+                <if test="entity.outStorage != null">
+                    OUT_STORAGE = #{entity.outStorage},
                 </if>
             </set>
             where SELL_ID = #{entity.sellId}

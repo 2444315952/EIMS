@@ -138,7 +138,7 @@ const routes = [
 		component:sellbill
 	},
 	{
-		path:'/selldetail',
+		path:'/selldetail/:sellId?',
 		name:'selldetail',
 		component:selldetail
 	}

@@ -25,15 +25,60 @@
         <result property="sellReturnHirthday" column="SELL_RETURN_HIRTHDAY" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <resultMap type="com.eims.mybatis.entity.SellReturn" id="SellReturnListMap">
+        <result property="sellReturnId" column="SELL_RETURN_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="sellReturnDocunum" column="SELL_RETURN_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="autited" column="AUTITED" jdbcType="INTEGER"/>
+        <result property="returnPaymentTerm" column="RETURN_PAYMENT_TERM" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+        <result property="customerId" column="CUSTOMER_ID" jdbcType="INTEGER"/>
+        <result property="customerName" column="CUSTOMER_NAME" jdbcType="VARCHAR"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="retPayAmount" column="RET_PAY_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="retPaidAmount" column="RET_PAID_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="retSellRemark" column="RET_SELL_REMARK" jdbcType="VARCHAR"/>
+        <result property="refunded" column="REFUNDED" jdbcType="INTEGER"/>
+        <result property="inStorage" column="IN_STORAGE" jdbcType="INTEGER"/>
+        <result property="sellReturnHirthday" column="SELL_RETURN_HIRTHDAY" jdbcType="TIMESTAMP"/>
+
+        <collection property="returnBillsProductList" javaType="list" ofType="com.eims.mybatis.entity.ReturnBillsProduct">
+            <result property="retBpId" column="RET_BP_ID" jdbcType="INTEGER"/>
+            <result property="sellReturnId" column="SELL_RETURN_ID" jdbcType="INTEGER"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productModel" column="PRODUCT_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="sellPrice" column="SELL_PRICE" jdbcType="VARCHAR"/>
+            <result property="sellQuantity" column="SELL_QUANTITY" jdbcType="INTEGER"/>
+            <result property="retBillPayAmount" column="RET_BILL_PAY_AMOUNT" jdbcType="VARCHAR"/>
+            <result property="retBillPaidAmount" column="RET_BILL_PAID_AMOUNT" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <sql id="SellReturnjoinCol">
+        S.SELL_RETURN_ID, S.COMPANY_ID, S.WORK_POINT_ID, S.SELL_RETURN_DOCUNUM, S.DOCUMENT_DATE, S.AUTITED, S.RETURN_PAYMENT_TERM, S.EMPLOYEE_ID, S.EMPLOYEE_NAME, S.SELL_ID, S.CUSTOMER_ID, S.CUSTOMER_NAME, S.WAREHOUSE_ID, S.WAREHOUSE_NAME, S.RET_PAY_AMOUNT, S.RET_PAID_AMOUNT, S.RET_SELL_REMARK, S.REFUNDED, S.IN_STORAGE, S.SELL_RETURN_HIRTHDAY   </sql>
+
     <sql id="SellReturnCol">
-        SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, IN_STORAGE, SELL_RETURN_HIRTHDAY    </sql>
+        SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, IN_STORAGE, SELL_RETURN_HIRTHDAY   </sql>
+
+
+    <sql id="ReturnBillsProductCol">
+        R.RET_BP_ID, R.SELL_RETURN_ID, R.PRODUCT_ID, R.PRODUCT_PICTURE, R.PRODUCT_NAME, R.PRODUCT_MODEL, R.PRODUCT_UNIT, R.SELL_PRICE, R.SELL_QUANTITY, R.RET_BILL_PAY_AMOUNT, R.RET_BILL_PAID_AMOUNT    </sql>
+
 
     <!--查询单个-->
-    <select id="queryById" resultMap="SellReturnMap">
+    <select id="queryById" resultMap="SellReturnListMap">
         select
-        <include refid="SellReturnCol"></include>
-        from EIMS.SELL_RETURN
-        where SELL_RETURN_ID = #{sellReturnId}
+        <include refid="SellReturnjoinCol"></include>,<include refid="ReturnBillsProductCol"></include>
+        from EIMS.SELL_RETURN S LEFT JOIN EIMS.RETURN_BILLS_PRODUCT R ON S.SELL_RETURN_ID = R.SELL_RETURN_ID
+        where S.SELL_RETURN_ID = #{sellReturnId}
     </select>
 
     <!--查询所有-->
@@ -47,6 +92,7 @@
         </where>
         )
     </select>
+
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="SellReturnMap">

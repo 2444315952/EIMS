@@ -1,6 +1,8 @@
 package com.eims.mybatis.dao;
 
+import com.eims.mybatis.entity.PurchaseReturn;
 import com.eims.mybatis.entity.StockOut;
+import com.eims.vo.form.PurchaseReturnQueryForm;
 import com.eims.vo.form.StockOutQueryForm;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -39,6 +41,13 @@ public interface StockOutDao {
      * @return 对象列表
      */
     List<StockOut> queryOrByPojo(StockOutQueryForm stockOutQueryForm);
+
+    /**
+     * 搜索框筛选出未出库的数据
+     * @param purchaseReturnQueryForm
+     * @return
+     */
+    List<PurchaseReturn> queryByPurReturn(PurchaseReturnQueryForm purchaseReturnQueryForm);
 
     /**
      * 通过实体作为并且条件查询

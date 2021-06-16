@@ -22,15 +22,232 @@
         <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap type="com.eims.mybatis.entity.Purchase" id="PurchaseMap">
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="inStorage" column="IN_STORAGE" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="paymentStatus" column="PAYMENT_STATUS" jdbcType="INTEGER"/>
+        <result property="returnState" column="RETURN_STATE" jdbcType="INTEGER"/>
+        <result property="transactionAmount" column="TRANSACTION_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="isOnline" column="IS_ONLINE" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap type="com.eims.mybatis.entity.WarehouseWarrant" id="WarehouseWarrantListMap">
+        <result property="warehouseWarrantId" column="WAREHOUSE_WARRANT_ID" jdbcType="INTEGER"/>
+        <result property="warehouseDocunum" column="WAREHOUSE_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="storageType" column="STORAGE_TYPE" jdbcType="VARCHAR"/>
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="saleReturnId" column="SALE_RETURN_ID" jdbcType="INTEGER"/>
+        <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
+        <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
+        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
+
+        <collection property="warehousingDetailList" javaType="list" ofType="com.eims.mybatis.entity.WarehousingDetail">
+            <result property="warehousingDetailId" column="WAREHOUSING_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="warehouseWarrantId" column="WAREHOUSE_WARRANT_ID" jdbcType="INTEGER"/>
+            <result property="warehouseDocunum" column="WAREHOUSE_DOCUNUM" jdbcType="VARCHAR"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+            <result property="commodityNote" column="COMMODITY_NOTE" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.eims.mybatis.entity.SellReturn" id="SellReturnMap">
+        <result property="sellReturnId" column="SELL_RETURN_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="sellReturnDocunum" column="SELL_RETURN_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="autited" column="AUTITED" jdbcType="INTEGER"/>
+        <result property="returnPaymentTerm" column="RETURN_PAYMENT_TERM" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+        <result property="customerId" column="CUSTOMER_ID" jdbcType="INTEGER"/>
+        <result property="customerName" column="CUSTOMER_NAME" jdbcType="VARCHAR"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="retPayAmount" column="RET_PAY_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="retPaidAmount" column="RET_PAID_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="retSellRemark" column="RET_SELL_REMARK" jdbcType="VARCHAR"/>
+        <result property="refunded" column="REFUNDED" jdbcType="INTEGER"/>
+        <result property="inStorage" column="IN_STORAGE" jdbcType="INTEGER"/>
+        <result property="sellReturnHirthday" column="SELL_RETURN_HIRTHDAY" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="ReturnBillsProductCol">
+        RET_BP_ID, SELL_RETURN_ID, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, PRODUCT_MODEL, PRODUCT_UNIT, SELL_PRICE, SELL_QUANTITY, RET_BILL_PAY_AMOUNT, RET_BILL_PAID_AMOUNT    </sql>
+
+
+    <sql id="PurchaseCol">
+        PURCH_ID, COMPANY_ID, WORK_POINT_ID, PURCH_DOCUNUM, DOCUMENT_DATE, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, IN_STORAGE, WAREHOUSE_ID, WAREHOUSE_NAME, AUDITED, PAYMENT_STATUS, RETURN_STATE, TRANSACTION_AMOUNT, IS_ONLINE    </sql>
+
+    <sql id="SellReturnCol">
+        SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, IN_STORAGE, SELL_RETURN_HIRTHDAY    </sql>
+
+
     <sql id="WarehouseWarrantCol">
         WAREHOUSE_WARRANT_ID, WAREHOUSE_DOCUNUM, DOCUMENT_DATE, COMPANY_ID, WORK_POINT_ID, EMPLOYEE_ID, EMPLOYEE_NAME, AUDITED, WAREHOUSE_ID, WAREHOUSE_NAME, STORAGE_TYPE, PURCH_ID, SALE_RETURN_ID, TRANSFER_ORDER_ID, BLITEM_ID, INVENTORY_QUANTITY, DOCUMENTS_NOTE    </sql>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="WarehouseWarrantMap">
+    <select id="queryById" resultMap="WarehouseWarrantListMap" >
         select
-        <include refid="WarehouseWarrantCol"></include>
-        from EIMS.WAREHOUSE_WARRANT
-        where WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+          W.WAREHOUSE_WARRANT_ID, W.WAREHOUSE_DOCUNUM, W.DOCUMENT_DATE,W.COMPANY_ID, W.WORK_POINT_ID, W.EMPLOYEE_ID, W.EMPLOYEE_NAME, W.AUDITED, W.WAREHOUSE_ID, W.WAREHOUSE_NAME, W.STORAGE_TYPE, W.PURCH_ID, W.SALE_RETURN_ID, W.TRANSFER_ORDER_ID, W.BLITEM_ID, W.INVENTORY_QUANTITY, W.DOCUMENTS_NOTE,
+          D.WAREHOUSE_WARRANT_ID AS LIST_WAREHOUSE_WARRANT_ID,D.WAREHOUSE_DOCUNUM AS LIST_WAREHOUSE_DOCUNUM , D.PRODUCT_ID, D.PRODUCT_PICTURE, D.PRODUCT_NAME, D.SPEC_MODEL, D.PRODUCT_UNIT, D.INVENTORY_QUANTITY AS LIST_INVENTORY_QUANTITY, D.COMMODITY_NOTE
+        from EIMS.WAREHOUSE_WARRANT W left join EIMS.WAREHOUSING_DETAIL D on W.WAREHOUSE_WARRANT_ID=D.WAREHOUSE_WARRANT_ID
+        where W.WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+    </select>
+
+    <!--晒选未入库的销售退货单-->
+    <select id="querySellInStorage" resultMap="SellReturnMap">
+        select
+        <include refid="SellReturnCol"></include>
+        from (select <include refid="SellReturnCol"></include> from EIMS.SELL_RETURN
+        <where>
+            company_id = #{companyId} and in_storage=0
+            <if test="workPointId != null">and work_point_id = #{workPointId} </if>
+        </where>
+        )
+
+        <where>
+            <if test="sellReturnId != null">
+                or SELL_RETURN_ID like '%'||#{sellReturnId}||'%'
+            </if>
+            <if test="sellReturnDocunum != null and sellReturnDocunum != ''">
+                or SELL_RETURN_DOCUNUM like '%'||#{sellReturnDocunum}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
+            </if>
+            <if test="autited != null">
+                or AUTITED like '%'||#{autited}||'%'
+            </if>
+            <if test="returnPaymentTerm != null and returnPaymentTerm != ''">
+                or RETURN_PAYMENT_TERM like '%'||#{returnPaymentTerm}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="sellId != null">
+                or SELL_ID like '%'||#{sellId}||'%'
+            </if>
+            <if test="customerId != null">
+                or CUSTOMER_ID like '%'||#{customerId}||'%'
+            </if>
+            <if test="customerName != null and customerName != ''">
+                or CUSTOMER_NAME like '%'||#{customerName}||'%'
+            </if>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="retPayAmount != null">
+                or RET_PAY_AMOUNT like '%'||#{retPayAmount}||'%'
+            </if>
+            <if test="retPaidAmount != null">
+                or RET_PAID_AMOUNT like '%'||#{retPaidAmount}||'%'
+            </if>
+            <if test="retSellRemark != null and retSellRemark != ''">
+                or RET_SELL_REMARK like '%'||#{retSellRemark}||'%'
+            </if>
+            <if test="refunded != null">
+                or REFUNDED like '%'||#{refunded}||'%'
+            </if>
+            <if test="inStorage != null">
+                or IN_STORAGE like '%'||#{inStorage}||'%'
+            </if>
+            <if test="sellReturnHirthday != null">
+                or SELL_RETURN_HIRTHDAY like '%'||#{sellReturnHirthday}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--采购单通过实体作为或者条件查询-->
+    <select id="queryPurchaseInStorage" resultMap="PurchaseMap">
+        select
+        <include refid="PurchaseCol"></include>
+        from (select <include refid="PurchaseCol"></include> from EIMS.PURCHASE
+        <where>
+            company_id = #{companyId} and in_storage =0
+            <if test="workPointId != null">and work_point_id = #{workPointId} </if>
+        </where>
+        )
+
+        <where>
+            <if test="purchId != null">
+                or PURCH_ID like '%'||#{purchId}||'%'
+            </if>
+            <if test="purchDocunum != null and purchDocunum != ''">
+                or PURCH_DOCUNUM like '%'||#{purchDocunum}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
+            </if>
+            <if test="supplierId != null">
+                or SUPPLIER_ID like '%'||#{supplierId}||'%'
+            </if>
+            <if test="supplierName != null and supplierName != ''">
+                or SUPPLIER_NAME like '%'||#{supplierName}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="inStorage != null">
+                or IN_STORAGE like '%'||#{inStorage}||'%'
+            </if>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="paymentStatus != null">
+                or PAYMENT_STATUS like '%'||#{paymentStatus}||'%'
+            </if>
+            <if test="returnState != null">
+                or RETURN_STATE like '%'||#{returnState}||'%'
+            </if>
+            <if test="transactionAmount != null">
+                or TRANSACTION_AMOUNT like '%'||#{transactionAmount}||'%'
+            </if>
+            <if test="isOnline != null">
+                or IS_ONLINE like '%'||#{isOnline}||'%'
+            </if>
+        </where>
     </select>
 
     <!--查询所有-->

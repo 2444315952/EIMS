@@ -1,7 +1,5 @@
 <template>
-
 	<div id="PaymentList">
-
 		<el-row>
 			<el-breadcrumb separator-class="el-icon-arrow-right" style="padding-bottom: 16px">
 				<el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -44,7 +42,6 @@
 					<el-table-column type="selection">
 					</el-table-column>
 					<el-table-column label="单据编号" width="162" prop="payDocunum">
-						
 					</el-table-column>
 					<el-table-column label="单据日期" prop="documentDate" width="135" :formatter="dateFormat">
 					</el-table-column>

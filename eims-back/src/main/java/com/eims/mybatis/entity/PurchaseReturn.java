@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -60,4 +61,6 @@ public class PurchaseReturn implements Serializable {
     private Integer isOut;
 
     private Integer isOnline;
+
+    private List<PurchaseDetail> purchaseDetailList;
 }

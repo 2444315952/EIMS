@@ -24,6 +24,14 @@ public interface WarehousingDetailService {
     WarehousingDetail queryById(Integer warehousingDetailId);
 
     /**
+     * 通过入库单id删除入库单明细
+     * @param warehouseWarrantId
+     * @return
+     */
+
+    boolean deleteFk(Integer warehouseWarrantId);
+
+    /**
      * 查询所有数据
      *
      * @param warehousingDetailQueryForm 实例对象

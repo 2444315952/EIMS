@@ -24,15 +24,59 @@
         <result property="isOnline" column="IS_ONLINE" jdbcType="INTEGER"/>
     </resultMap>
 
+    <resultMap type="com.eims.mybatis.entity.PurchaseReturn" id="PurchaseReturnListMap">
+        <result property="purchReturnId" column="PURCH_RETURN_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="purchReturnDocunum" column="PURCH_RETURN_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="transactionAmount" column="TRANSACTION_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="refundAmount" column="REFUND_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="inRefund" column="IN_REFUND" jdbcType="INTEGER"/>
+        <result property="isOut" column="IS_OUT" jdbcType="INTEGER"/>
+        <result property="isOnline" column="IS_ONLINE" jdbcType="INTEGER"/>
+
+        <collection property="purchaseDetailList"  javaType="list" ofType="com.eims.mybatis.entity.PurchaseReturnDetail">
+            <result property="purchReturnDetailId" column="PURCH_RETURN_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="purchReturnId" column="PURCH_RETURN_ID" jdbcType="INTEGER"/>
+            <result property="purchReturnDocunum" column="PURCH_RETURN_DOCUNUM" jdbcType="VARCHAR"/>
+            <result property="purchDetailId" column="PURCH_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
+            <result property="purchaseQuantity" column="PURCHASE_QUANTITY" jdbcType="INTEGER"/>
+            <result property="purchaseSubtotal" column="PURCHASE_SUBTOTAL" jdbcType="VARCHAR"/>
+            <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
+        </collection>
+    </resultMap>
+
+    <sql id="PurchaseReturnDetailCol">
+        D.PURCH_RETURN_DETAIL_ID, D.PURCH_RETURN_ID, D.PURCH_RETURN_DOCUNUM, D.PURCH_DETAIL_ID, D.PRODUCT_NAME, D.PRODUCT_PICTURE, D.SPEC_MODEL, D.PRODUCT_UNIT, D.PURCHASE_PRICE, D.PURCHASE_QUANTITY, D.PURCHASE_SUBTOTAL, D.RETURNED    </sql>
+
     <sql id="PurchaseReturnCol">
         PURCH_RETURN_ID, COMPANY_ID, WORK_POINT_ID, PURCH_RETURN_DOCUNUM, PURCH_ID, PURCH_DOCUNUM, DOCUMENT_DATE, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, TRANSACTION_AMOUNT, REFUND_AMOUNT, AUDITED, IN_REFUND, IS_OUT, IS_ONLINE    </sql>
 
+    <sql id="PurchaseReturJoinCol">
+        P.PURCH_RETURN_ID, P.COMPANY_ID, P.WORK_POINT_ID, P.PURCH_RETURN_DOCUNUM, P.PURCH_ID, P.PURCH_DOCUNUM, P.DOCUMENT_DATE, P.SUPPLIER_ID, P.SUPPLIER_NAME, P.EMPLOYEE_ID, P.EMPLOYEE_NAME, P.WAREHOUSE_ID, P.WAREHOUSE_NAME, P.TRANSACTION_AMOUNT, P.REFUND_AMOUNT, P.AUDITED, P.IN_REFUND, P.IS_OUT, P.IS_ONLINE    </sql>
+
+
     <!--查询单个-->
-    <select id="queryById" resultMap="PurchaseReturnMap">
+    <select id="queryById" resultMap="PurchaseReturnListMap">
         select
-        <include refid="PurchaseReturnCol"></include>
-        from EIMS.PURCHASE_RETURN
-        where PURCH_RETURN_ID = #{purchReturnId}
+        <include refid="PurchaseReturJoinCol"></include>,<include refid="PurchaseReturnDetailCol"></include>
+        from EIMS.PURCHASE_RETURN P LEFT JOIN EIMS.PURCHASE_RETURN_DETAIL D ON P.PURCH_RETURN_ID = D.PURCH_RETURN_ID
+        where P.PURCH_RETURN_ID = #{purchReturnId}
     </select>
 
     <!--查询所有-->

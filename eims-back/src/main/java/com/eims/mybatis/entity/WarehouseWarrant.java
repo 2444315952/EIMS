@@ -3,6 +3,7 @@ package com.eims.mybatis.entity;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -55,4 +56,6 @@ public class WarehouseWarrant implements Serializable {
     private Integer inventoryQuantity;
 
     private String documentsNote;
+
+    private List<WarehousingDetail> warehousingDetailList;
 }

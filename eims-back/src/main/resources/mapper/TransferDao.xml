@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.TransferDao">
+
+    <resultMap type="com.eims.mybatis.entity.Transfer" id="TransferMap">
+        <result property="transferId" column="TRANSFER_ID" jdbcType="INTEGER"/>
+        <result property="transferDocunum" column="TRANSFER_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="foldWarehouseId" column="FOLD_WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="foldWarehouseName" column="FOLD_WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="exportWarehouseId" column="EXPORT_WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="exportWarehouseName" column="EXPORT_WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="transferState" column="TRANSFER_STATE" jdbcType="INTEGER"/>
+        <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="TransferCol">
+        TRANSFER_ID, TRANSFER_DOCUNUM, DOCUMENT_DATE, COMPANY_ID, WORK_POINT_ID, EMPLOYEE_ID, EMPLOYEE_NAME, FOLD_WAREHOUSE_ID, FOLD_WAREHOUSE_NAME, EXPORT_WAREHOUSE_ID, EXPORT_WAREHOUSE_NAME, AUDITED, TRANSFER_STATE, DOCUMENTS_NOTE    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TransferMap">
+        select
+        <include refid="TransferCol"></include>
+        from EIMS.TRANSFER
+        where TRANSFER_ID = #{transferId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="TransferMap">
+        select
+        <include refid="TransferCol"></include>
+        from (select * from EIMS.TRANSFER where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="TransferMap">
+        select
+        <include refid="TransferCol"></include>
+        from (select * from EIMS.TRANSFER where work_point_id = #{workPointId})
+        <where>
+            <if test="transferId != null">
+                or TRANSFER_ID like '%'||#{transferId}||'%'
+            </if>
+            <if test="transferDocunum != null and transferDocunum != ''">
+                or TRANSFER_DOCUNUM like '%'||#{transferDocunum}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
+            </if>
+            <if test="companyId != null">
+                or COMPANY_ID like '%'||#{companyId}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="foldWarehouseId != null">
+                or FOLD_WAREHOUSE_ID like '%'||#{foldWarehouseId}||'%'
+            </if>
+            <if test="foldWarehouseName != null and foldWarehouseName != ''">
+                or FOLD_WAREHOUSE_NAME like '%'||#{foldWarehouseName}||'%'
+            </if>
+            <if test="exportWarehouseId != null">
+                or EXPORT_WAREHOUSE_ID like '%'||#{exportWarehouseId}||'%'
+            </if>
+            <if test="exportWarehouseName != null and exportWarehouseName != ''">
+                or EXPORT_WAREHOUSE_NAME like '%'||#{exportWarehouseName}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="transferState != null">
+                or TRANSFER_STATE like '%'||#{transferState}||'%'
+            </if>
+            <if test="documentsNote != null and documentsNote != ''">
+                or DOCUMENTS_NOTE like '%'||#{documentsNote}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="TransferMap">
+        select
+        <include refid="TransferCol"></include>
+        from EIMS.TRANSFER
+        <where>
+            <if test="transferId != null">
+                and TRANSFER_ID = #{transferId}
+            </if>
+            <if test="transferDocunum != null and transferDocunum != ''">
+                and TRANSFER_DOCUNUM = #{transferDocunum}
+            </if>
+            <if test="documentDate != null">
+                and DOCUMENT_DATE = #{documentDate}
+            </if>
+            <if test="companyId != null">
+                and COMPANY_ID = #{companyId}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+            <if test="foldWarehouseId != null">
+                and FOLD_WAREHOUSE_ID = #{foldWarehouseId}
+            </if>
+            <if test="foldWarehouseName != null and foldWarehouseName != ''">
+                and FOLD_WAREHOUSE_NAME = #{foldWarehouseName}
+            </if>
+            <if test="exportWarehouseId != null">
+                and EXPORT_WAREHOUSE_ID = #{exportWarehouseId}
+            </if>
+            <if test="exportWarehouseName != null and exportWarehouseName != ''">
+                and EXPORT_WAREHOUSE_NAME = #{exportWarehouseName}
+            </if>
+            <if test="audited != null">
+                and AUDITED = #{audited}
+            </if>
+            <if test="transferState != null">
+                and TRANSFER_STATE = #{transferState}
+            </if>
+            <if test="documentsNote != null and documentsNote != ''">
+                and DOCUMENTS_NOTE = #{documentsNote}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.TRANSFER
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            TRANSFER_ID,
+            <if test="transferDocunum != null">
+                TRANSFER_DOCUNUM,
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE,
+            </if>
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="foldWarehouseId != null">
+                FOLD_WAREHOUSE_ID,
+            </if>
+            <if test="foldWarehouseName != null">
+                FOLD_WAREHOUSE_NAME,
+            </if>
+            <if test="exportWarehouseId != null">
+                EXPORT_WAREHOUSE_ID,
+            </if>
+            <if test="exportWarehouseName != null">
+                EXPORT_WAREHOUSE_NAME,
+            </if>
+            <if test="audited != null">
+                AUDITED,
+            </if>
+            <if test="transferState != null">
+                TRANSFER_STATE,
+            </if>
+            <if test="documentsNote != null">
+                DOCUMENTS_NOTE,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{transferId},
+            <if test="transferDocunum != null">
+                #{transferDocunum},
+            </if>
+            <if test="documentDate != null">
+                #{documentDate},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+            <if test="foldWarehouseId != null">
+                #{foldWarehouseId},
+            </if>
+            <if test="foldWarehouseName != null">
+                #{foldWarehouseName},
+            </if>
+            <if test="exportWarehouseId != null">
+                #{exportWarehouseId},
+            </if>
+            <if test="exportWarehouseName != null">
+                #{exportWarehouseName},
+            </if>
+            <if test="audited != null">
+                #{audited},
+            </if>
+            <if test="transferState != null">
+                #{transferState},
+            </if>
+            <if test="documentsNote != null">
+                #{documentsNote},
+            </if>
+        </trim>
+        <selectKey keyProperty="transferId" resultType="INTEGER" order="BEFORE">
+            select SEQ_TRANSFER.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.TRANSFER
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                TRANSFER_ID,
+                <if test="entity.transferDocunum != null">
+                    TRANSFER_DOCUNUM,
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE,
+                </if>
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.foldWarehouseId != null">
+                    FOLD_WAREHOUSE_ID,
+                </if>
+                <if test="entity.foldWarehouseName != null">
+                    FOLD_WAREHOUSE_NAME,
+                </if>
+                <if test="entity.exportWarehouseId != null">
+                    EXPORT_WAREHOUSE_ID,
+                </if>
+                <if test="entity.exportWarehouseName != null">
+                    EXPORT_WAREHOUSE_NAME,
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED,
+                </if>
+                <if test="entity.transferState != null">
+                    TRANSFER_STATE,
+                </if>
+                <if test="entity.documentsNote != null">
+                    DOCUMENTS_NOTE,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_TRANSFER.NEXTVAL,
+                <if test="entity.transferDocunum != null">
+                    #{entity.transferDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    #{entity.documentDate},
+                </if>
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.foldWarehouseId != null">
+                    #{entity.foldWarehouseId},
+                </if>
+                <if test="entity.foldWarehouseName != null">
+                    #{entity.foldWarehouseName},
+                </if>
+                <if test="entity.exportWarehouseId != null">
+                    #{entity.exportWarehouseId},
+                </if>
+                <if test="entity.exportWarehouseName != null">
+                    #{entity.exportWarehouseName},
+                </if>
+                <if test="entity.audited != null">
+                    #{entity.audited},
+                </if>
+                <if test="entity.transferState != null">
+                    #{entity.transferState},
+                </if>
+                <if test="entity.documentsNote != null">
+                    #{entity.documentsNote},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.TRANSFER
+        <set>
+            <if test="transferDocunum != null">
+                TRANSFER_DOCUNUM = #{transferDocunum},
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE = #{documentDate},
+            </if>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+            <if test="foldWarehouseId != null">
+                FOLD_WAREHOUSE_ID = #{foldWarehouseId},
+            </if>
+            <if test="foldWarehouseName != null">
+                FOLD_WAREHOUSE_NAME = #{foldWarehouseName},
+            </if>
+            <if test="exportWarehouseId != null">
+                EXPORT_WAREHOUSE_ID = #{exportWarehouseId},
+            </if>
+            <if test="exportWarehouseName != null">
+                EXPORT_WAREHOUSE_NAME = #{exportWarehouseName},
+            </if>
+            <if test="audited != null">
+                AUDITED = #{audited},
+            </if>
+            <if test="transferState != null">
+                TRANSFER_STATE = #{transferState},
+            </if>
+            <if test="documentsNote != null">
+                DOCUMENTS_NOTE = #{documentsNote},
+            </if>
+        </set>
+        where TRANSFER_ID = #{transferId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.TRANSFER
+            <set>
+                <if test="entity.transferDocunum != null">
+                    TRANSFER_DOCUNUM = #{entity.transferDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE = #{entity.documentDate},
+                </if>
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.foldWarehouseId != null">
+                    FOLD_WAREHOUSE_ID = #{entity.foldWarehouseId},
+                </if>
+                <if test="entity.foldWarehouseName != null">
+                    FOLD_WAREHOUSE_NAME = #{entity.foldWarehouseName},
+                </if>
+                <if test="entity.exportWarehouseId != null">
+                    EXPORT_WAREHOUSE_ID = #{entity.exportWarehouseId},
+                </if>
+                <if test="entity.exportWarehouseName != null">
+                    EXPORT_WAREHOUSE_NAME = #{entity.exportWarehouseName},
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED = #{entity.audited},
+                </if>
+                <if test="entity.transferState != null">
+                    TRANSFER_STATE = #{entity.transferState},
+                </if>
+                <if test="entity.documentsNote != null">
+                    DOCUMENTS_NOTE = #{entity.documentsNote},
+                </if>
+            </set>
+            where TRANSFER_ID = #{entity.transferId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.TRANSFER where TRANSFER_ID = #{transferId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.TRANSFER where TRANSFER_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.TRANSFER where TRANSFER_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.transferId}
+        </foreach>
+    </delete>
+</mapper>
+

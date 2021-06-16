@@ -1,6 +1,10 @@
 package com.eims.service;
 
+import com.eims.mybatis.entity.Purchase;
+import com.eims.mybatis.entity.SellReturn;
 import com.eims.mybatis.entity.WarehouseWarrant;
+import com.eims.vo.form.PurchaseQueryForm;
+import com.eims.vo.form.SellReturnQueryForm;
 import com.eims.vo.form.WarehouseWarrantQueryForm;
 
 import java.util.List;
@@ -70,6 +74,20 @@ public interface WarehouseWarrantService {
      * @return 实例对象
      */
     WarehouseWarrant update(WarehouseWarrant warehouseWarrant);
+
+    /**
+     * 通过实体作为或者条件查询已入库的数据
+     * @param purchaseQueryForm
+     * @return
+     */
+    PageInfo<Purchase> queryPurchaseInStorage(PurchaseQueryForm purchaseQueryForm);
+
+    /**
+     * 搜索框筛选已入库的销售退货单
+     * @param sellReturnQueryForm
+     * @return
+     */
+    PageInfo<SellReturn> querySellInStorage(SellReturnQueryForm sellReturnQueryForm);
 
     /**
      * 批量修改数据

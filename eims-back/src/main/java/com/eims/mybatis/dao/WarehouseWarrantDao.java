@@ -1,6 +1,10 @@
 package com.eims.mybatis.dao;
 
+import com.eims.mybatis.entity.Purchase;
+import com.eims.mybatis.entity.SellReturn;
 import com.eims.mybatis.entity.WarehouseWarrant;
+import com.eims.vo.form.PurchaseQueryForm;
+import com.eims.vo.form.SellReturnQueryForm;
 import com.eims.vo.form.WarehouseWarrantQueryForm;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -23,6 +27,20 @@ public interface WarehouseWarrantDao {
      * @return 实例对象
      */
     WarehouseWarrant queryById(Integer warehouseWarrantId);
+
+    /**
+     * 搜索框筛选出已入库采购单的数据
+     * @param purchaseQueryForm
+     * @return
+     */
+    List<Purchase> queryPurchaseInStorage(PurchaseQueryForm purchaseQueryForm);
+
+    /**
+     * 搜索框筛选出已入库销售退货单的数据
+     * @param sellReturnQueryForm
+     * @return
+     */
+    List<SellReturn> querySellInStorage(SellReturnQueryForm sellReturnQueryForm);
 
     /**
      * 查询所有数据

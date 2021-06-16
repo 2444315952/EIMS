@@ -132,6 +132,16 @@ public class OutboundDetailServiceImpl implements OutboundDetailService {
     }
 
     /**
+     * 通过出库单id删除明细
+     * @param stockOutId
+     * @return
+     */
+    @Override
+    public boolean deleteFk(Integer stockOutId){
+        return this.outboundDetailDao.deleteFk(stockOutId) > 0;
+    }
+
+    /**
      * 批量删除数据
      *
      * @param ids 主键列表

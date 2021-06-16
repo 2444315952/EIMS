@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.BaldetailDao">
+
+    <resultMap type="com.eims.mybatis.entity.Baldetail" id="BaldetailMap">
+        <result property="baldetailId" column="BALDETAIL_ID" jdbcType="INTEGER"/>
+        <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
+        <result property="blitemDocunum" column="BLITEM_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+        <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+        <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
+        <result property="totalCost" column="TOTAL_COST" jdbcType="VARCHAR"/>
+        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="physicalInventory" column="PHYSICAL_INVENTORY" jdbcType="INTEGER"/>
+        <result property="physicalAmount" column="PHYSICAL_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="quantityVariance" column="QUANTITY_VARIANCE" jdbcType="INTEGER"/>
+        <result property="differenceAmount" column="DIFFERENCE_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="commodityNote" column="COMMODITY_NOTE" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="BaldetailCol">
+        BALDETAIL_ID, BLITEM_ID, BLITEM_DOCUNUM, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, SPEC_MODEL, PRODUCT_UNIT, PURCHASE_PRICE, TOTAL_COST, INVENTORY_QUANTITY, PHYSICAL_INVENTORY, PHYSICAL_AMOUNT, QUANTITY_VARIANCE, DIFFERENCE_AMOUNT, COMMODITY_NOTE    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaldetailMap">
+        select
+        <include refid="BaldetailCol"></include>
+        from EIMS.BALDETAIL
+        where BALDETAIL_ID = #{baldetailId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="BaldetailMap">
+        select
+        <include refid="BaldetailCol"></include>
+        from (select * from EIMS.BALDETAIL where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="BaldetailMap">
+        select
+        <include refid="BaldetailCol"></include>
+        from (select * from EIMS.BALDETAIL where work_point_id = #{workPointId})
+        <where>
+            <if test="baldetailId != null">
+                or BALDETAIL_ID like '%'||#{baldetailId}||'%'
+            </if>
+            <if test="blitemId != null">
+                or BLITEM_ID like '%'||#{blitemId}||'%'
+            </if>
+            <if test="blitemDocunum != null and blitemDocunum != ''">
+                or BLITEM_DOCUNUM like '%'||#{blitemDocunum}||'%'
+            </if>
+            <if test="productId != null">
+                or PRODUCT_ID like '%'||#{productId}||'%'
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                or PRODUCT_PICTURE like '%'||#{productPicture}||'%'
+            </if>
+            <if test="productName != null and productName != ''">
+                or PRODUCT_NAME like '%'||#{productName}||'%'
+            </if>
+            <if test="specModel != null and specModel != ''">
+                or SPEC_MODEL like '%'||#{specModel}||'%'
+            </if>
+            <if test="productUnit != null and productUnit != ''">
+                or PRODUCT_UNIT like '%'||#{productUnit}||'%'
+            </if>
+            <if test="purchasePrice != null">
+                or PURCHASE_PRICE like '%'||#{purchasePrice}||'%'
+            </if>
+            <if test="totalCost != null">
+                or TOTAL_COST like '%'||#{totalCost}||'%'
+            </if>
+            <if test="inventoryQuantity != null">
+                or INVENTORY_QUANTITY like '%'||#{inventoryQuantity}||'%'
+            </if>
+            <if test="physicalInventory != null">
+                or PHYSICAL_INVENTORY like '%'||#{physicalInventory}||'%'
+            </if>
+            <if test="physicalAmount != null">
+                or PHYSICAL_AMOUNT like '%'||#{physicalAmount}||'%'
+            </if>
+            <if test="quantityVariance != null">
+                or QUANTITY_VARIANCE like '%'||#{quantityVariance}||'%'
+            </if>
+            <if test="differenceAmount != null">
+                or DIFFERENCE_AMOUNT like '%'||#{differenceAmount}||'%'
+            </if>
+            <if test="commodityNote != null and commodityNote != ''">
+                or COMMODITY_NOTE like '%'||#{commodityNote}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="BaldetailMap">
+        select
+        <include refid="BaldetailCol"></include>
+        from EIMS.BALDETAIL
+        <where>
+            <if test="baldetailId != null">
+                and BALDETAIL_ID = #{baldetailId}
+            </if>
+            <if test="blitemId != null">
+                and BLITEM_ID = #{blitemId}
+            </if>
+            <if test="blitemDocunum != null and blitemDocunum != ''">
+                and BLITEM_DOCUNUM = #{blitemDocunum}
+            </if>
+            <if test="productId != null">
+                and PRODUCT_ID = #{productId}
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                and PRODUCT_PICTURE = #{productPicture}
+            </if>
+            <if test="productName != null and productName != ''">
+                and PRODUCT_NAME = #{productName}
+            </if>
+            <if test="specModel != null and specModel != ''">
+                and SPEC_MODEL = #{specModel}
+            </if>
+            <if test="productUnit != null and productUnit != ''">
+                and PRODUCT_UNIT = #{productUnit}
+            </if>
+            <if test="purchasePrice != null">
+                and PURCHASE_PRICE = #{purchasePrice}
+            </if>
+            <if test="totalCost != null">
+                and TOTAL_COST = #{totalCost}
+            </if>
+            <if test="inventoryQuantity != null">
+                and INVENTORY_QUANTITY = #{inventoryQuantity}
+            </if>
+            <if test="physicalInventory != null">
+                and PHYSICAL_INVENTORY = #{physicalInventory}
+            </if>
+            <if test="physicalAmount != null">
+                and PHYSICAL_AMOUNT = #{physicalAmount}
+            </if>
+            <if test="quantityVariance != null">
+                and QUANTITY_VARIANCE = #{quantityVariance}
+            </if>
+            <if test="differenceAmount != null">
+                and DIFFERENCE_AMOUNT = #{differenceAmount}
+            </if>
+            <if test="commodityNote != null and commodityNote != ''">
+                and COMMODITY_NOTE = #{commodityNote}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.BALDETAIL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            BALDETAIL_ID,
+            <if test="blitemId != null">
+                BLITEM_ID,
+            </if>
+            <if test="blitemDocunum != null">
+                BLITEM_DOCUNUM,
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID,
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE,
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME,
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL,
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT,
+            </if>
+            <if test="purchasePrice != null">
+                PURCHASE_PRICE,
+            </if>
+            <if test="totalCost != null">
+                TOTAL_COST,
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY,
+            </if>
+            <if test="physicalInventory != null">
+                PHYSICAL_INVENTORY,
+            </if>
+            <if test="physicalAmount != null">
+                PHYSICAL_AMOUNT,
+            </if>
+            <if test="quantityVariance != null">
+                QUANTITY_VARIANCE,
+            </if>
+            <if test="differenceAmount != null">
+                DIFFERENCE_AMOUNT,
+            </if>
+            <if test="commodityNote != null">
+                COMMODITY_NOTE,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{baldetailId},
+            <if test="blitemId != null">
+                #{blitemId},
+            </if>
+            <if test="blitemDocunum != null">
+                #{blitemDocunum},
+            </if>
+            <if test="productId != null">
+                #{productId},
+            </if>
+            <if test="productPicture != null">
+                #{productPicture},
+            </if>
+            <if test="productName != null">
+                #{productName},
+            </if>
+            <if test="specModel != null">
+                #{specModel},
+            </if>
+            <if test="productUnit != null">
+                #{productUnit},
+            </if>
+            <if test="purchasePrice != null">
+                #{purchasePrice},
+            </if>
+            <if test="totalCost != null">
+                #{totalCost},
+            </if>
+            <if test="inventoryQuantity != null">
+                #{inventoryQuantity},
+            </if>
+            <if test="physicalInventory != null">
+                #{physicalInventory},
+            </if>
+            <if test="physicalAmount != null">
+                #{physicalAmount},
+            </if>
+            <if test="quantityVariance != null">
+                #{quantityVariance},
+            </if>
+            <if test="differenceAmount != null">
+                #{differenceAmount},
+            </if>
+            <if test="commodityNote != null">
+                #{commodityNote},
+            </if>
+        </trim>
+        <selectKey keyProperty="baldetailId" resultType="INTEGER" order="BEFORE">
+            select SEQ_BALDETAIL.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.BALDETAIL
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                BALDETAIL_ID,
+                <if test="entity.blitemId != null">
+                    BLITEM_ID,
+                </if>
+                <if test="entity.blitemDocunum != null">
+                    BLITEM_DOCUNUM,
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID,
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE,
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME,
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL,
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT,
+                </if>
+                <if test="entity.purchasePrice != null">
+                    PURCHASE_PRICE,
+                </if>
+                <if test="entity.totalCost != null">
+                    TOTAL_COST,
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY,
+                </if>
+                <if test="entity.physicalInventory != null">
+                    PHYSICAL_INVENTORY,
+                </if>
+                <if test="entity.physicalAmount != null">
+                    PHYSICAL_AMOUNT,
+                </if>
+                <if test="entity.quantityVariance != null">
+                    QUANTITY_VARIANCE,
+                </if>
+                <if test="entity.differenceAmount != null">
+                    DIFFERENCE_AMOUNT,
+                </if>
+                <if test="entity.commodityNote != null">
+                    COMMODITY_NOTE,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_BALDETAIL.NEXTVAL,
+                <if test="entity.blitemId != null">
+                    #{entity.blitemId},
+                </if>
+                <if test="entity.blitemDocunum != null">
+                    #{entity.blitemDocunum},
+                </if>
+                <if test="entity.productId != null">
+                    #{entity.productId},
+                </if>
+                <if test="entity.productPicture != null">
+                    #{entity.productPicture},
+                </if>
+                <if test="entity.productName != null">
+                    #{entity.productName},
+                </if>
+                <if test="entity.specModel != null">
+                    #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    #{entity.productUnit},
+                </if>
+                <if test="entity.purchasePrice != null">
+                    #{entity.purchasePrice},
+                </if>
+                <if test="entity.totalCost != null">
+                    #{entity.totalCost},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.physicalInventory != null">
+                    #{entity.physicalInventory},
+                </if>
+                <if test="entity.physicalAmount != null">
+                    #{entity.physicalAmount},
+                </if>
+                <if test="entity.quantityVariance != null">
+                    #{entity.quantityVariance},
+                </if>
+                <if test="entity.differenceAmount != null">
+                    #{entity.differenceAmount},
+                </if>
+                <if test="entity.commodityNote != null">
+                    #{entity.commodityNote},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.BALDETAIL
+        <set>
+            <if test="blitemId != null">
+                BLITEM_ID = #{blitemId},
+            </if>
+            <if test="blitemDocunum != null">
+                BLITEM_DOCUNUM = #{blitemDocunum},
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID = #{productId},
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE = #{productPicture},
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME = #{productName},
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL = #{specModel},
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT = #{productUnit},
+            </if>
+            <if test="purchasePrice != null">
+                PURCHASE_PRICE = #{purchasePrice},
+            </if>
+            <if test="totalCost != null">
+                TOTAL_COST = #{totalCost},
+            </if>
+            <if test="inventoryQuantity != null">
+                INVENTORY_QUANTITY = #{inventoryQuantity},
+            </if>
+            <if test="physicalInventory != null">
+                PHYSICAL_INVENTORY = #{physicalInventory},
+            </if>
+            <if test="physicalAmount != null">
+                PHYSICAL_AMOUNT = #{physicalAmount},
+            </if>
+            <if test="quantityVariance != null">
+                QUANTITY_VARIANCE = #{quantityVariance},
+            </if>
+            <if test="differenceAmount != null">
+                DIFFERENCE_AMOUNT = #{differenceAmount},
+            </if>
+            <if test="commodityNote != null">
+                COMMODITY_NOTE = #{commodityNote},
+            </if>
+        </set>
+        where BALDETAIL_ID = #{baldetailId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.BALDETAIL
+            <set>
+                <if test="entity.blitemId != null">
+                    BLITEM_ID = #{entity.blitemId},
+                </if>
+                <if test="entity.blitemDocunum != null">
+                    BLITEM_DOCUNUM = #{entity.blitemDocunum},
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID = #{entity.productId},
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE = #{entity.productPicture},
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME = #{entity.productName},
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL = #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT = #{entity.productUnit},
+                </if>
+                <if test="entity.purchasePrice != null">
+                    PURCHASE_PRICE = #{entity.purchasePrice},
+                </if>
+                <if test="entity.totalCost != null">
+                    TOTAL_COST = #{entity.totalCost},
+                </if>
+                <if test="entity.inventoryQuantity != null">
+                    INVENTORY_QUANTITY = #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.physicalInventory != null">
+                    PHYSICAL_INVENTORY = #{entity.physicalInventory},
+                </if>
+                <if test="entity.physicalAmount != null">
+                    PHYSICAL_AMOUNT = #{entity.physicalAmount},
+                </if>
+                <if test="entity.quantityVariance != null">
+                    QUANTITY_VARIANCE = #{entity.quantityVariance},
+                </if>
+                <if test="entity.differenceAmount != null">
+                    DIFFERENCE_AMOUNT = #{entity.differenceAmount},
+                </if>
+                <if test="entity.commodityNote != null">
+                    COMMODITY_NOTE = #{entity.commodityNote},
+                </if>
+            </set>
+            where BALDETAIL_ID = #{entity.baldetailId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.BALDETAIL where BALDETAIL_ID = #{baldetailId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.BALDETAIL where BALDETAIL_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.BALDETAIL where BALDETAIL_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.baldetailId}
+        </foreach>
+    </delete>
+</mapper>
+

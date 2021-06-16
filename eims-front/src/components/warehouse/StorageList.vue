@@ -1,132 +1,140 @@
 <template>
 	<div id="Storage">
+		<el-row>
+			<el-breadcrumb separator-class="el-icon-arrow-right">
+				<el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+				<el-breadcrumb-item>入库单列表</el-breadcrumb-item>
+			</el-breadcrumb>
+		</el-row>
 		<el-container>
-			<el-container>
-				<el-main>
-					<el-row>
-						<el-col :span="8">
-							<el-input style="width: 320px; float: left" class="inline-input"
-								placeholder="请输入单据编号/仓库/工作点/入库类型" v-model="searchInput"  @keyup.enter.native="search" size="medium">
-								<template #append>
-									<el-button icon="el-icon-search" size="small" @click="search"></el-button>
-								</template>
-							</el-input>
-						</el-col>
-						<el-col :span="3">
-							<el-button type="text" @click="dialogFormVisible = true" style="float: left;" size="medium">
-								高级查询</el-button>
-							<el-dialog title="高级查询" v-model="dialogFormVisible">
-								<el-form :model="form">
-									<el-row>
-										<el-form-item label="所属仓库:" :label-width="formLabelWidth" style="width:250px;">
-											<el-input v-model="form.number" autocomplete="off"></el-input>
-										</el-form-item>
-									</el-row>
-									<el-row>
-										<el-form-item label="审核状态:" :label-width="formLabelWidth">
-											<el-radio-group v-model="audit">
-												<el-radio :label="1">已审核</el-radio>
-												<el-radio :label="2">未审核</el-radio>
-											</el-radio-group>
-										</el-form-item>
-									</el-row>
-									<el-row>
-										<el-form-item label="入库类型:" :label-width="formLabelWidth">
-											<el-radio-group v-model="type">
-												<el-radio :label="1">采购入库</el-radio>
-												<el-radio :label="2">退货售单入库</el-radio>
-												<el-radio :label="3">调拨入库</el-radio>
-												<el-radio :label="4">盘点入库</el-radio>
-											</el-radio-group>
-										</el-form-item>
-									</el-row>
-								</el-form>
-								<template #footer>
-									<span class="dialog-footer">
-										<el-button @click="dialogFormVisible = false">取 消</el-button>
-										<el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-									</span>
-								</template>
-							</el-dialog>
-						</el-col>
-						<el-col :span="6">
-							<!-- <span class="dialog-footer" style="float:left;">
-								<span class="font-style">单据日期:</span>&nbsp;
-								<el-date-picker
-								      v-model="value1"
-								      type="date"
-									  size="medium"
-								      placeholder="选择日期">
-								</el-date-picker>
-							</span> -->
-						</el-col>
-						<el-col :span="2"></el-col>
-						<el-col :span="3">
-							<el-button size="medium" type="danger" v-show="delbut" @click="Pldelete(changeFun)">批量删除
-							</el-button>
-						</el-col>
-						<el-col :span="2">
-							<el-button @click="this.$router.push({name:'AddStorage'})" style="float: right;" size="medium" type="primary">新增
-							</el-button>
-						</el-col>
-					</el-row>
-
-					<el-table ref="multipleTable" :data="tableData" :height="tableHeight" tooltip-effect="dark"
-						size="medium" style="width: 100%; height: 490px;" @selection-change="changeFun">
-						<el-table-column type="selection" width="55">
-						</el-table-column>
-						<el-table-column prop="warehouseDocunum" label="单据编号" width="110">
-						</el-table-column>
-						<el-table-column :formatter="dateFormat" label="单据日期" width="130" prop="documentDate">
-						</el-table-column>
-						<el-table-column prop="warehouseName" label="所属仓库" width="110" widthshow-overflow-tooltip>
-						</el-table-column>
-						<el-table-column prop="storageType" label="入库类型" width="110" show-overflow-tooltip>
-						</el-table-column>
-						<el-table-column label="审核状态" width="80" show-overflow-tooltip>
-							<template #default="scope">
-								<p v-if="tableData[scope.$index].audited==0">未审核</p>
-								<p v-if="tableData[scope.$index].audited==1">已审核</p>
+			<el-main>
+				<el-row>
+					<el-col :span="8">
+						<el-input style="width: 320px; float: left" class="inline-input"
+							placeholder="请输入单据编号/仓库/工作点/入库类型" v-model="searchInput" @keyup.enter.native="search"
+							size="medium">
+							<template #append>
+								<el-button icon="el-icon-search" size="small" @click="search"></el-button>
 							</template>
-						</el-table-column>
-						<el-table-column prop="workPointName" label="工作点" width="100" show-overflow-tooltip>
-						</el-table-column>
-						<el-table-column prop="employeeName" label="业务员" width="100">
-						</el-table-column>
-						<el-table-column prop="documentsNote" label="备注" width="130" show-overflow-tooltip>
-						</el-table-column>
-						<el-table-column prop="operate" label="操作" show-overflow-tooltip>
-							<template #default="scope">
-								<el-tooltip class="item" effect="dark" content="查看" placement="top">
-									<el-button size="mini" circle type="success" icon="el-icon-view" content="查看"
-										@click="$router.push({name:'AddStorage',params:{warehouseWarrantId:scope.row.warehouseWarrantId}})"></el-button>
-								</el-tooltip>
-								<el-tooltip class="item" v-if="scope.row.audited==0" effect="dark" content="编辑"
-									placement="top">
-									<el-button size="mini" circle type="primary" icon="el-icon-edit-outline"
-										@click="$router.push({name:'AddStorage'})"></el-button>
-								</el-tooltip>
-								<el-tooltip v-if="scope.row.audited==0" class="item" effect="dark" content="审核"
-									placement="top">
-									<el-button size="mini" type="info" circle icon="el-icon-s-check"
-										@click="check(scope.row.warehouseWarrantId)">
-									</el-button>
-								</el-tooltip>
-								<el-tooltip v-if="scope.row.audited==1" class="item" effect="dark" content="反审核"
-									placement="top">
-									<el-button size="mini" type="info" circle icon="el-icon-coordinate"
-										@click="backCheck(scope.row.warehouseWarrantId)">
-									</el-button>
-								</el-tooltip>
+						</el-input>
+					</el-col>
+					<el-col :span="3">
+						<el-button type="text" @click="dialogFormVisible = true" style="float: left;" size="medium">
+							高级查询</el-button>
+						<el-dialog title="高级查询" v-model="dialogFormVisible">
+							<el-form :model="form">
+								<el-row>
+									<el-form-item label="所属仓库:" :label-width="formLabelWidth" style="width:250px;">
+										<el-input v-model="form.number" autocomplete="off"></el-input>
+									</el-form-item>
+								</el-row>
+								<el-row>
+									<el-form-item label="审核状态:" :label-width="formLabelWidth">
+										<el-radio-group v-model="audit">
+											<el-radio :label="1">已审核</el-radio>
+											<el-radio :label="2">未审核</el-radio>
+										</el-radio-group>
+									</el-form-item>
+								</el-row>
+								<el-row>
+									<el-form-item label="入库类型:" :label-width="formLabelWidth">
+										<el-radio-group v-model="type">
+											<el-radio :label="1">采购入库</el-radio>
+											<el-radio :label="2">退货售单入库</el-radio>
+											<el-radio :label="3">调拨入库</el-radio>
+											<el-radio :label="4">盘点入库</el-radio>
+										</el-radio-group>
+									</el-form-item>
+								</el-row>
+							</el-form>
+							<template #footer>
+								<span class="dialog-footer">
+									<el-button @click="dialogFormVisible = false">取 消</el-button>
+									<el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+								</span>
 							</template>
-						</el-table-column>
-					</el-table>
-					<el-pagination :current-page="queryForm.pageNum" :page-sizes="[10, 20, 40, 60]"
-						:page-size="queryForm.pageSize" layout=" total, sizes, prev, pager, next, jumper"
-						:total="queryForm.total" @size-change="handleSizeChange"
-						@current-change="handleCurrentChange" />
-				</el-main>
-			</el-container>
+						</el-dialog>
+					</el-col>
+					<el-col :span="6">
+						<!-- <span class="dialog-footer" style="float:left;">
+							<span class="font-style">单据日期:</span>&nbsp;
+							<el-date-picker
+							      v-model="value1"
+							      type="date"
+								  size="medium"
+							      placeholder="选择日期">
+							</el-date-picker>
+						</span> -->
+					</el-col>
+					<el-col :span="2"></el-col>
+					<el-col :span="3">
+						<el-button size="medium" type="danger" v-show="delbut" @click="Pldelete(changeFun)">批量删除
+						</el-button>
+					</el-col>
+					<el-col :span="2">
+						<el-button @click="this.$router.push({name:'AddStorage'})" style="float: right;"
+							size="medium" type="primary">新增
+						</el-button>
+					</el-col>
+				</el-row>
+		
+				<el-table ref="multipleTable" :data="tableData" :height="tableHeight" tooltip-effect="dark"
+				max-height="480" size="medium" style="width: 100%; height: 490px;" @selection-change="changeFun">
+					<el-table-column type="selection" width="55">
+					</el-table-column>
+					<el-table-column prop="warehouseDocunum" label="单据编号" width="180">
+					</el-table-column>
+					<el-table-column :formatter="dateFormat" label="单据日期" width="150" prop="documentDate">
+					</el-table-column>
+					<el-table-column prop="warehouseName" label="所属仓库" width="110" widthshow-overflow-tooltip>
+					</el-table-column>
+					<el-table-column prop="storageType" label="入库类型" width="110" show-overflow-tooltip>
+					</el-table-column>
+					<el-table-column label="审核状态" prop="audited" width="100" show-overflow-tooltip>
+						<template #default="scope">
+							<p v-if="tableData[scope.$index].audited==0">未审核</p>
+							<p v-if="tableData[scope.$index].audited==1">已审核</p>
+						</template>
+					</el-table-column>
+					<el-table-column prop="workPointName" label="工作点" width="100" show-overflow-tooltip>
+					</el-table-column>
+					<el-table-column prop="employeeName" label="业务员" width="100">
+					</el-table-column>
+					<el-table-column prop="documentsNote" label="备注" width="160" show-overflow-tooltip>
+					</el-table-column>
+					<el-table-column prop="operate" label="操作" show-overflow-tooltip>
+						<template #default="scope">
+							<el-tooltip class="item" effect="dark" content="查看" placement="top">
+								<el-button size="mini" circle type="success" icon="el-icon-view" content="查看"
+									@click="$router.push({name:'AddStorage',params:{warehouseWarrantId:scope.row.warehouseWarrantId}})">
+								</el-button>
+							</el-tooltip>
+							<el-tooltip class="item" v-if="scope.row.audited==0" effect="dark" content="编辑"
+								placement="top">
+								<el-button size="mini" circle type="primary" icon="el-icon-edit-outline"
+									@click="$router.push({name:'AddStorage',params:{warehouseWarrantId:scope.row.warehouseWarrantId}})">
+								</el-button>
+							</el-tooltip>
+							<el-tooltip v-if="scope.row.audited==0" class="item" effect="dark" content="审核"
+								placement="top">
+								<el-button size="mini" type="info" circle icon="el-icon-s-check"
+									@click="check(scope.row.warehouseWarrantId)">
+								</el-button>
+							</el-tooltip>
+							<!-- <el-tooltip v-if="scope.row.audited==1" class="item" effect="dark" content="反审核"
+								placement="top">
+								<el-button size="mini" type="info" circle icon="el-icon-coordinate"
+									@click="backCheck(scope.row.warehouseWarrantId)">
+								</el-button>
+							</el-tooltip> -->
+						</template>
+					</el-table-column>
+				</el-table>
+				<el-pagination :current-page="queryForm.pageNum" :page-sizes="[10, 20, 40, 60]"
+					:page-size="queryForm.pageSize" layout=" total, sizes, prev, pager, next, jumper"
+					:total="queryForm.total" @size-change="handleSizeChange"
+					@current-change="handleCurrentChange" />
+			</el-main>
 		</el-container>
 	</div>
 </template>
@@ -230,10 +238,10 @@
 
 			search() {
 				this.queryType = 'search'
-				this.queryForm.warehouseDocunum= this.searchInput
-				this.queryForm.warehouseName=this.searchInput
-				this.queryForm.workPointName=this.searchInput
-				this.queryForm.storageType=this.searchInput
+				this.queryForm.warehouseDocunum = this.searchInput
+				this.queryForm.warehouseName = this.searchInput
+				this.queryForm.workPointName = this.searchInput
+				this.queryForm.storageType = this.searchInput
 				//var searchForm = Object.assign(this.message,this.queryForm)
 				//console.log(searchForm)
 				this.axios({
@@ -280,56 +288,53 @@
 				});
 			},
 			//反审核入库单
-			backCheck(val) {
-				this.$confirm('是否要对该入库单进行反审核操作?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.axios({
-						url: "http://localhost:8089/eims/warehouseWarrant",
-						method: "put",
-						data: {
-							"warehouseWarrantId": val,
-							"audited": 0
-						}
-					}).then(res => {
-						this.show()
-					}).catch(err => {
+			// backCheck(val) {
+			// 	this.$confirm('是否要对该入库单进行反审核操作?', '提示', {
+			// 		confirmButtonText: '确定',
+			// 		cancelButtonText: '取消',
+			// 		type: 'warning'
+			// 	}).then(() => {
+			// 		this.axios({
+			// 			url: "http://localhost:8089/eims/warehouseWarrant",
+			// 			method: "put",
+			// 			data: {
+			// 				"warehouseWarrantId": val,
+			// 				"audited": 0
+			// 			}
+			// 		}).then(res => {
+			// 			this.show()
+			// 		}).catch(err => {
 
-					})
-					this.$message({
-						type: 'success',
-						message: '成功反审核!'
-					});
-					this.show()
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消反审核操作'
-					});
-				});
-			},
+			// 		})
+			// 		this.$message({
+			// 			type: 'success',
+			// 			message: '成功反审核!'
+			// 		});
+			// 		this.show()
+			// 	}).catch(() => {
+			// 		this.$message({
+			// 			type: 'info',
+			// 			message: '已取消反审核操作'
+			// 		});
+			// 	});
+			// },
 			changeFun(val) {
 				this.multipleSelection = val
-				if (this.multipleSelection.length > 0) {
+				if (val.length > 0) {
 					this.delbut = true
 				} else {
 					this.delbut = false
 				}
 			},
 			Pldelete() {
-				var canDelete = true //是否可以删除
-				this.multipleSelection.forEach(a => {
-					if (a.audited == 1) {
-						canDelete = false
+				for (var i = 0; i<this.multipleSelection.length; i++)
+					if (this.multipleSelection[i].audited == 1) {
 						this.$message({
 							type: 'info',
 							message: '已审核的入库单不能进行删除操作!'
 						});
 						return false
-					}
-				})
+					} 
 
 				/* var a = false/true
 				//选中的入库单有已审核的数据，不能删除，false
@@ -337,40 +342,42 @@
 				if(选中的入库单没有已审核的数据){
 					删除代码
 				} */
-
-
-				if (canDelete) {
-					this.$confirm('此操作将永久删除【' + this.multipleSelection.length + '】张入库单, 是否继续?', '提示', {
-						confirmButtonText: '确定',
-						cancelButtonText: '取消',
-						type: 'warning'
-					}).then(() => {
-						var ids = new Array()
-						//var ids = []
-						this.multipleSelection.forEach(item => {
-							ids.push(item.warehouseWarrantId);
-						})
-						this.axios({
-							url: "http://localhost:8089/eims/warehouseWarrant/batch",
-							method: "delete",
-							data: ids
-						}).then(res => {
-							this.show()
-						}).catch(err => {
-
-						})
-						this.$message({
-							type: 'success',
-							message: '删除成功!'
-						});
+				
+				this.$confirm('此操作将永久删除【' + this.multipleSelection.length + '】张入库单, 是否继续?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					var ids = new Array()
+					//var ids = []
+					// for (let i = 0; i < this.multipleSelection.length; i++)
+					// 	ids.push(this.multipleSelection[i].warehouseWarrantId)
+				
+					this.multipleSelection.forEach(item => {
+						ids.push(item.warehouseWarrantId);
+					})
+					this.axios({
+						url: "http://localhost:8089/eims/warehouseWarrant/batch",
+						method: "delete",
+						data: ids
+					}).then(res => {
+						console.log(res)
 						this.show()
-					}).catch(() => {
-						this.$message({
-							type: 'info',
-							message: '已取消删除'
-						});
+					}).catch(err => {
+				
+					})
+					this.$message({
+						type: 'success',
+						message: '删除成功!'
 					});
-				}
+					this.show()
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消删除'
+					});
+				});
+
 			},
 			handleEdit(index, row) {
 				console.log(index, row);
@@ -382,7 +389,7 @@
 					this.show()
 				else if (this.queryType == 'search')
 					this.search()
-				else if (this.queryType =='screen')
+				else if (this.queryType == 'screen')
 					this.screen()
 			},
 			handleCurrentChange(val) {
@@ -467,7 +474,7 @@
 	}
 
 	#Storage .el-table td,
-	#Storage .table th{
+	#Storage .table th {
 		padding: 0 2px;
 		height: 10px;
 		width: 20px;

@@ -1,6 +1,11 @@
 package com.eims.controller;
 
+import com.eims.mybatis.entity.Purchase;
+import com.eims.mybatis.entity.SellReturn;
 import com.eims.mybatis.entity.WarehouseWarrant;
+import com.eims.service.PurchaseService;
+import com.eims.vo.form.PurchaseQueryForm;
+import com.eims.vo.form.SellReturnQueryForm;
 import com.eims.vo.form.WarehouseWarrantQueryForm;
 import com.eims.service.WarehouseWarrantService;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +29,7 @@ public class WarehouseWarrantController {
      */
     @Resource
     private WarehouseWarrantService warehouseWarrantService;
+
 
     /**
      * 通过主键查询单条数据
@@ -58,6 +64,28 @@ public class WarehouseWarrantController {
     public PageInfo<WarehouseWarrant> queryBySearch(WarehouseWarrantQueryForm warehouseWarrantQueryForm) {
         warehouseWarrantQueryForm.setCompanyId(1);
         return this.warehouseWarrantService.queryBySearch(warehouseWarrantQueryForm);
+    }
+
+    /**
+     * 通过实体作为或者条件查询已入库的数据
+     * @param purchaseQueryForm
+     * @return 对象列表
+     */
+    @GetMapping("/purchase/searchInStorage")
+    public PageInfo<Purchase> queryInStorage(PurchaseQueryForm purchaseQueryForm) {
+        purchaseQueryForm.setCompanyId(1);
+        return this.warehouseWarrantService.queryPurchaseInStorage(purchaseQueryForm);
+    }
+
+    /**
+     * 搜索框筛选出已入库的销售退货单
+     * @param sellReturnQueryForm
+     * @return
+     */
+    @GetMapping("/sellReturn/searchInStorage")
+    public  PageInfo<SellReturn> querySellInStorage(SellReturnQueryForm sellReturnQueryForm){
+        sellReturnQueryForm.setCompanyId(1);
+        return this.warehouseWarrantService.querySellInStorage(sellReturnQueryForm);
     }
 
     /**

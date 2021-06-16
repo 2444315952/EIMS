@@ -1,6 +1,8 @@
 package com.eims.controller;
 
+import com.eims.mybatis.entity.PurchaseReturn;
 import com.eims.mybatis.entity.StockOut;
+import com.eims.vo.form.PurchaseReturnQueryForm;
 import com.eims.vo.form.StockOutQueryForm;
 import com.eims.service.StockOutService;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +51,18 @@ public class StockOutController {
     }
 
     /**
+     * 根据查询条件筛选数据
+     *
+     * @param stockOutQueryForm
+     * @return 对象列表
+     */
+    @GetMapping("/stockOut/screen")
+    public PageInfo<StockOut> queryByScreen(StockOutQueryForm stockOutQueryForm) {
+        stockOutQueryForm.setCompanyId(1);
+        return this.stockOutService.queryByScreen(stockOutQueryForm);
+    }
+
+    /**
      * 根据查询条件搜索数据
      *
      * @param stockOutQueryForm
@@ -61,15 +75,14 @@ public class StockOutController {
     }
 
     /**
-     * 根据查询条件筛选数据
-     *
-     * @param stockOutQueryForm
-     * @return 对象列表
+     * 搜索框筛选未出库的数据
+     * @param purchaseReturnQueryForm
+     * @return
      */
-    @GetMapping("/stockOut/screen")
-    public PageInfo<StockOut> queryByScreen(StockOutQueryForm stockOutQueryForm) {
-        stockOutQueryForm.setCompanyId(1);
-        return this.stockOutService.queryByScreen(stockOutQueryForm);
+    @GetMapping("/purchReturn/queryByPurReturn")
+    public PageInfo<PurchaseReturn> queryBySearch(PurchaseReturnQueryForm purchaseReturnQueryForm){
+        purchaseReturnQueryForm.setCompanyId(1);
+        return this.stockOutService.queryByPurReturn(purchaseReturnQueryForm);
     }
 
     /**

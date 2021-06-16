@@ -33,6 +33,13 @@ public interface WarehousingDetailDao {
     List<WarehousingDetail> queryAll(WarehousingDetailQueryForm warehousingDetailQueryForm);
 
     /**
+     * 通过入库单id删除明细
+     * @param warehouseWarrantId
+     * @return
+     */
+    int deleteFk(Integer warehouseWarrantId);
+
+    /**
      * 通过实体作为或者条件查询
      *
      * @param warehousingDetailQueryForm 实例对象

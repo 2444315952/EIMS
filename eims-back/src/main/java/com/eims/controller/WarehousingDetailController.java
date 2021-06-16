@@ -92,6 +92,16 @@ public class WarehousingDetailController {
     }
 
     /**
+     * 通过入库单id删除入库单明细
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/warehousingDetailByfk")
+    public boolean deletefk(Integer id){
+        return this.warehousingDetailService.deleteFk(id);
+    }
+
+    /**
      * 修改数据
      *
      * @param warehousingDetail 实例对象

@@ -328,9 +328,13 @@
         </foreach>
     </update>
 
-    <!--通过主键删除数据-->
     <delete id="deleteById">
         delete from EIMS.OUTBOUND_DETAIL where OUTBOUND_DETAIL_ID = #{outboundDetailId}
+    </delete>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteFk">
+        delete from EIMS.OUTBOUND_DETAIL where STOCK_OUT_ID = #{stockOutId}
     </delete>
 
     <!--通过主键列表批量删除数据-->

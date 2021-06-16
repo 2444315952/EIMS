@@ -1,6 +1,8 @@
 package com.eims.service;
 
+import com.eims.mybatis.entity.PurchaseReturn;
 import com.eims.mybatis.entity.StockOut;
+import com.eims.vo.form.PurchaseReturnQueryForm;
 import com.eims.vo.form.StockOutQueryForm;
 
 import java.util.List;
@@ -31,6 +33,15 @@ public interface StockOutService {
      */
     PageInfo<StockOut> queryAll(StockOutQueryForm stockOutQueryForm);
 
+
+    /**
+     * 根据查询条件筛选数据
+     *
+     * @param stockOutQueryForm
+     * @return 对象列表
+     */
+    PageInfo<StockOut> queryByScreen(StockOutQueryForm stockOutQueryForm);
+
     /**
      * 根据查询条件搜索数据
      *
@@ -40,12 +51,11 @@ public interface StockOutService {
     PageInfo<StockOut> queryBySearch(StockOutQueryForm stockOutQueryForm);
 
     /**
-     * 根据查询条件筛选数据
-     *
-     * @param stockOutQueryForm
-     * @return 对象列表
+     * 搜索框筛选出未出库的数据
+     * @param purchaseReturnQueryForm
+     * @return
      */
-    PageInfo<StockOut> queryByScreen(StockOutQueryForm stockOutQueryForm);
+    PageInfo<PurchaseReturn> queryByPurReturn(PurchaseReturnQueryForm purchaseReturnQueryForm);
 
     /**
      * 新增数据

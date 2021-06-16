@@ -49,6 +49,16 @@ public class WarehousingDetailServiceImpl implements WarehousingDetailService {
     }
 
     /**
+     * 通过入库单id删除明细
+     * @param warehouseWarrantId
+     * @return
+     */
+    @Override
+    public boolean deleteFk(Integer warehouseWarrantId){
+        return  this.warehousingDetailDao.deleteFk(warehouseWarrantId)>0;
+    }
+
+    /**
      * 根据查询条件搜索数据
      *
      * @param warehousingDetailQueryForm

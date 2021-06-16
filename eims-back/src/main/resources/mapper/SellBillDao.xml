@@ -28,19 +28,67 @@
         <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap type="com.eims.mybatis.entity.SellBill" id="SellBillListMap">
+        <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="sellDocunum" column="SELL_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="billsType" column="BILLS_TYPE" jdbcType="VARCHAR"/>
+        <result property="sellDate" column="SELL_DATE" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="paymentTerm" column="PAYMENT_TERM" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="customerId" column="CUSTOMER_ID" jdbcType="INTEGER"/>
+        <result property="customerName" column="CUSTOMER_NAME" jdbcType="VARCHAR"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="billPayAmount" column="BILL_PAY_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="billPaidAmount" column="BILL_PAID_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="sellDiscounts" column="SELL_DISCOUNTS" jdbcType="VARCHAR"/>
+        <result property="sellRemark" column="SELL_REMARK" jdbcType="VARCHAR"/>
+        <result property="returnState" column="RETURN_STATE" jdbcType="INTEGER"/>
+        <result property="isRetail" column="IS_RETAIL" jdbcType="INTEGER"/>
+        <result property="received" column="RECEIVED" jdbcType="INTEGER"/>
+        <result property="sellAddress" column="SELL_ADDRESS" jdbcType="VARCHAR"/>
+        <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
+
+        <collection property="sellDetailList" javaType="list" ofType="com.eims.mybatis.entity.SellDetail">
+            <result property="sellDetailId" column="SELL_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productModel" column="PRODUCT_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="sellPrice" column="SELL_PRICE" jdbcType="VARCHAR"/>
+            <result property="sellQuantity" column="SELL_QUANTITY" jdbcType="INTEGER"/>
+            <result property="detailPayAmount" column="DETAIL_PAY_AMOUNT" jdbcType="VARCHAR"/>
+            <result property="detailPaidAmount" column="DETAIL_PAID_AMOUNT" jdbcType="VARCHAR"/>
+            <result property="detail_Discounts" column="DETAIL__DISCOUNTS" jdbcType="VARCHAR"/>
+            <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
+        </collection>
+    </resultMap>
+
+    <sql id="SellDetailCol">
+        D.SELL_DETAIL_ID, D.SELL_ID, D.PRODUCT_ID, D.PRODUCT_PICTURE, D.PRODUCT_NAME, D.PRODUCT_MODEL, D.PRODUCT_UNIT, D.SELL_PRICE, D.SELL_QUANTITY, D.DETAIL_PAY_AMOUNT, D.DETAIL_PAID_AMOUNT, D.DETAIL__DISCOUNTS, D.RETURNED    </sql>
+
     <sql id="SellBillCol">
         SELL_ID, COMPANY_ID, WORK_POINT_ID, SELL_DOCUNUM, BILLS_TYPE, SELL_DATE, AUDITED, PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, BILL_PAY_AMOUNT, BILL_PAID_AMOUNT, SELL_DISCOUNTS, SELL_REMARK, RETURN_STATE, IS_RETAIL, RECEIVED, SELL_ADDRESS, SELL_HIRTHDAY    </sql>
 
+    <sql id="SellBillJoinCol">
+        B.SELL_ID, B.COMPANY_ID, B.WORK_POINT_ID, B.SELL_DOCUNUM, B.BILLS_TYPE, B.SELL_DATE, B.AUDITED, B.PAYMENT_TERM, B.EMPLOYEE_ID, B.EMPLOYEE_NAME, B.CUSTOMER_ID, B.CUSTOMER_NAME, B.WAREHOUSE_ID, B.WAREHOUSE_NAME, B.BILL_PAY_AMOUNT, B.BILL_PAID_AMOUNT, B.SELL_DISCOUNTS, B.SELL_REMARK, B.RETURN_STATE, B.IS_RETAIL, B.RECEIVED, B.SELL_ADDRESS, B.SELL_HIRTHDAY    </sql>
+
     <!--查询单个-->
-    <select id="queryById" resultMap="SellBillMap">
+    <select id="queryById" resultMap="SellBillListMap">
         select
-        <include refid="SellBillCol"></include>
-        from EIMS.SELL_BILL
-        where SELL_ID = #{sellId}
+        <include refid="SellBillJoinCol"></include>,<include refid="SellDetailCol"></include>
+        from EIMS.SELL_BILL B LEFT JOIN  EIMS.SELL_DETAIL D ON B.SELL_ID = D.SELL_ID
+        where B.SELL_ID = #{sellId}
     </select>
 
     <!--查询所有-->
-    <select id="queryAll" resultMap="SellBillMap">
+    <select id="queryAll" resultMap="SellBillListMap">
         select
         <include refid="SellBillCol"></include>
         from (select <include refid="SellBillCol"></include> from EIMS.SELL_BILL

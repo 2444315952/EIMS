@@ -88,6 +88,13 @@ public interface OutboundDetailService {
     boolean deleteById(Integer outboundDetailId);
 
     /**
+     * 通过出库单id删除明细
+     * @param stockOutId
+     * @return
+     */
+    boolean deleteFk(Integer stockOutId);
+
+    /**
      * 批量删除数据
      *
      * @param ids 主键列表

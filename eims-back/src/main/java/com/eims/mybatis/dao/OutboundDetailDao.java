@@ -89,6 +89,13 @@ public interface OutboundDetailDao {
     int deleteById(Integer outboundDetailId);
 
     /**
+     * 通过出库单id删除明细
+     * @param stockOutId
+     * @return
+     */
+    int deleteFk(Integer stockOutId);
+
+    /**
      * 通过主键列表删除数据
      *
      * @param ids 主键列表

@@ -125,6 +125,16 @@ public class OutboundDetailController {
     }
 
     /**
+     * 通过出库单i删除明细
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/outboundDetail/deleteFk")
+    public boolean deletefk(Integer id){
+        return this.outboundDetailService.deleteFk(id);
+    }
+
+    /**
      * 批量删除数据
      *
      * @param ids 主键列表

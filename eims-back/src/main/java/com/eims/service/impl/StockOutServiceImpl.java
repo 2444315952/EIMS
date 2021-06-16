@@ -1,6 +1,11 @@
 package com.eims.service.impl;
 
+import com.eims.mybatis.dao.OutboundDetailDao;
+import com.eims.mybatis.dao.PurchaseReturnDao;
+import com.eims.mybatis.entity.OutboundDetail;
+import com.eims.mybatis.entity.PurchaseReturn;
 import com.eims.mybatis.entity.StockOut;
+import com.eims.vo.form.PurchaseReturnQueryForm;
 import com.eims.vo.form.StockOutQueryForm;
 import com.eims.mybatis.dao.StockOutDao;
 import com.eims.service.StockOutService;
@@ -23,6 +28,9 @@ import com.github.pagehelper.PageInfo;
 public class StockOutServiceImpl implements StockOutService {
     @Resource
     private StockOutDao stockOutDao;
+
+    @Resource
+    private OutboundDetailDao outboundDetailDao;
 
     /**
      * 通过ID查询单条数据
@@ -48,18 +56,6 @@ public class StockOutServiceImpl implements StockOutService {
         return new PageInfo<>(stockOutList);
     }
 
-    /**
-     * 根据查询条件搜索数据
-     *
-     * @param stockOutQueryForm
-     * @return 对象列表
-     */
-    @Override
-    public PageInfo<StockOut> queryBySearch(StockOutQueryForm stockOutQueryForm) {
-        Page<StockOut> page = PageHelper.startPage(stockOutQueryForm.getPageNum(), stockOutQueryForm.getPageSize());
-        List<StockOut> stockOutList = this.stockOutDao.queryOrByPojo(stockOutQueryForm);
-        return new PageInfo<>(stockOutList);
-    }
 
     /**
      * 根据查询条件筛选数据
@@ -75,6 +71,32 @@ public class StockOutServiceImpl implements StockOutService {
     }
 
     /**
+     * 根据查询条件搜索数据
+     *
+     * @param stockOutQueryForm
+     * @return 对象列表
+     */
+    @Override
+    public PageInfo<StockOut> queryBySearch(StockOutQueryForm stockOutQueryForm) {
+        Page<StockOut> page = PageHelper.startPage(stockOutQueryForm.getPageNum(), stockOutQueryForm.getPageSize());
+        List<StockOut> stockOutList = this.stockOutDao.queryOrByPojo(stockOutQueryForm);
+        return new PageInfo<>(stockOutList);
+    }
+
+    /**
+     * 根据查询条件搜索数据
+     *
+     * @param purchaseReturnQueryForm
+     * @return 对象列表
+     */
+    @Override
+    public PageInfo<PurchaseReturn> queryByPurReturn(PurchaseReturnQueryForm purchaseReturnQueryForm){
+        Page<PurchaseReturn> page=PageHelper.startPage(purchaseReturnQueryForm.getPageNum(),purchaseReturnQueryForm.getPageSize());
+        List<PurchaseReturn> purchaseReturnList=this.stockOutDao.queryByPurReturn(purchaseReturnQueryForm);
+        return new PageInfo<>(purchaseReturnList);
+    }
+
+    /**
      * 新增数据
      *
      * @param stockOut 实例对象
@@ -83,6 +105,13 @@ public class StockOutServiceImpl implements StockOutService {
     @Override
     public StockOut insert(StockOut stockOut) {
         this.stockOutDao.insert(stockOut);
+
+        //设置出库单id
+        for (OutboundDetail detail:stockOut.getOutboundDetailList())
+            detail.setStockOutId(stockOut.getStockOutId());
+
+        //新增明细数据
+        this.outboundDetailDao.insertBatch(stockOut.getOutboundDetailList());
         return this.queryById(stockOut.getStockOutId());
     }
 
@@ -106,6 +135,16 @@ public class StockOutServiceImpl implements StockOutService {
     @Override
     public StockOut update(StockOut stockOut) {
         this.stockOutDao.update(stockOut);
+        //先删除已有的明细数据
+
+        if(stockOut.getOutboundDetailList() !=null){
+            this.outboundDetailDao.deleteFk(stockOut.getStockOutId());
+            //再新增新的明细数据
+            for(OutboundDetail detail:stockOut.getOutboundDetailList())
+                detail.setStockOutId(stockOut.getStockOutId());
+            this.outboundDetailDao.insertBatch(stockOut.getOutboundDetailList());
+        }
+
         return this.queryById(stockOut.getStockOutId());
     }
 
@@ -128,7 +167,8 @@ public class StockOutServiceImpl implements StockOutService {
      */
     @Override
     public boolean deleteById(Integer stockOutId) {
-        return this.stockOutDao.deleteById(stockOutId) > 0;
+        this.stockOutDao.deleteById(stockOutId);
+        return this.outboundDetailDao.deleteFk(stockOutId)>0;
     }
 
     /**

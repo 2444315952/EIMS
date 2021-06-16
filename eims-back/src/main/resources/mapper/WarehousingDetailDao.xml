@@ -26,6 +26,11 @@
         where WAREHOUSING_DETAIL_ID = #{warehousingDetailId}
     </select>
 
+    <!--通过主键入库单id删除入库单明细-->
+    <delete id="deleteFk">
+        delete from EIMS.WAREHOUSING_DETAIL where WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+    </delete>
+
     <!--查询所有-->
     <select id="queryAll" resultMap="WarehousingDetailMap">
         select

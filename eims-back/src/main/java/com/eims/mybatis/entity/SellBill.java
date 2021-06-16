@@ -3,6 +3,7 @@ package com.eims.mybatis.entity;
 import java.math.BigDecimal;
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -67,4 +68,6 @@ public class SellBill implements Serializable {
     private String sellAddress;
 
     private Object sellHirthday;
+
+    private List<SellDetail> sellDetailList;
 }

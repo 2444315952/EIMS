@@ -49,8 +49,8 @@
 		  			<el-menu-item-group>	
 		  				<el-menu-item index="3-1"><router-link :to="{name:'Storage'}">入库单</router-link></el-menu-item>
 		  				<el-menu-item index="3-2"><router-link :to="{name:'Odo'}">出库单</router-link></el-menu-item>
-		  				<el-menu-item index="3-3">库存调拨</el-menu-item>
-		  				<el-menu-item index="3-4">库存盘点</el-menu-item>
+		  				<el-menu-item index="3-3"><router-link :to="{name:'Allot'}">库存调拨</router-link></el-menu-item>
+		  				<el-menu-item index="3-4"><router-link :to="{name:'Blitem'}">库存盘点</router-link></el-menu-item>
 		  			</el-menu-item-group>
 		  		  </el-submenu>
 		  		  <el-submenu index="4">

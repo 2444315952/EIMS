@@ -48,6 +48,10 @@ public interface ProductDao {
      */
     List<Product> queryAndByPojo(ProductQueryForm productQueryForm);
 
+
+    List<Product> queryByAllLike(@Param("comm_type_name") String comm_type_name,@Param("product_name") String product_name,@Param("is_enabled") String is_enabled) ;
+
+
     /**
      * 新增数据
      *

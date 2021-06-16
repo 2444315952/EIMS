@@ -137,6 +137,36 @@
         </where>
     </select>
 
+    <!--查询-->
+    <select id="queryByAllLike" resultMap="ProductMap" >
+        select
+        p.PRODUCT_ID, p.PRODUCT_NUMBER, p.PRODUCT_NAME, p.PRODUCT_PICTURE,p.COMM_ID, p.SPEC_MODEL, p.PRODUCT_UNIT, p.REFER_COST, p.MARKET_PRICE, p.IS_ENABLED, p.REMAKE, P.company_Id, c.COMM_TYPE_NAME
+        from EIMS.PRODUCT p
+        INNER JOIN EIMS.COMMODITY_TYPE c
+        on p.COMM_ID = c.COMM_ID
+
+        <where>
+            <if test='comm_type_name != null and comm_type_name != " " and comm_type_name != ""'>
+                and COMM_TYPE_NAME = #{comm_type_name}
+            </if>
+
+            <if test='product_name != null and product_name != " " and product_name !=""'>
+                and PRODUCT_NAME like concat(concat('%',#{product_name}),'%')
+                or SPEC_MODEL like  concat(concat('%',#{product_name}),'%')
+                or PRODUCT_NUMBER like  concat( concat('%',#{product_name}),'%')
+            </if>
+            <if test='is_enabled == "正常" '>
+                and IS_ENABLED = 0
+
+            </if>
+            <if test='is_enabled == "禁用" '>
+                and IS_ENABLED = 1
+
+            </if>
+
+        </where>
+    </select>
+
     <!--新增所有列-->
     <insert id="insert">
         insert into EIMS.PRODUCT

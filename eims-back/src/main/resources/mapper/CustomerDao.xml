@@ -123,6 +123,44 @@
         </where>
     </select>
 
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAllXyj" resultMap="CustomerMap">
+        select
+        CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_TYPE, CUSTOMER_LEVEL, CONTACT, CONTACT_ADDRESS, CONTACT_NUMBER,
+        CONTACT_EMAILL, IS_ENABLED, REMARK ,company_Id
+        from EIMS.CUSTOMER
+
+        <where>
+
+
+            <if test='customerName != null and customerName != " " and customerName != ""'>
+
+                and CUSTOMER_NAME like concat(concat('%',#{customerName}),'%')
+                or CONTACT like  concat(concat('%',#{customerName}),'%')
+                or CONTACT_NUMBER like  concat( concat('%',#{customerName}),'%')
+                or CUSTOMER_TYPE like  concat( concat('%',#{customerName}),'%')
+
+            </if>
+
+            <if test='is_enabled == "正常" '>
+                and IS_ENABLED = 0
+
+            </if>
+            <if test='is_enabled == "禁用" '>
+                and IS_ENABLED = 1
+
+            </if>
+
+
+
+
+
+        </where>
+
+    </select>
+
     <!--新增所有列-->
     <insert id="insert">
         insert into EIMS.CUSTOMER

@@ -73,6 +73,19 @@ public class ProductController {
     }
 
     /**
+     * 特殊查询
+     */
+
+    @GetMapping("/product/xyj")
+    public PageInfo<Product> pageproduct(int currentPage, int pageSize, String comm_type_name, String product_name, String is_enabled ){
+        System.out.println(currentPage+"--"+pageSize+"--"+comm_type_name+"--"+product_name+"--"+is_enabled);
+        PageInfo<Product> page = this.productService.queryByAllLike(currentPage,pageSize,comm_type_name,is_enabled,product_name);
+
+        return page;
+
+    }
+
+    /**
      * 新增数据
      *
      * @param product 实例对象

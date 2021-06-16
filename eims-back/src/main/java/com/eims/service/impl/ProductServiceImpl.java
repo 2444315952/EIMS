@@ -74,6 +74,36 @@ public class ProductServiceImpl implements ProductService {
         return new PageInfo<>(productList);
     }
 
+
+
+    @Override
+    public PageInfo<Product> queryByAllLike(int currentPage, int pageSize, String comm_type_name,String is_enabled, String product_name) {
+        System.out.println(currentPage+"--"+pageSize+"--"+comm_type_name+"--"+product_name+"--"+is_enabled);
+
+//       if((comm_type_name==null && comm_type_name.equals("")) || (is_enabled==null && is_enabled.equals("")) || (product_name==null && product_name.equals(""))){
+//           System.out.println("?????????????????");
+//           List<Product> list1 = productDao.queryByAll();
+//           System.out.println(currentPage);
+//           Page<Product> page = PageHelper.startPage(currentPage, pageSize, true);
+//           List<Product> list = productDao.queryByAll();
+//           List<ProductVo> vos = new ArrayList<>();
+//           BeanTools.copyList(list, vos, ProductVo.class);
+//           PageInfo<ProductVo> info = new PageInfo<>(vos);
+//           info.setTotal(list1.size());
+//           return info;
+//       }else {
+        List<Product> list1 = productDao.queryByAllLike(comm_type_name, product_name,is_enabled);
+        System.out.println(currentPage);
+        System.out.println("=============="+list1);
+
+        Page<Product> page = PageHelper.startPage(currentPage, pageSize, true);
+        List<Product> list = productDao.queryByAllLike(comm_type_name,  product_name,is_enabled);
+
+        PageInfo<Product> info = new PageInfo<>(list);
+        return info;
+//       }
+    }
+
     /**
      * 新增数据
      *

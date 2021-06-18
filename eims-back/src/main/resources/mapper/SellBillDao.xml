@@ -70,7 +70,7 @@
         <result property="sellAddress" column="SELL_ADDRESS" jdbcType="VARCHAR"/>
         <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
 
-        <collection property="sellDetailList" javaType="list" ofType="com.eims.mybatis.entity.SellDetail">
+        <collection property="sellDetails" javaType="list" ofType="com.eims.mybatis.entity.SellDetail">
             <result property="sellDetailId" column="SELL_DETAIL_ID" jdbcType="INTEGER"/>
             <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
             <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>

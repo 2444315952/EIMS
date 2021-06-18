@@ -47,4 +47,6 @@ public class SellOrderDetail implements Serializable {
     private BigDecimal orderDetailDiscounts;
 
     private Integer returned;
+
+    private SellOrderBill sellOrderBill;
 }

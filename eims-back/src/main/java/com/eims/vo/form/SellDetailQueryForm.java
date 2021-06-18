@@ -13,7 +13,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class SellDetailQueryForm implements Serializable {
-    private static final long serialVersionUID = -79562653794784244L;
+    private static final long serialVersionUID = -68370109757787795L;
 
     private Integer sellDetailId;
 
@@ -29,6 +29,8 @@ public class SellDetailQueryForm implements Serializable {
 
     private String productUnit;
 
+    private BigDecimal marketPrice;
+
     private BigDecimal sellPrice;
 
     private Integer sellQuantity;
@@ -37,7 +39,7 @@ public class SellDetailQueryForm implements Serializable {
 
     private BigDecimal detailPaidAmount;
 
-    private BigDecimal detail_Discounts;
+    private BigDecimal detailDiscounts;
 
     private Integer returned;
 

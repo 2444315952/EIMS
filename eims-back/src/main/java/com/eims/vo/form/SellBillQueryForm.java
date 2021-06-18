@@ -1,6 +1,7 @@
 package com.eims.vo.form;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class SellBillQueryForm implements Serializable {
-    private static final long serialVersionUID = 512241379929902687L;
+    private static final long serialVersionUID = 399854273831313422L;
 
     private Integer sellId;
 
@@ -25,7 +26,7 @@ public class SellBillQueryForm implements Serializable {
 
     private String billsType;
 
-    private Object sellDate;
+    private Date sellDate;
 
     private Integer audited;
 
@@ -59,7 +60,9 @@ public class SellBillQueryForm implements Serializable {
 
     private String sellAddress;
 
-    private Object sellHirthday;
+    private Date sellHirthday;
+
+    private Integer outStorage;
 
     private Integer pageNum;    //当前页
     private Integer pageSize;   //页大小

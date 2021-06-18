@@ -423,5 +423,14 @@
             #{entity.sellOrderDetailId}
         </foreach>
     </delete>
+
+    <delete id="deleteByPurchIdAndNotInKeyIds">
+        delete from (select   <include refid="SellOrderDetailCol"></include> from EIMS.SELL_ORDER_DETAIL where SELL_ORDER_ID = #{sellOrderId})
+        where SELL_ORDER_DETAIL_ID not in
+        <foreach collection="keyIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+    </delete>
 </mapper>
 

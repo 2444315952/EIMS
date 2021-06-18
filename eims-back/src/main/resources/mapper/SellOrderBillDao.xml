@@ -21,10 +21,35 @@
         <result property="sellOrderRemark" column="SELL_ORDER_REMARK" jdbcType="VARCHAR"/>
         <result property="sellOrderAddress" column="SELL_ORDER_ADDRESS" jdbcType="VARCHAR"/>
         <result property="sellOrderHirthday" column="SELL_ORDER_HIRTHDAY" jdbcType="TIMESTAMP"/>
+        <collection property="sellOrderDetails" ofType="com.eims.mybatis.entity.SellOrderDetail" column="sellOrderId">
+            <result property="sellOrderDetailId" column="SELL_ORDER_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="sellOrderId" column="SELL_ORDER_ID" jdbcType="INTEGER"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productModel" column="PRODUCT_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="sellPrice" column="SELL_PRICE" jdbcType="VARCHAR"/>
+            <result property="sellQuantity" column="SELL_QUANTITY" jdbcType="INTEGER"/>
+            <result property="orderDetailPayAmount" column="ORDER_DETAIL_PAY_AMOUNT" jdbcType="VARCHAR"/>
+            <result property="orderDetailPaidAmount" column="ORDER_DETAIL_PAID_AMOUNT" jdbcType="VARCHAR"/>
+            <result property="orderDetailDiscounts" column="ORDER_DETAIL_DISCOUNTS" jdbcType="VARCHAR"/>
+            <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
+        </collection>
     </resultMap>
 
     <sql id="SellOrderBillCol">
         SELL_ORDER_ID, COMPANY_ID, WORK_POINT_ID, SELL_ORDER_DOCUNUM, SELL_ORDER_DATE, AUDITED, EMPLOYEE_ID, EMPLOYEE_NAME, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, ORDER_PAY_AMOUNT, ORDER_PAID_AMOUNT, ORDER_SELL_DISCOUNTS, SELL_ORDER_REMARK, SELL_ORDER_ADDRESS, SELL_ORDER_HIRTHDAY    </sql>
+
+
+    <sql id="SellOrderBillCol1">
+        B.SELL_ORDER_ID, B.SELL_ORDER_DOCUNUM, B.SELL_ORDER_DATE, B.AUDITED, B.WORK_POINT_ID, B.EMPLOYEE_ID, B.EMPLOYEE_NAME, B.CUSTOMER_ID, B.CUSTOMER_NAME, B.WAREHOUSE_ID, B.WAREHOUSE_NAME,B.ORDER_PAY_AMOUNT,B. ORDER_PAID_AMOUNT, B.ORDER_SELL_DISCOUNTS, B.SELL_ORDER_REMARK, B.SELL_ORDER_ADDRESS,B.SELL_ORDER_HIRTHDAY,  </sql>
+
+    <sql id="SellOrderDetailCol">
+       D.SELL_ORDER_DETAIL_ID, D.PRODUCT_ID, D.PRODUCT_PICTURE, D.PRODUCT_NAME, D.PRODUCT_MODEL, D.PRODUCT_UNIT, D.SELL_PRICE, D.SELL_QUANTITY, D.ORDER_DETAIL_PAY_AMOUNT, D.ORDER_DETAIL_PAID_AMOUNT, D.ORDER_DETAIL_DISCOUNTS, D.RETURNED    </sql>
+
+
+
 
     <!--查询单个-->
     <select id="queryById" resultMap="SellOrderBillMap">
@@ -35,28 +60,72 @@
     </select>
 
     <!--查询所有-->
+
+
     <select id="queryAll" resultMap="SellOrderBillMap">
         select
-        <include refid="SellOrderBillCol"></include>
-        from (select <include refid="SellOrderBillCol"></include> from EIMS.SELL_ORDER_BILL
+        <include refid="SellOrderBillCol1"></include>
+        <include refid="SellOrderDetailCol"></include>
+        from EIMS.SELL_ORDER_BILL B
+        INNER JOIN EIMS.SELL_ORDER_DETAIL D
+        on B.SELL_ORDER_ID=D.SELL_ORDER_ID
         <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
-        </where>
-        )
-    </select>
+            <if test="sellOrderId != null">
+                or B.SELL_ORDER_ID like '%'||#{sellOrderId}||'%'
+            </if>
+            <if test="sellOrderDocunum != null and sellOrderDocunum != ''">
+                or SELL_ORDER_DOCUNUM like '%'||#{sellOrderDocunum}||'%'
+            </if>
+            <if test="sellOrderDate != null">
+                or SELL_ORDER_DATE like '%'||#{sellOrderDate}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
 
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="customerId != null">
+                or CUSTOMER_ID like '%'||#{customerId}||'%'
+            </if>
+            <if test="customerName != null and customerName != ''">
+                or CUSTOMER_NAME like '%'||#{customerName}||'%'
+            </if>
+            <if test="warehouseId != null">
+                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            </if>
+            <if test="orderPayAmount != null">
+                or ORDER_PAY_AMOUNT like '%'||#{orderPayAmount}||'%'
+            </if>
+            <if test="orderPaidAmount != null">
+                or ORDER_PAID_AMOUNT like '%'||#{orderPaidAmount}||'%'
+            </if>
+            <if test="orderSellDiscounts != null">
+                or ORDER_SELL_DISCOUNTS like '%'||#{orderSellDiscounts}||'%'
+            </if>
+            <if test="sellOrderRemark != null and sellOrderRemark != ''">
+                or SELL_ORDER_REMARK like '%'||#{sellOrderRemark}||'%'
+            </if>
+            <if test="sellOrderAddress != null and sellOrderAddress != ''">
+                or SELL_ORDER_ADDRESS like '%'||#{sellOrderAddress}||'%'
+            </if>
+            <if test="sellOrderHirthday != null">
+                or SELL_ORDER_HIRTHDAY like '%'||#{sellOrderHirthday}||'%'
+            </if>
+        </where>
+    </select>
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="SellOrderBillMap">
         select
         <include refid="SellOrderBillCol"></include>
-        from (select <include refid="SellOrderBillCol"></include> from EIMS.SELL_ORDER_BILL
-        <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
-        </where>
-        )
-
+        from  EIMS.SELL_ORDER_BILL
         <where>
             <if test="sellOrderId != null">
                 or SELL_ORDER_ID like '%'||#{sellOrderId}||'%'
@@ -69,6 +138,9 @@
             </if>
             <if test="audited != null">
                 or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                or WORK_POINT_NAME like '%'||#{workPointName}||'%'
             </if>
             <if test="employeeId != null">
                 or EMPLOYEE_ID like '%'||#{employeeId}||'%'
@@ -113,13 +185,7 @@
     <select id="queryAndByPojo" resultMap="SellOrderBillMap">
         select
         <include refid="SellOrderBillCol"></include>
-        from (select <include refid="SellOrderBillCol"></include> from EIMS.SELL_ORDER_BILL
-        <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
-        </where>
-        )
-
+        from EIMS.SELL_ORDER_BILL
         <where>
             <if test="sellOrderId != null">
                 and SELL_ORDER_ID = #{sellOrderId}
@@ -132,6 +198,12 @@
             </if>
             <if test="audited != null">
                 and AUDITED = #{audited}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
+            </if>
+            <if test="workPointName != null and workPointName != ''">
+                and WORK_POINT_NAME = #{workPointName}
             </if>
             <if test="employeeId != null">
                 and EMPLOYEE_ID = #{employeeId}
@@ -177,14 +249,11 @@
         insert into EIMS.SELL_ORDER_BILL
         <trim prefix="(" suffix=")" suffixOverrides=",">
             SELL_ORDER_ID,
-            <if test="companyId != null">
-                COMPANY_ID,
-            </if>
-            <if test="workPointId != null">
-                WORK_POINT_ID,
-            </if>
             <if test="sellOrderDocunum != null">
                 SELL_ORDER_DOCUNUM,
+            </if>
+            <if test="companyId != null">
+                COMPANY_ID,
             </if>
             <if test="sellOrderDate != null">
                 SELL_ORDER_DATE,
@@ -192,6 +261,10 @@
             <if test="audited != null">
                 AUDITED,
             </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+
             <if test="employeeId != null">
                 EMPLOYEE_ID,
             </if>
@@ -232,14 +305,11 @@
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{sellOrderId},
-            <if test="companyId != null">
-                #{companyId},
-            </if>
-            <if test="workPointId != null">
-                #{workPointId},
-            </if>
             <if test="sellOrderDocunum != null">
                 #{sellOrderDocunum},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
             </if>
             <if test="sellOrderDate != null">
                 #{sellOrderDate},
@@ -247,6 +317,10 @@
             <if test="audited != null">
                 #{audited},
             </if>
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+
             <if test="employeeId != null">
                 #{employeeId},
             </if>

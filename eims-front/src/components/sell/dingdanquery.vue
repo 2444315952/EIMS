@@ -325,7 +325,7 @@
 			},
 			toDetail() {
 				this.$router.push({
-					name: 'xiaohuo5'
+					name: 'dingdandetail'
 				})
 			},
 			loadData() {

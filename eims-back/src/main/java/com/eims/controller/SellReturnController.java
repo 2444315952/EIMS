@@ -108,8 +108,8 @@ public class SellReturnController {
     @PutMapping("/sellReturn")
     public SellReturn update(@RequestBody SellReturn sellReturn) {
         System.out.println("-----------sellreturn:"+sellReturn);
-//        return this.sellReturnService.update(sellReturn);
-        return  null;
+        return this.sellReturnService.update(sellReturn);
+
     }
 
     /**

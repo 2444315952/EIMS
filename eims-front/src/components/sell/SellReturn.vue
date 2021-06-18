@@ -37,7 +37,7 @@
 					  <el-form :model="screenCondition">
 						
 						<el-form-item label="审核状态：" label-width="120px">
-							<el-radio-group v-model="screenCondition.audited">
+							<el-radio-group v-model="screenCondition.autited">
 							  <el-radio>不限</el-radio>
 							  <el-radio label="0">未审核</el-radio>
 							  <el-radio label="1">已审核</el-radio>
@@ -73,13 +73,13 @@
 				<el-table :data="tableData" max-height="477" style="width: 100%;height:477px;" @selection-change="handleSelectionChange">
 					<el-table-column type="selection">
 					</el-table-column>
-					<el-table-column label="单据编号" prop="purchReturnDocunum">
+					<el-table-column label="单据编号" prop="sellReturnDocunum">
 					</el-table-column>
 					<el-table-column label="单据日期" prop="documentDate" width="135" :formatter="dateFormat">
 					</el-table-column>
-					<el-table-column label="销售单号" prop="purchDocunum">
+					<el-table-column label="销售单号" prop="sellDocunum">
 					</el-table-column>
-					<el-table-column label="客户" prop="supplierName">
+					<el-table-column label="客户" prop="customerName">
 					</el-table-column>
 					<el-table-column label="业务员" prop="employeeName">
 					</el-table-column>
@@ -87,23 +87,23 @@
 					</el-table-column>
 					<el-table-column label="审核状态" prop="audited">
 						<template #default="scope">
-							<p v-if="tableData[scope.$index].audited == 0">未审核</p>
-							<p v-if="tableData[scope.$index].audited == 1">已审核</p>
+							<p v-if="tableData[scope.$index].autited == 0">未审核</p>
+							<p v-if="tableData[scope.$index].autited == 1">已审核</p>
 						</template>
 					</el-table-column>
-					<el-table-column label="退款状态" prop="inRefund">
+					<el-table-column label="退款状态" prop="refunded">
 						<template #default="scope">
-							<p v-if="tableData[scope.$index].inRefund == 0">未退款</p>
-							<p v-if="tableData[scope.$index].inRefund == 1">已退款</p>
+							<p v-if="tableData[scope.$index].refunded == 0">未退款</p>
+							<p v-if="tableData[scope.$index].refunded == 1">已退款</p>
 						</template>
 					</el-table-column>
-					<el-table-column label="交易金额" prop="transactionAmount">
+					<el-table-column label="交易金额" prop="retPayAmount">
 					</el-table-column>
-					<el-table-column label="退款金额" prop="refundAmount">
+					<el-table-column label="退款金额" prop="retPaidAmount">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100">
 						<template #default="scope">
-							<el-button v-if="tableData[scope.$index].audited == 0" @click="handleAudit(scope.row.purchReturnId)" type="text">审核</el-button>
+							<el-button v-if="tableData[scope.$index].autited == 0" @click="handleAudit(scope.row.sellReturnId)" type="text">审核</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -167,11 +167,12 @@
 			},
 			loadData() {
 				this.axios({
-					url: "http://localhost:8089/eims/purchaseReturn",
+					url: "http://localhost:8089/eims/sellReturn",
 					method: 'get',
 					params: this.pageParam
 				}).then((response) => {
 					this.tableData = response.data.list
+					console.log(this.tableData)
 					this.tableTotal = response.data.total
 				}).catch((error) => {
 			
@@ -206,17 +207,18 @@
 					this.handleScreen()
 			},
 			handleAudit(val) {
+				console.log(val)
 				this.$confirm('此操作将通过审核，是否继续？', '提示', {
 					confirmButtonTest: '确定',
 					cancelButtonTest: '取消',
 					type: 'warning'
 				}).then(() => {
 					this.axios({
-						url: "http://localhost:8089/eims/purchaseReturn",
+						url: "http://localhost:8089/eims/sellReturn",
 						method: "put",
 						data: {
-							"purchId": val,
-							"audited": 1
+							"sellReturnId": val,
+							"aut ited": 1
 						}
 					}).then(response => {
 						this.loadData()
@@ -262,7 +264,7 @@
 						ids.push(this.multipleSelection[i].purchId)
 			
 					this.axios({
-						url: "http://localhost:8089/eims/purchaseReturn/batch",
+						url: "http://localhost:8089/eims/sellReturn/batch",
 						method: "delete",
 						data: ids
 					}).then(response => {
@@ -289,7 +291,7 @@
 				var searchForm = Object.assign(this.searchCondition,this.pageParam)
 				console.log(this.pageParam)
 				this.axios({
-					url: "http://localhost:8089/eims/purchaseReturn/search",
+					url: "http://localhost:8089/eims/sellReturn/search",
 					method: "get",
 					params: searchForm
 				}).then(response => {
@@ -305,7 +307,7 @@
 				var screenForm = Object.assign(this.screenCondition,this.pageParam)
 				console.log(this.pageParam)
 				this.axios({
-					url: "http://localhost:8089/eims/purchaseReturn/screen",
+					url: "http://localhost:8089/eims/sellReturn/screen",
 					method: "get",
 					params: screenForm
 				}).then(response => {

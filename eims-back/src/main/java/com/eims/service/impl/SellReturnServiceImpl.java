@@ -1,12 +1,23 @@
 package com.eims.service.impl;
 
+import com.eims.mybatis.dao.ReturnBillsProductDao;
+import com.eims.mybatis.dao.SellBillDao;
+import com.eims.mybatis.dao.SellDetailDao;
+import com.eims.mybatis.entity.ReturnBillsProduct;
+import com.eims.mybatis.entity.SellBill;
+import com.eims.mybatis.entity.SellDetail;
 import com.eims.mybatis.entity.SellReturn;
+import com.eims.vo.form.SellDetailQueryForm;
 import com.eims.vo.form.SellReturnQueryForm;
 import com.eims.mybatis.dao.SellReturnDao;
 import com.eims.service.SellReturnService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.github.pagehelper.Page;
@@ -19,10 +30,20 @@ import com.github.pagehelper.PageInfo;
  * @author makejava
  * @since 2021-06-12 10:28:44
  */
+@Log4j2
 @Service("sellReturnService")
 public class SellReturnServiceImpl implements SellReturnService {
     @Resource
     private SellReturnDao sellReturnDao;
+
+    @Resource
+    private ReturnBillsProductDao returnBillsProductDao;
+
+    @Resource
+    private SellBillDao sellBillDao;
+
+    @Resource
+    private SellDetailDao sellDetailDao;
 
     /**
      * 通过ID查询单条数据
@@ -82,7 +103,64 @@ public class SellReturnServiceImpl implements SellReturnService {
      */
     @Override
     public SellReturn insert(SellReturn sellReturn) {
+
+
+        sellReturn.setDocumentDate(new Date());
         this.sellReturnDao.insert(sellReturn);
+        log.debug("主键id是:{}",sellReturn.getSellReturnId());
+        List<ReturnBillsProduct> returnBillsProductList=sellReturn.getReturnBillsProductList();
+
+        if(returnBillsProductList!=null){
+            for(ReturnBillsProduct detail:returnBillsProductList)
+                detail.setSellReturnId(sellReturn.getSellReturnId());
+
+
+            log.debug("详情是是:{}",sellReturn.getReturnBillsProductList());
+            Iterator<ReturnBillsProduct> it= returnBillsProductList.iterator();
+            while(it.hasNext()) {
+                ReturnBillsProduct x = it.next();
+                if (x.getProductId() == null) {
+                    it.remove();
+                }
+            }
+            log.debug("处理后的订单详情:{}",returnBillsProductList);
+            List<SellDetail> sellDetails=new ArrayList<SellDetail>();
+            Integer i=0;
+            for(ReturnBillsProduct returnBillsProducts:sellReturn.getReturnBillsProductList()){
+                i++;
+                SellDetail sellDetailone=new SellDetail();
+                sellDetailone.setSellDetailId(returnBillsProducts.getSellDetailId());
+                sellDetailone.setReturned(1);
+                sellDetails.add(sellDetailone);
+            }
+            //销售单详情更改退货状态
+            sellDetailDao.updateBatch(sellDetails);
+            SellDetailQueryForm sellDetail=new SellDetailQueryForm();
+            sellDetail.setSellId(sellReturn.getSellId());
+            Integer aa=sellDetailDao.queryOrByPojo(sellDetail).size();
+            System.out.println("前端数量"+i);
+            System.out.println("数据库数量"+aa);
+
+
+
+            SellBill sellBill=new SellBill();
+            sellBill.setSellId(sellReturn.getSellId());
+            if(aa>i) {
+                sellBill.setReturnState(1);
+            }else {
+                sellBill.setReturnState(2);
+            }
+            //销售单更改退货状态
+
+            sellBillDao.update(sellBill);
+
+
+
+            returnBillsProductDao.insertBatch(returnBillsProductList);
+
+
+        }
+
         return this.queryById(sellReturn.getSellReturnId());
     }
 

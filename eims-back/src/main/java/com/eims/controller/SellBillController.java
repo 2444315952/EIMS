@@ -69,7 +69,7 @@ public class SellBillController {
      */
     @GetMapping("/sellBill/screen")
     public PageInfo<SellBill> queryByScreen(SellBillQueryForm sellBillQueryForm) {
-        sellBillQueryForm.setCompanyId(1);
+        System.out.println(sellBillQueryForm);
         return this.sellBillService.queryByScreen(sellBillQueryForm);
     }
 
@@ -82,8 +82,8 @@ public class SellBillController {
     @PostMapping("/sellBill")
     public SellBill insert(@RequestBody SellBill sellBill) {
         System.out.println("-------新增------"+sellBill);
-//        return this.sellBillService.insert(sellBill);
-        return null;
+        return this.sellBillService.insert(sellBill);
+
     }
 
     /**
@@ -105,7 +105,7 @@ public class SellBillController {
      */
     @PutMapping("/sellBill")
     public SellBill update(@RequestBody SellBill sellBill) {
-
+        System.out.println(sellBill);
         return this.sellBillService.update(sellBill);
 
 
@@ -121,8 +121,8 @@ public class SellBillController {
     @PutMapping("/sellBill/detail")
     public SellBill updateSellAndDetail(@RequestBody SellBill sellBill) {
         System.out.println("-------修改-------"+sellBill);
-//        return this.sellBillService.update(sellBill);
-        return  null;
+        return this.sellBillService.updateanddetail(sellBill);
+
     }
 
     /**

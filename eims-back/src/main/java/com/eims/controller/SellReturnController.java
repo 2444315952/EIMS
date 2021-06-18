@@ -3,6 +3,7 @@ package com.eims.controller;
 import com.eims.mybatis.entity.SellReturn;
 import com.eims.vo.form.SellReturnQueryForm;
 import com.eims.service.SellReturnService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,6 +19,7 @@ import java.util.List;
  * @since 2021-06-12 10:28:45
  */
 @RestController
+@Log4j2
 public class SellReturnController {
     /**
      * 服务对象
@@ -80,9 +82,10 @@ public class SellReturnController {
      */
     @PostMapping("/sellReturn")
     public SellReturn insert(@RequestBody SellReturn sellReturn) {
-        sellReturn.setCompanyId(1);
-        sellReturn.setWorkPointId(1);
+        System.out.println("-----------sellreturn:"+sellReturn);
+
         return this.sellReturnService.insert(sellReturn);
+//        return null;
     }
 
     /**
@@ -104,7 +107,9 @@ public class SellReturnController {
      */
     @PutMapping("/sellReturn")
     public SellReturn update(@RequestBody SellReturn sellReturn) {
-        return this.sellReturnService.update(sellReturn);
+        System.out.println("-----------sellreturn:"+sellReturn);
+//        return this.sellReturnService.update(sellReturn);
+        return  null;
     }
 
     /**

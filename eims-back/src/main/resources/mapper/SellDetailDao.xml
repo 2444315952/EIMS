@@ -41,7 +41,7 @@
     <select id="queryOrByPojo" resultMap="SellDetailMap">
         select
         <include refid="SellDetailCol"></include>
-        from (select * from EIMS.SELL_DETAIL where work_point_id = #{workPointId})
+        from  EIMS.SELL_DETAIL
         <where>
             <if test="sellDetailId != null">
                 or SELL_DETAIL_ID like '%'||#{sellDetailId}||'%'
@@ -439,6 +439,16 @@
         <foreach collection="list" item="entity" open="(" separator="," close=")">
             #{entity.sellDetailId}
         </foreach>
+    </delete>
+
+
+    <delete id="deleteSellDetilIdAndNotInKeyIds">
+        delete from (select   <include refid="SellDetailCol"></include> from EIMS.SELL_DETAIL where SELL_ID = #{sellId})
+        where SELL_DETAIL_ID not in
+        <foreach collection="keyIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
     </delete>
 </mapper>
 

@@ -26,6 +26,8 @@ public class ReturnBillsProduct implements Serializable {
 
     private Integer sellReturnId;
 
+    private Integer sellDetailId;
+
     private Integer productId;
 
     private String productPicture;
@@ -43,4 +45,6 @@ public class ReturnBillsProduct implements Serializable {
     private BigDecimal retBillPayAmount;
 
     private BigDecimal retBillPaidAmount;
+
+
 }

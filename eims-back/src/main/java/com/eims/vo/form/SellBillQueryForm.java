@@ -64,8 +64,6 @@ public class SellBillQueryForm implements Serializable {
 
     private Integer outStorage;
 
-    private Integer outStorage;
-
     private Integer pageNum;    //当前页
     private Integer pageSize;   //页大小
 

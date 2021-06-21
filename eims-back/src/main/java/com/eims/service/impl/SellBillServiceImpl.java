@@ -1,9 +1,11 @@
 package com.eims.service.impl;
 
 import com.eims.mybatis.dao.SellDetailDao;
+import com.eims.mybatis.dao.SellOrderBillDao;
 import com.eims.mybatis.dao.SellOrderDetailDao;
 import com.eims.mybatis.entity.SellBill;
 import com.eims.mybatis.entity.SellDetail;
+import com.eims.mybatis.entity.SellOrderBill;
 import com.eims.mybatis.entity.SellOrderDetail;
 import com.eims.vo.form.SellBillQueryForm;
 import com.eims.mybatis.dao.SellBillDao;
@@ -33,6 +35,9 @@ public class SellBillServiceImpl implements SellBillService {
 
     @Resource
     private SellDetailDao sellDetailDao;
+
+    @Resource
+    private SellOrderBillDao sellOrderBillDao;
 
     /**
      * 通过ID查询单条数据
@@ -114,6 +119,18 @@ public class SellBillServiceImpl implements SellBillService {
                 }
             }
             log.debug("处理后的订单详情:{}",sellDetailList);
+            
+            if(sellBill.getSellOrderId()!=null){
+                log.debug("SellOrderId的值是:{}",sellBill.getSellOrderId());
+                SellOrderBill sellOrderBill=new SellOrderBill();
+                sellOrderBill.setSellOrderId(sellBill.getSellOrderId());
+                sellOrderBill.setAudited(2);
+                sellOrderBillDao.update(sellOrderBill);
+
+
+
+
+            }
 
             sellDetailDao.insertBatch(sellDetailList);
 

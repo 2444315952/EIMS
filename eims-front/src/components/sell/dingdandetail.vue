@@ -152,7 +152,7 @@
 						</el-dialog>
 						
 						<el-col :span="8">
-							<el-form-item label="地址" style="float: left;" prop="sellAddress">---------------
+							<el-form-item label="地址" style="float: left;" prop="sellOrderAddress">
 								<el-input v-model="ruleForm.sellOrderAddress" size="medium">
 									
 								</el-input>
@@ -161,11 +161,11 @@
 
 					</el-row>
 
-					<el-table :data="ruleForm.sellDetails" show-summary max-height="402"
+					<el-table :data="ruleForm.sellOrderDetailList" show-summary max-height="402"
 						style="width: 100%;height:402px;">
 						<el-table-column label="产品名称" prop="productName">
 							<template #default="scope">
-								<el-input v-model="ruleForm.sellDetails[scope.$index].productName"
+								<el-input v-model="ruleForm.sellOrderDetailList[scope.$index].productName"
 									style="width: 170px" size="small" disabled>
 									<template #append>
 										<el-button icon="el-icon-plus" size="mini"
@@ -182,7 +182,7 @@
 						<el-table-column label="销售价" prop="sellPrice">
 						
 							<template #default="scope">
-								<el-input-number v-model="ruleForm.sellDetails[scope.$index].sellPrice"
+								<el-input-number v-model="ruleForm.sellOrderDetailList[scope.$index].sellPrice"
 									@change="changePriceOrQuantity(scope.$index)" controls-position="right" size="small"
 									style="width: 130px;" :precision="2">
 								</el-input-number>
@@ -190,15 +190,15 @@
 						</el-table-column>
 						<el-table-column label="采购数量" prop="sellQuantity">
 							<template #default="scope">
-								<el-input-number v-model="ruleForm.sellDetails[scope.$index].sellQuantity"
+								<el-input-number v-model="ruleForm.sellOrderDetailList[scope.$index].sellQuantity"
 									@change="changePriceOrQuantity(scope.$index)" size="small" :min="1" :precision="0">
 								</el-input-number>
 							</template>
 						</el-table-column>
-						<el-table-column label="小计" prop="detailPaidAmount">
+						<el-table-column label="小计" prop="orderDetailPaidAmount">
 						</el-table-column>
 						
-						<el-table-column label="优惠" prop="detailDiscounts">
+						<el-table-column label="优惠" prop="orderDetailDiscounts">
 						</el-table-column>
 						<el-table-column label="操作" width="100">
 							<template #default="scope">
@@ -268,13 +268,13 @@
 										</el-col> -->
 										<el-col :span="4">
 											<div class="grid-content bg-purple-light">
-												<h1>优惠金额 <el-input v-model="ruleForm.sellDiscounts" disabled></el-input>
+												<h1>优惠金额 <el-input v-model="ruleForm.orderSellDiscounts" disabled></el-input>
 												</h1>
 											</div>
 										</el-col>
 										<el-col :span="4">
 											<div class="grid-content bg-purple-light">
-												<h1>金额<el-input v-model="ruleForm.billPaidAmount" disabled></el-input>
+												<h1>金额<el-input v-model="ruleForm.orderPaidAmount" disabled></el-input>
 												</h1>
 											</div>
 										</el-col>
@@ -306,7 +306,7 @@
 			return {
 				isAdd: true,
 				ruleForm: {
-					sellDetails: [{}]
+					sellOrderDetailList: [{}]
 				},
 				rules: {
 					sellOrderDocunum: [{
@@ -374,17 +374,22 @@
 		methods: {
 			loadData(){
 				this.axios({
-					url: "http://localhost:8089/eims/sellBill/one",
+					url: "http://localhost:8089/eims/sellOrderBill/one",
 					method: "get",
 					params: {
-						"id": this.ruleForm.sellId
+						"id": this.ruleForm.sellOrderId
 					}
 				}).then(response => {
 					this.ruleForm = response.data
 					
 					console.log("初始化的数据为")
 					console.log(this.ruleForm)
-					console.log(this.ruleForm.sellDetails)
+					console.log(this.ruleForm.sellOrderDetailList)
+					this.ruleForm.sellOrderDetailList.forEach(detail => {
+						detail.marketPrice=detail.orderDetailPayAmount/detail.sellQuantity
+						
+						
+						})
 				}).catch(error => {
 				
 				})
@@ -401,7 +406,7 @@
 				this.ruleForm.sellOrderDocunum = prefix + "-" + nowDate.getFullYear() + month + date + "-"
 
 				this.axios({
-					url: 'http://localhost:8089/eims/sellBill/search',
+					url: 'http://localhost:8089/eims/sellOrderBill/search',
 					method: 'get',
 					params: {
 						'sellOrderDocunum': this.ruleForm.sellOrderDocunum
@@ -476,7 +481,7 @@
 				this.product.sourceRowIndex = index
 				this.product.dialogVisible = true
 				this.productLoadData()
-				console.log(this.ruleForm.sellDetails)
+				console.log(this.ruleForm.sellOrderDetailList)
 			},
 			productLoadData() {
 				this.axios({
@@ -495,7 +500,7 @@
 			productSelectionChange(val) {
 				this.product.multipleSelection = val
 				console.log("选中产品后:")
-				console.log(this.ruleForm.sellDetails)
+				console.log(this.ruleForm.sellOrderDetailList)
 			},
 			productSizeChange(val) {
 				this.product.pageParam.pageSize = val
@@ -509,27 +514,29 @@
 				this.product.dialogVisible = false
 				
 				console.log("点击确定按钮后")
-				console.log(this.ruleForm.sellDetails)
+				console.log(this.ruleForm.sellOrderDetailList)
 
 				this.product.multipleSelection.forEach(detail => {
 					console.log()
 					
 					//设置明细默认的采购量和小计，和采购单据编号
 					detail.sellQuantity = 1
-					detail.detailPaidAmount = detail.marketPrice
+					detail.orderDetailPaidAmount = detail.marketPrice
 					detail.sellOrderDocunum = this.ruleForm.sellOrderDocunum
 					detail.sellPrice = detail.marketPrice
-					detail.detailPaidAmount=detail.marketPrice
-					detail.detailPayAmount=detail.marketPrice
-					detail.detailDiscounts=0
+					detail.orderDetailPaidAmount=detail.marketPrice
+					detail.orderDetailPayAmount=detail.marketPrice
+					detail.orderDetailDiscounts=0
 					detail.productModel=detail.specModel
-					detail.sellId=this.ruleForm.sellId
+					detail.sellOrderId=this.ruleForm.sellOrderId
 					console.log("marketPrice"+detail.marketPrice)
-					this.ruleForm.sellDetails[this.product.sourceRowIndex] = detail
+				
+					this.ruleForm.sellOrderDetailList[this.product.sourceRowIndex] = detail
 						
 					this.product.sourceRowIndex++
 
 				})
+					
 				
 				
 				// console.log("循环后的值")
@@ -581,26 +588,33 @@
 				this.ruleForm.warehouseName = this.warehouse.singleSelection.warehouseName
 			},
 			addRow() {
-				this.ruleForm.sellDetails.push({});
+				this.ruleForm.sellOrderDetailList.push({});
 			},
 			removeRow(index) {
-				if (this.ruleForm.sellDetails.length > 1)
-					this.ruleForm.sellDetails.splice(index, 1);
+				if (this.ruleForm.sellOrderDetailList.length > 1)
+					this.ruleForm.sellOrderDetailList.splice(index, 1);
 					this.productConfirmButton()					
 			},
 			
 			changePriceOrQuantity(index) {
-				const detail = this.ruleForm.sellDetails[index]
+				const detail = this.ruleForm.sellOrderDetailList[index]
+			
+			
+			
+				console.log("detail-----------"+detail)
 				const subtotal = detail.sellPrice * detail.sellQuantity
+				console.log("subtotal-----------"+subtotal)
 				// const subtotal1 = detail.marketPrice1 * detail.sellQuantity
 				//计算交易金额
-				this.ruleForm.sellDetails[index].detailPaidAmount = subtotal
+				this.ruleForm.sellOrderDetailList[index].orderDetailPaidAmount = subtotal
 				//计算应付
-				this.ruleForm.sellDetails[index].detailPayAmount= detail.marketPrice * detail.sellQuantity
+				this.ruleForm.sellOrderDetailList[index].orderDetailPayAmount= detail.marketPrice * detail.sellQuantity
+				console.log("baba"+ detail.sellQuantity )
+				console.log("baba"+ detail.marketPrice )
 				//计算优惠金额
-				this.ruleForm.sellDetails[index].detailDiscounts= detail.marketPrice * detail.sellQuantity-subtotal
+				this.ruleForm.sellOrderDetailList[index].orderDetailDiscounts= detail.marketPrice * detail.sellQuantity- subtotal
 				
-			
+				console.log(detail.marketPrice+"*"+detail.sellQuantity+"-"+subtotal)
 				
 				this.calcTransactionAmount()
 			},
@@ -608,22 +622,25 @@
 				var transactionAmount = 0
 				var transactionAmount1 = 0
 				var transactionAmount2 = 0
-				this.ruleForm.sellDetails.forEach(detail => {
-					transactionAmount += detail.detailPaidAmount
-					transactionAmount1 += detail.detailPayAmount
-					transactionAmount2 += detail.detailDiscounts
+				this.ruleForm.sellOrderDetailList.forEach(detail => {
+					transactionAmount += detail.orderDetailPaidAmount
+					transactionAmount1 += detail.orderDetailPayAmount
+					transactionAmount2 += detail.orderDetailDiscounts  
+					
 				})
+				console.log(this.ruleForm.sellOrderDetailList)
+				
 				this.ruleForm.transactionAmount = transactionAmount
-				this.ruleForm.billPaidAmount=transactionAmount
-				this.ruleForm.billPayAmount=transactionAmount1
-				this.ruleForm.sellDiscounts=transactionAmount2
+				this.ruleForm.orderPaidAmount=transactionAmount
+				this.ruleForm.orderPayAmount=transactionAmount1
+				this.ruleForm.orderSellDiscounts=transactionAmount2
 				console.log("金额是:" +transactionAmount)
 				console.log("原价是:" +transactionAmount1)
 				console.log("优惠是:" +transactionAmount2)
 			},
 			submitForm(formName) {
 
-				const list = this.ruleForm.sellDetails
+				const list = this.ruleForm.sellOrderDetailList
 				for(var i=0;i<list.length;i++){
 					if (typeof(list[i].productId) == "undefined" || list[i].marketPrice == "") {
 						this.$message({
@@ -651,7 +668,7 @@
 
 						if (this.isAdd) {
 							this.axios({
-								url: 'http://localhost:8089/eims/sellBill',
+								url: 'http://localhost:8089/eims/sellOrderBill',
 								method: 'post',
 								data: this.ruleForm
 							}).then(response => {
@@ -661,7 +678,7 @@
 								})
 
 								this.$router.push({
-									name: 'sellbill'
+									name: 'dingdanquery'
 								})
 							}).catch(error => {
 
@@ -699,7 +716,7 @@
 							}
 						
 							this.axios({
-								url:'http://localhost:8089/eims/sellBill/detail',
+								url:'http://localhost:8089/eims/sellOrderBill/detail',
 								method:'put',
 								data:this.ruleForm
 							}).then(response=>{
@@ -709,7 +726,7 @@
 								})
 								
 								this.$router.push({
-									name:'sellbill'
+									name:'dingdanquery'
 								})
 							}).catch(error=>{
 								
@@ -724,17 +741,19 @@
 			}
 		},
 		created() {
-			this.ruleForm.sellId = this.$route.params.sellId
-			this.isAdd = typeof(this.ruleForm.sellId) == "undefined" || this.ruleForm.sellId == ""
-			console.log(this.ruleForm.sellId)
+			this.ruleForm.sellOrderId = this.$route.params.sellOrderId
+			this.isAdd = typeof(this.ruleForm.sellOrderId) == "undefined" || this.ruleForm.sellOrderId == ""
+			console.log(this.ruleForm.sellOrderId)
 			if (this.isAdd)
 			
-				this.getDocuNum("GOS")
+				this.getDocuNum("SO")
 			else 
 			
 				this.loadData()
 		}
 	}
+	
+	
 </script>
 
 <style>

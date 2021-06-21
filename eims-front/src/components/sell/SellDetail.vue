@@ -25,6 +25,64 @@
 
 				<el-main style="background-color: white;">
 					<el-row>
+						<el-row>
+							<el-col :span="8" v-if="isAdd==true">
+								<el-form-item label="选单添加" style="float: left;" prop="sellOrderDocunum" required>
+									<el-input v-model="ruleForm.sellOrderDocunum" size="medium" disabled>
+										<template #append>
+											<el-button icon="el-icon-plus" size="small"
+												@click="sellOrderBill.dialogVisible = true;sellOrderBillLoadData()">
+											</el-button>
+										</template>
+									</el-input>
+								</el-form-item>
+							</el-col>
+						
+							<el-dialog title="选单销售" v-model="sellOrderBill.dialogVisible">
+								<el-row type="flex" justify="end" style="padding-bottom: 12px;">
+									<el-col :span="7.5">
+										<el-input v-model="sellOrderBill.searchInput" placeholder="请搜索销售订单编号. " size="small">
+											<template #append>
+												<el-button @click="sellOrderBillLoadData()" icon="el-icon-search" size="mini">
+												</el-button>
+											</template>
+										</el-input>
+									</el-col>
+						
+								</el-row>
+						
+								<el-table :data="sellOrderBill.tableData" max-height="286" style="height: 286px;"
+									highlight-current-row @current-change="sellBillSelectionChange" >
+									<el-table-column property="sellOrderDocunum" label="销售单编号"></el-table-column>
+									<el-table-column property="sellOrderHirthday" label="单据日期 "></el-table-column>
+									<el-table-column property="customerName" label="客户"></el-table-column>
+									<el-table-column property="employeeName" label="业务员"></el-table-column>
+									<el-table-column property="warehouseName" label="出库仓库"></el-table-column>
+									<!-- <el-table-column property="sellAddress" label="地址"></el-table-column> -->
+									<el-table-column property="orderPaidAmount" label="成交金额"></el-table-column>
+									<el-table-column property="orderSellDiscounts" label="优惠金额"></el-table-column>
+									<el-table-column property="sellOrderRemark" label="备注"></el-table-column>
+								</el-table>
+								
+								<el-row>
+									<el-col :span="24">
+										<el-pagination style="float: right;margin-top: 15px;"
+											@size-change="sellBillSizeChange" @current-change="sellBillCurrentChange"
+											:page-sizes="[10,20,40,80]" :page-size="sellOrderBill.pageParam.pageSize"
+											layout="total, sizes, prev, pager, next, jumper" :total="sellOrderBill.tableTotal">
+										</el-pagination>
+									</el-col>
+								</el-row>
+						
+								<template #footer>
+									<span class="dialog-footer">
+										<el-button @click="sellOrderBill.dialogVisible = false" size="medium">取 消</el-button>
+										<el-button type="primary" @click="sellBillConfirmButton" size="medium">确 定
+										</el-button>
+									</span>
+								</template>
+							</el-dialog>
+						
 						<el-col :span="8">
 							<el-form-item label="单据编号" style="float: left;" prop="sellDocunum">
 								<el-input v-model="ruleForm.sellDocunum" size="medium" disabled></el-input>
@@ -345,6 +403,17 @@
 						"pageSize": 10
 					}
 				},
+				sellOrderBill: {
+					dialogVisible: false,
+					searchInput: '',
+					tableData: [],
+					tableTotal: '',
+					singleSelection: {},
+					pageParam: {
+						"pageNum": 1,
+						"pageSize": 10
+					}
+				},
 				warehouse: {
 					dialogVisible: false,
 					searchInput: '',
@@ -372,6 +441,89 @@
 		},
 		
 		methods: {
+			
+			sellOrderBillLoadData() {
+				this.axios({
+					url: 'http://localhost:8089/eims/sellOrderBill/screen',
+					method: 'get',
+					params: Object.assign({
+						// 控制显示单据是否能退货
+						'audited': 0,
+						
+						'sellOrderDocunum':this.sellOrderBill.searchInput,
+						'customerName':this.sellOrderBill.searchInput,
+						'employeeName':this.sellOrderBill.searchInput
+						
+					}, this.sellOrderBill.pageParam)
+				}).then(response => {
+					console.log(response.data.list)
+					this.sellOrderBill.tableData = response.data.list
+					this.sellOrderBill.tableTotal = response.data.total
+					
+					
+				}).catch(error => {
+			
+				})
+			},
+			sellBillSelectionChange(val) {
+				console.log(val)
+				this.sellOrderBill.singleSelection = val
+			},
+			sellBillSizeChange(val) {
+				this.sellOrderBill.pageParam.pageSize = val
+				this.sellOrderBillLoadData()
+			},
+			sellBillCurrentChange(val) {
+				this.sellOrderBill.pageParam.pageNum = val
+				this.sellOrderBillLoadData()
+			},
+			sellBillConfirmButton() {
+				this.sellOrderBill.dialogVisible = false
+				// this.ruleForm=this.sellOrderBill.singleSelection
+				// console.log(this.ruleForm)
+				
+				
+				
+				
+				this.axios({
+					url: "http://localhost:8089/eims/sellOrderBill/one",
+					method: "get",
+					params: {
+						"id":this.sellOrderBill.singleSelection.sellOrderId
+					}
+				}).then(response => {
+					this.ruleForm = response.data
+					
+					console.log("初始化的数据为")
+					console.log(this.ruleForm)
+					console.log(this.ruleForm.sellDetails)
+					this.getDocuNum("GOS")
+					this.ruleForm.sellDate=this.ruleForm.sellOrderDate
+					this.ruleForm.sellAddress=this.ruleForm.sellOrderAddress
+					this.ruleForm.billPayAmount=this.ruleForm.orderPayAmount
+					this.ruleForm.billPaidAmount=this.ruleForm.orderPaidAmount
+					this.ruleForm.sellDiscounts=this.ruleForm.orderSellDiscounts
+					this.ruleForm.sellRemark=this.ruleForm.sellOrderRemark
+					this.ruleForm.sellDetails=this.ruleForm.sellOrderDetailList
+					this.ruleForm.sellDetails.forEach(detail => {
+						detail.marketPrice=detail.orderDetailPayAmount/detail.sellQuantity
+						detail.detailPayAmount=detail.orderDetailPayAmount
+						detail.detailPaidAmount=detail.orderDetailPaidAmount
+						detail.detailDiscounts=detail.orderDetailDiscounts
+						
+						
+						
+						})
+				}).catch(error => {
+				
+				})
+				
+				
+				// console.log("商品数据"+this.sellOrderBill.singleSelection.sellOrderDetailList)
+				// this.ruleForm.sellDetails=this.sellOrderBill.singleSelection.sellOrderDetailList
+				
+			
+			},
 			loadData(){
 				this.axios({
 					url: "http://localhost:8089/eims/sellBill/one",
@@ -385,6 +537,12 @@
 					console.log("初始化的数据为")
 					console.log(this.ruleForm)
 					console.log(this.ruleForm.sellDetails)
+					
+					this.ruleForm.sellDetails.forEach(detail => {
+						detail.marketPrice=detail.detailPayAmount/detail.sellQuantity
+						
+						
+						})
 				}).catch(error => {
 				
 				})

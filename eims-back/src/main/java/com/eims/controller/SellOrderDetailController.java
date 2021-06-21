@@ -15,7 +15,7 @@ import java.util.List;
  * (SellOrderDetail)表控制层
  *
  * @author makejava
- * @since 2021-06-11 21:26:51
+ * @since 2021-06-20 21:17:41
  */
 @RestController
 public class SellOrderDetailController {
@@ -44,6 +44,7 @@ public class SellOrderDetailController {
      */
     @GetMapping("/sellOrderDetail")
     public PageInfo<SellOrderDetail> queryAll(SellOrderDetailQueryForm sellOrderDetailQueryForm) {
+
         return this.sellOrderDetailService.queryAll(sellOrderDetailQueryForm);
     }
 
@@ -55,6 +56,7 @@ public class SellOrderDetailController {
      */
     @GetMapping("/sellOrderDetail/search")
     public PageInfo<SellOrderDetail> queryBySearch(SellOrderDetailQueryForm sellOrderDetailQueryForm) {
+
         return this.sellOrderDetailService.queryBySearch(sellOrderDetailQueryForm);
     }
 
@@ -66,6 +68,7 @@ public class SellOrderDetailController {
      */
     @GetMapping("/sellOrderDetail/screen")
     public PageInfo<SellOrderDetail> queryByScreen(SellOrderDetailQueryForm sellOrderDetailQueryForm) {
+
         return this.sellOrderDetailService.queryByScreen(sellOrderDetailQueryForm);
     }
 
@@ -77,6 +80,7 @@ public class SellOrderDetailController {
      */
     @PostMapping("/sellOrderDetail")
     public SellOrderDetail insert(@RequestBody SellOrderDetail sellOrderDetail) {
+
         return this.sellOrderDetailService.insert(sellOrderDetail);
     }
 

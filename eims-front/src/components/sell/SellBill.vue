@@ -50,6 +50,7 @@
 									<el-radio label="0">未审核</el-radio>
 									<el-radio label="1">已审核</el-radio>
 								</el-radio-group>
+							
 							</el-form-item>
 
 							<el-form-item label="付款状态：" label-width="120px">
@@ -92,6 +93,7 @@
 					@selection-change="handleSelectionChange">
 					<el-table-column type="selection">
 					</el-table-column>
+					
 					<el-table-column label="单据编号" width="162">
 						<template #default="scope">
 							<router-link :to="{name:'selldetail',params:{sellId:scope.row.sellId}}">
@@ -167,6 +169,7 @@
 		name: "PurchaseList",
 		data() {
 			return {
+				checked1:false,
 				tableData: [],
 				tableTotal: 0,
 				multipleSelection: [],

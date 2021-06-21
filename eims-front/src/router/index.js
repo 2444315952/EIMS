@@ -148,7 +148,7 @@ const routes = [{
 		component: Product
 	},
 	{
-		path: '/dingdandetail',
+		path: '/dingdandetail/:sellOrderId?',
 		name: 'dingdandetail',
 		component: dingdandetail
 	},

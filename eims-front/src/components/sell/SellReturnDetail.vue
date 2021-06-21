@@ -397,7 +397,7 @@
 					params: Object.assign({
 						// 控制显示单据是否能退货
 						'returnState': 0,
-						'outStorage': 0
+						'outStorage': 1
 						
 					}, this.sellBill.pageParam)
 				}).then(response => {

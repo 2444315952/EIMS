@@ -3,17 +3,15 @@ package com.eims.service;
 import com.eims.mybatis.entity.SellOrderBill;
 import com.eims.vo.form.SellOrderBillQueryForm;
 
-
+import java.util.List;
 
 import com.github.pagehelper.PageInfo;
-
-import java.util.List;
 
 /**
  * (SellOrderBill)表服务接口
  *
  * @author makejava
- * @since 2021-06-11 21:26:50
+ * @since 2021-06-20 21:16:22
  */
 public interface SellOrderBillService {
 
@@ -72,6 +70,9 @@ public interface SellOrderBillService {
      * @return 实例对象
      */
     SellOrderBill update(SellOrderBill sellOrderBill);
+
+
+    SellOrderBill updateSellAndDetail(SellOrderBill sellOrderBill);
 
     /**
      * 批量修改数据

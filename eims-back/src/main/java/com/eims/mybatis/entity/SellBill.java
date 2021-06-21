@@ -74,6 +74,8 @@ public class SellBill implements Serializable {
 
     private Integer outStorage;
 
+    private Integer sellOrderId;
+
     private List<SellDetail> sellDetails;
 
 }

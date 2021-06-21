@@ -1,11 +1,9 @@
 package com.eims.service.impl;
 
+import com.eims.mybatis.dao.InventoryDao;
 import com.eims.mybatis.dao.PurchaseDao;
 import com.eims.mybatis.dao.WarehousingDetailDao;
-import com.eims.mybatis.entity.Purchase;
-import com.eims.mybatis.entity.SellReturn;
-import com.eims.mybatis.entity.WarehouseWarrant;
-import com.eims.mybatis.entity.WarehousingDetail;
+import com.eims.mybatis.entity.*;
 import com.eims.vo.form.PurchaseQueryForm;
 import com.eims.vo.form.SellReturnQueryForm;
 import com.eims.vo.form.WarehouseWarrantQueryForm;
@@ -35,9 +33,6 @@ public class WarehouseWarrantServiceImpl implements WarehouseWarrantService {
 
     @Resource
     private WarehousingDetailDao warehousingDetailDao;
-
-    @Resource
-    private PurchaseDao purchaseDao;
 
     /**
      * 通过ID查询单条数据
@@ -171,10 +166,21 @@ public class WarehouseWarrantServiceImpl implements WarehouseWarrantService {
                 detail.setWarehouseWarrantId(warehouseWarrant.getWarehouseWarrantId());
             this.warehousingDetailDao.insertBatch(warehouseWarrant.getWarehousingDetailList());
         }
-
         return this.queryById(warehouseWarrant.getWarehouseWarrantId());
     }
 
+    /**
+     * 根据入库单该库存
+     * @param inventoryQuantity
+     * @param warehouseId
+     * @param productId
+     * @return
+     */
+     public Inventory auditStorage(Integer inventoryQuantity, Integer warehouseId, Integer productId) {
+//         for(WarehousingDetail detail :warehouseWarrant.getWarehousingDetailList())
+//             this.warehouseWarrantDao.auditStorage(warehouseWarrant.getWarehouseId(),detail.getProductId(),detail.getInventoryQuantity());
+         return  null;
+     }
     /**
      * 批量修改数据
      *

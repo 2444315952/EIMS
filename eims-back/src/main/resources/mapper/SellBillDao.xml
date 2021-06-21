@@ -25,6 +25,10 @@
         <result property="isRetail" column="IS_RETAIL" jdbcType="INTEGER"/>
         <result property="received" column="RECEIVED" jdbcType="INTEGER"/>
         <result property="sellAddress" column="SELL_ADDRESS" jdbcType="VARCHAR"/>
+<<<<<<< HEAD
+        <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
+        <result property="outStorage" column="OUT_STORAGE" jdbcType="INTEGER"/>
+=======
         <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="TIMESTAMP"/>
         <result property="outStorage" column="OUT_STORAGE" jdbcType="INTEGER"/>
         <collection property="sellDetails" ofType="com.eims.mybatis.entity.SellDetail" column="sellId">
@@ -43,6 +47,7 @@
             <result property="detailDiscounts" column="DETAIL_DISCOUNTS" jdbcType="VARCHAR"/>
             <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
         </collection>
+>>>>>>> cce76d9f6560700ca74c7477c1a63df289d03018
     </resultMap>
 
     <resultMap type="com.eims.mybatis.entity.SellBill" id="SellBillListMap">
@@ -69,6 +74,7 @@
         <result property="received" column="RECEIVED" jdbcType="INTEGER"/>
         <result property="sellAddress" column="SELL_ADDRESS" jdbcType="VARCHAR"/>
         <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
+        <result property="outStorage" column="OUT_STORAGE" jdbcType="INTEGER"/>
 
         <collection property="sellDetails" javaType="list" ofType="com.eims.mybatis.entity.SellDetail">
             <result property="sellDetailId" column="SELL_DETAIL_ID" jdbcType="INTEGER"/>
@@ -98,7 +104,7 @@
 
 
     <sql id="SellBillJoinCol">
-        B.SELL_ID, B.COMPANY_ID, B.WORK_POINT_ID, B.SELL_DOCUNUM, B.BILLS_TYPE, B.SELL_DATE, B.AUDITED, B.PAYMENT_TERM, B.EMPLOYEE_ID, B.EMPLOYEE_NAME, B.CUSTOMER_ID, B.CUSTOMER_NAME, B.WAREHOUSE_ID, B.WAREHOUSE_NAME, B.BILL_PAY_AMOUNT, B.BILL_PAID_AMOUNT, B.SELL_DISCOUNTS, B.SELL_REMARK, B.RETURN_STATE, B.IS_RETAIL, B.RECEIVED, B.SELL_ADDRESS, B.SELL_HIRTHDAY    </sql>
+        B.SELL_ID, B.COMPANY_ID, B.WORK_POINT_ID, B.SELL_DOCUNUM, B.BILLS_TYPE, B.SELL_DATE, B.AUDITED, B.PAYMENT_TERM, B.EMPLOYEE_ID, B.EMPLOYEE_NAME, B.CUSTOMER_ID, B.CUSTOMER_NAME, B.WAREHOUSE_ID, B.WAREHOUSE_NAME, B.BILL_PAY_AMOUNT, B.BILL_PAID_AMOUNT, B.SELL_DISCOUNTS, B.SELL_REMARK, B.RETURN_STATE, B.IS_RETAIL, B.RECEIVED, B.SELL_ADDRESS, B.SELL_HIRTHDAY ,B.OUT_STORAGE   </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="SellBillListMap">

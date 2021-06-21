@@ -1,8 +1,10 @@
 package com.eims.controller;
 
 import com.eims.mybatis.entity.Inventory;
+import com.eims.service.WarehouseWarrantService;
 import com.eims.vo.form.InventoryQueryForm;
 import com.eims.service.InventoryService;
+import com.eims.vo.table.InventoryTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,6 +27,7 @@ public class InventoryController {
     @Resource
     private InventoryService inventoryService;
 
+
     /**
      * 通过主键查询单条数据
      *
@@ -34,6 +37,17 @@ public class InventoryController {
     @GetMapping("/inventory/one")
     public Inventory selectOne(Integer id) {
         return this.inventoryService.queryById(id);
+    }
+
+    /**
+     * 查询完整库存信息
+     * @param inventoryQueryForm
+     * @return
+     */
+    @GetMapping("/inventory/all")
+    public PageInfo<InventoryTable> queryInventoryVo(InventoryQueryForm inventoryQueryForm){
+        inventoryQueryForm.setCompanyId(1);
+        return this.inventoryService.queryInventoryVo(inventoryQueryForm);
     }
 
     /**
@@ -105,6 +119,8 @@ public class InventoryController {
     public Inventory update(@RequestBody Inventory inventory) {
         return this.inventoryService.update(inventory);
     }
+
+
 
     /**
      * 批量修改数据

@@ -522,20 +522,20 @@
 				var totalQuantity = 0
 				this.ruleForm.outboundDetailList.forEach(detail => {
 					detail.stockOutDocunum = this.ruleForm.stockOutDocunum
-					detail.inventoryQuantity = detail.purchaseQuantity
+					//detail.inventoryQuantity = detail.purchaseQuantity
 					detail.commodityNote = this.ruleForm.commodityNote
 					detail.deliveryQuantity=detail.purchaseQuantity
 
 					totalQuantity = totalQuantity + detail.purchaseQuantity
 				})
-				this.ruleForm.inventoryQuantity = totalQuantity
+				this.ruleForm.deliveryQuantity = totalQuantity
 			},
 
 			detailSalesOrderToStockOut() {
 				var totalQuantity = 0
 				this.ruleForm.outboundDetailList.forEach(detail => {
 					detail.stockOutDocunum = this.ruleForm.stockOutDocunum
-					detail.inventoryQuantity = detail.sellQuantity
+					detail.deliveryQuantity = detail.sellQuantity
 					detail.specModel = detail.productModel
 					detail.commodityNote = this.ruleForm.commodityNote
 					
@@ -543,7 +543,7 @@
 
 					totalQuantity = totalQuantity + detail.sellQuantity
 				})
-				this.ruleForm.inventoryQuantity = totalQuantity
+				this.ruleForm.deliveryQuantity = totalQuantity
 			},
 
 			//选中下拉框的值弹出对应的弹框

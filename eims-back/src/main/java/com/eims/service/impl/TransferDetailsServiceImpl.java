@@ -17,7 +17,7 @@ import com.github.pagehelper.PageInfo;
  * (TransferDetails)表服务实现类
  *
  * @author makejava
- * @since 2021-06-16 10:35:20
+ * @since 2021-06-16 23:18:26
  */
 @Service("transferDetailsService")
 public class TransferDetailsServiceImpl implements TransferDetailsService {
@@ -129,6 +129,16 @@ public class TransferDetailsServiceImpl implements TransferDetailsService {
     @Override
     public boolean deleteById(Integer transferDetailId) {
         return this.transferDetailsDao.deleteById(transferDetailId) > 0;
+    }
+
+    /**
+     * 通过调拨单主键删除明细数据
+     * @param transferId
+     * @return
+     */
+    @Override
+    public boolean deleteByFk(Integer transferId){
+        return this.transferDetailsDao.deleteByFk(transferId) >0;
     }
 
     /**

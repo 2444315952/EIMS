@@ -1,5 +1,6 @@
 package com.eims.service;
 
+import com.eims.mybatis.entity.Inventory;
 import com.eims.mybatis.entity.Purchase;
 import com.eims.mybatis.entity.SellReturn;
 import com.eims.mybatis.entity.WarehouseWarrant;
@@ -74,6 +75,16 @@ public interface WarehouseWarrantService {
      * @return 实例对象
      */
     WarehouseWarrant update(WarehouseWarrant warehouseWarrant);
+
+
+    /**
+     * 审核入库单改变库存
+     * @param inventoryQuantity
+     * @param warehouseId
+     * @param productId
+     * @return
+     */
+    Inventory auditStorage(Integer inventoryQuantity, Integer warehouseId, Integer productId);
 
     /**
      * 通过实体作为或者条件查询已入库的数据

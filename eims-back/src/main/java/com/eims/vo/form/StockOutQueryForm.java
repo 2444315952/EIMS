@@ -45,7 +45,7 @@ public class StockOutQueryForm implements Serializable {
 
     private Integer blitemId;
 
-    private Integer inventoryQuantity;
+    private Integer deliveryQuantity;
 
     private String documentsNote;
 

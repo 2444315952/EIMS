@@ -44,7 +44,7 @@ public class TransferController {
      */
     @GetMapping("/transfer")
     public PageInfo<Transfer> queryAll(TransferQueryForm transferQueryForm) {
-        transferQueryForm.setWorkPointId(1);
+        transferQueryForm.setCompanyId(1);
         return this.transferService.queryAll(transferQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class TransferController {
      */
     @GetMapping("/transfer/search")
     public PageInfo<Transfer> queryBySearch(TransferQueryForm transferQueryForm) {
-        transferQueryForm.setWorkPointId(1);
+        transferQueryForm.setCompanyId(1);
         return this.transferService.queryBySearch(transferQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class TransferController {
      */
     @GetMapping("/transfer/screen")
     public PageInfo<Transfer> queryByScreen(TransferQueryForm transferQueryForm) {
-        transferQueryForm.setWorkPointId(1);
+        transferQueryForm.setCompanyId(1);
         return this.transferService.queryByScreen(transferQueryForm);
     }
 
@@ -80,6 +80,7 @@ public class TransferController {
      */
     @PostMapping("/transfer")
     public Transfer insert(@RequestBody Transfer transfer) {
+        transfer.setCompanyId(1);
         transfer.setWorkPointId(1);
         //transfer.setWorkPointName("示例工作点");
         return this.transferService.insert(transfer);

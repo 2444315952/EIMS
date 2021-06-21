@@ -12,14 +12,14 @@ import lombok.ToString;
  * (TransferDetails)实体类
  *
  * @author makejava
- * @since 2021-06-16 10:35:20
+ * @since 2021-06-16 23:18:23
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class TransferDetails implements Serializable {
-    private static final long serialVersionUID = -46571860870952259L;
+    private static final long serialVersionUID = -39105314241844604L;
 
     private Integer transferDetailId;
 
@@ -29,13 +29,15 @@ public class TransferDetails implements Serializable {
 
     private Integer productId;
 
+    private String productPicture;
+
     private String productName;
 
     private String specModel;
 
     private String productUnit;
 
-    private Integer availableStock;
+    private Integer inventory;
 
     private Integer outboundQuantity;
 

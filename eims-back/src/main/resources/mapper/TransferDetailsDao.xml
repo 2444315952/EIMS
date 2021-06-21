@@ -7,16 +7,17 @@
         <result property="transferId" column="TRANSFER_ID" jdbcType="INTEGER"/>
         <result property="transferDocunum" column="TRANSFER_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
         <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
         <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
         <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
-        <result property="availableStock" column="AVAILABLE_STOCK" jdbcType="INTEGER"/>
+        <result property="inventory" column="INVENTORY" jdbcType="INTEGER"/>
         <result property="outboundQuantity" column="OUTBOUND_QUANTITY" jdbcType="INTEGER"/>
         <result property="commodityNote" column="COMMODITY_NOTE" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="TransferDetailsCol">
-        TRANSFER_DETAIL_ID, TRANSFER_ID, TRANSFER_DOCUNUM, PRODUCT_ID, PRODUCT_NAME, SPEC_MODEL, PRODUCT_UNIT, AVAILABLE_STOCK, OUTBOUND_QUANTITY, COMMODITY_NOTE    </sql>
+        TRANSFER_DETAIL_ID, TRANSFER_ID, TRANSFER_DOCUNUM, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, SPEC_MODEL, PRODUCT_UNIT, INVENTORY, OUTBOUND_QUANTITY, COMMODITY_NOTE    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="TransferDetailsMap">
@@ -30,14 +31,21 @@
     <select id="queryAll" resultMap="TransferDetailsMap">
         select
         <include refid="TransferDetailsCol"></include>
-        from (select * from EIMS.TRANSFER_DETAILS where work_point_id = #{workPointId})
+        from (select <include refid="TransferDetailsCol"></include> from EIMS.TRANSFER_DETAILS
+         <where>
+         </where>
+         )
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="TransferDetailsMap">
         select
         <include refid="TransferDetailsCol"></include>
-        from (select * from EIMS.TRANSFER_DETAILS where work_point_id = #{workPointId})
+        from (select <include refid="TransferDetailsCol"></include> from EIMS.TRANSFER_DETAILS
+        <where>
+        </where>
+        )
+
         <where>
             <if test="transferDetailId != null">
                 or TRANSFER_DETAIL_ID like '%'||#{transferDetailId}||'%'
@@ -51,6 +59,9 @@
             <if test="productId != null">
                 or PRODUCT_ID like '%'||#{productId}||'%'
             </if>
+            <if test="productPicture != null and productPicture != ''">
+                or PRODUCT_PICTURE like '%'||#{productPicture}||'%'
+            </if>
             <if test="productName != null and productName != ''">
                 or PRODUCT_NAME like '%'||#{productName}||'%'
             </if>
@@ -60,8 +71,8 @@
             <if test="productUnit != null and productUnit != ''">
                 or PRODUCT_UNIT like '%'||#{productUnit}||'%'
             </if>
-            <if test="availableStock != null">
-                or AVAILABLE_STOCK like '%'||#{availableStock}||'%'
+            <if test="inventory != null">
+                or INVENTORY like '%'||#{inventory}||'%'
             </if>
             <if test="outboundQuantity != null">
                 or OUTBOUND_QUANTITY like '%'||#{outboundQuantity}||'%'
@@ -76,7 +87,12 @@
     <select id="queryAndByPojo" resultMap="TransferDetailsMap">
         select
         <include refid="TransferDetailsCol"></include>
-        from EIMS.TRANSFER_DETAILS
+
+        from (select <include refid="TransferDetailsCol"></include> from EIMS.TRANSFER_DETAILS
+        <where>
+        </where>
+        )
+
         <where>
             <if test="transferDetailId != null">
                 and TRANSFER_DETAIL_ID = #{transferDetailId}
@@ -90,6 +106,9 @@
             <if test="productId != null">
                 and PRODUCT_ID = #{productId}
             </if>
+            <if test="productPicture != null and productPicture != ''">
+                and PRODUCT_PICTURE = #{productPicture}
+            </if>
             <if test="productName != null and productName != ''">
                 and PRODUCT_NAME = #{productName}
             </if>
@@ -99,8 +118,8 @@
             <if test="productUnit != null and productUnit != ''">
                 and PRODUCT_UNIT = #{productUnit}
             </if>
-            <if test="availableStock != null">
-                and AVAILABLE_STOCK = #{availableStock}
+            <if test="inventory != null">
+                and INVENTORY = #{inventory}
             </if>
             <if test="outboundQuantity != null">
                 and OUTBOUND_QUANTITY = #{outboundQuantity}
@@ -125,6 +144,9 @@
             <if test="productId != null">
                 PRODUCT_ID,
             </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE,
+            </if>
             <if test="productName != null">
                 PRODUCT_NAME,
             </if>
@@ -134,8 +156,8 @@
             <if test="productUnit != null">
                 PRODUCT_UNIT,
             </if>
-            <if test="availableStock != null">
-                AVAILABLE_STOCK,
+            <if test="inventory != null">
+                INVENTORY,
             </if>
             <if test="outboundQuantity != null">
                 OUTBOUND_QUANTITY,
@@ -156,6 +178,9 @@
             <if test="productId != null">
                 #{productId},
             </if>
+            <if test="productPicture != null">
+                #{productPicture},
+            </if>
             <if test="productName != null">
                 #{productName},
             </if>
@@ -165,8 +190,8 @@
             <if test="productUnit != null">
                 #{productUnit},
             </if>
-            <if test="availableStock != null">
-                #{availableStock},
+            <if test="inventory != null">
+                #{inventory},
             </if>
             <if test="outboundQuantity != null">
                 #{outboundQuantity},
@@ -195,6 +220,9 @@
                 <if test="entity.productId != null">
                     PRODUCT_ID,
                 </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE,
+                </if>
                 <if test="entity.productName != null">
                     PRODUCT_NAME,
                 </if>
@@ -204,8 +232,8 @@
                 <if test="entity.productUnit != null">
                     PRODUCT_UNIT,
                 </if>
-                <if test="entity.availableStock != null">
-                    AVAILABLE_STOCK,
+                <if test="entity.inventory != null">
+                    INVENTORY,
                 </if>
                 <if test="entity.outboundQuantity != null">
                     OUTBOUND_QUANTITY,
@@ -226,6 +254,9 @@
                 <if test="entity.productId != null">
                     #{entity.productId},
                 </if>
+                <if test="entity.productPicture != null">
+                    #{entity.productPicture},
+                </if>
                 <if test="entity.productName != null">
                     #{entity.productName},
                 </if>
@@ -235,8 +266,8 @@
                 <if test="entity.productUnit != null">
                     #{entity.productUnit},
                 </if>
-                <if test="entity.availableStock != null">
-                    #{entity.availableStock},
+                <if test="entity.inventory != null">
+                    #{entity.inventory},
                 </if>
                 <if test="entity.outboundQuantity != null">
                     #{entity.outboundQuantity},
@@ -261,6 +292,9 @@
             <if test="productId != null">
                 PRODUCT_ID = #{productId},
             </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE = #{productPicture},
+            </if>
             <if test="productName != null">
                 PRODUCT_NAME = #{productName},
             </if>
@@ -270,8 +304,8 @@
             <if test="productUnit != null">
                 PRODUCT_UNIT = #{productUnit},
             </if>
-            <if test="availableStock != null">
-                AVAILABLE_STOCK = #{availableStock},
+            <if test="inventory != null">
+                INVENTORY = #{inventory},
             </if>
             <if test="outboundQuantity != null">
                 OUTBOUND_QUANTITY = #{outboundQuantity},
@@ -297,6 +331,9 @@
                 <if test="entity.productId != null">
                     PRODUCT_ID = #{entity.productId},
                 </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE = #{entity.productPicture},
+                </if>
                 <if test="entity.productName != null">
                     PRODUCT_NAME = #{entity.productName},
                 </if>
@@ -306,8 +343,8 @@
                 <if test="entity.productUnit != null">
                     PRODUCT_UNIT = #{entity.productUnit},
                 </if>
-                <if test="entity.availableStock != null">
-                    AVAILABLE_STOCK = #{entity.availableStock},
+                <if test="entity.inventory != null">
+                    INVENTORY = #{entity.inventory},
                 </if>
                 <if test="entity.outboundQuantity != null">
                     OUTBOUND_QUANTITY = #{entity.outboundQuantity},
@@ -323,6 +360,11 @@
     <!--通过主键删除数据-->
     <delete id="deleteById">
         delete from EIMS.TRANSFER_DETAILS where TRANSFER_DETAIL_ID = #{transferDetailId}
+    </delete>
+
+    <!--通过调拨单主键删除明细数据-->
+    <delete id="deleteByFk">
+        delete from EIMS.TRANSFER_DETAILS where TRANSFER_ID = #{transferId}
     </delete>
 
     <!--通过主键列表批量删除数据-->

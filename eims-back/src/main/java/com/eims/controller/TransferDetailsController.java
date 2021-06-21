@@ -15,7 +15,7 @@ import java.util.List;
  * (TransferDetails)表控制层
  *
  * @author makejava
- * @since 2021-06-16 10:35:21
+ * @since 2021-06-16 23:18:27
  */
 @RestController
 public class TransferDetailsController {
@@ -68,8 +68,18 @@ public class TransferDetailsController {
      */
     @GetMapping("/transferDetails/screen")
     public PageInfo<TransferDetails> queryByScreen(TransferDetailsQueryForm transferDetailsQueryForm) {
-        //transferDetailsQueryForm.setWorkPointId(1);
+//        transferDetailsQueryForm.
         return this.transferDetailsService.queryByScreen(transferDetailsQueryForm);
+    }
+
+    /**
+     * 通过调拨单id主键删除明细
+     * @param transferId
+     * @return
+     */
+    @DeleteMapping("/transferDetails/deleteByFk")
+    public Boolean deleteByFk(Integer transferId){
+        return this.transferDetailsService.deleteByFk(transferId);
     }
 
     /**

@@ -10,14 +10,84 @@
         <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
         <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
         <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
-        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="inventory" column="INVENTORY" jdbcType="INTEGER"/>
         <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
         <result property="totalCost" column="TOTAL_COST" jdbcType="VARCHAR"/>
+        <result property="minimumStock" column="MINIMUM_STOCK" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <sql id="InventoryCol">
-        INVENTORY_ID, COMPANY_ID, WAREHOUSE_ID, WAREHOUSE_NAME, PRODUCT_ID, PRODUCT_NAME, PURCHASE_PRICE, INVENTORY_QUANTITY, MARKET_PRICE, TOTAL_COST    </sql>
+    <resultMap type="com.eims.mybatis.entity.Product" id="ProductMap">
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productNumber" column="PRODUCT_NUMBER" jdbcType="VARCHAR"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+        <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+        <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+        <result property="referCost" column="REFER_COST" jdbcType="VARCHAR"/>
+        <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
+        <result property="commId" column="COMM_ID" jdbcType="INTEGER"/>
+        <result property="minimumStock" column="MINIMUM_STOCK" jdbcType="INTEGER"/>
+        <result property="isEnabled" column="IS_ENABLED" jdbcType="INTEGER"/>
+        <result property="remake" column="REMAKE" jdbcType="VARCHAR"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+    </resultMap>
 
+    <resultMap type="com.eims.mybatis.entity.Inventory" id="InventoryListMap">
+        <result property="inventoryId" column="INVENTORY_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
+        <result property="inventory" column="INVENTORY" jdbcType="INTEGER"/>
+        <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
+        <result property="totalCost" column="TOTAL_COST" jdbcType="VARCHAR"/>
+        <result property="minimumStock" column="MINIMUM_STOCK" jdbcType="VARCHAR"/>
+
+        <association property="product" javaType="com.eims.mybatis.entity.Product">
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productNumber" column="PRODUCT_NUMBER" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="referCost" column="REFER_COST" jdbcType="VARCHAR"/>
+            <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
+            <result property="commId" column="COMM_ID" jdbcType="INTEGER"/>
+            <result property="minimumStock" column="MINIMUM_STOCK" jdbcType="INTEGER"/>
+            <result property="isEnabled" column="IS_ENABLED" jdbcType="INTEGER"/>
+            <result property="remake" column="REMAKE" jdbcType="VARCHAR"/>
+            <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        </association>
+    </resultMap>
+
+    <resultMap type="com.eims.vo.table.InventoryTable" id="InventoryVoMap">
+        <result property="inventoryId" column="INVENTORY_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="specModel" column="spec_model"></result>
+        <result property="productUnit" column="product_unit"></result>
+        <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
+        <result property="inventory" column="INVENTORY" jdbcType="INTEGER"/>
+        <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
+        <result property="totalCost" column="TOTAL_COST" jdbcType="VARCHAR"/>
+        <result property="minimumStock" column="MINIMUM_STOCK" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="ProductCol">
+        P.PRODUCT_ID, P.PRODUCT_NUMBER, P.PRODUCT_NAME, P.PRODUCT_PICTURE, P.SPEC_MODEL, P.PRODUCT_UNIT, P.REFER_COST, P.MARKET_PRICE, P.COMM_ID, P.MINIMUM_STOCK, P.IS_ENABLED, P.REMAKE, P.COMPANY_ID    </sql>
+
+
+    <sql id="InventoryCol">
+        INVENTORY_ID, COMPANY_ID, WAREHOUSE_ID, WAREHOUSE_NAME, PRODUCT_ID, PRODUCT_NAME, PURCHASE_PRICE, INVENTORY, MARKET_PRICE, TOTAL_COST ,MINIMUM_STOCK   </sql>
+
+    <sql id="InventoryJoinCol">
+        I.INVENTORY_ID, I.COMPANY_ID, I.WAREHOUSE_ID, I.WAREHOUSE_NAME, I.PRODUCT_ID, I.PRODUCT_NAME, I.PURCHASE_PRICE, I.INVENTORY, I.MARKET_PRICE, I.TOTAL_COST , I.MINIMUM_STOCK </sql>
     <!--查询单个-->
     <select id="queryById" resultMap="InventoryMap">
         select
@@ -34,6 +104,14 @@
         <where>
             company_id = #{companyId}
         </where>)
+    </select>
+
+    <!-- 查询完整库存信息 -->
+    <select id="queryInventoryVo" resultMap="InventoryVoMap">
+        select <include refid="InventoryJoinCol"></include>,P.PRODUCT_PICTURE,P.SPEC_MODEL,P.PRODUCT_UNIT from inventory I inner join product P on I.product_id = P.product_id where I.company_id = #{companyId}
+        <if test="warehouseId != null">
+            and warehouse_id = #{warehouseId}
+        </if>
     </select>
 
     <!--通过实体作为或者条件查询-->
@@ -58,20 +136,26 @@
             <if test="productId != null">
                 or PRODUCT_ID like '%'||#{productId}||'%'
             </if>
+            <if test="productPicture != null and productPicture != ''">
+                or PRODUCT_PICTURE like '%'||#{productPicture}||'%'
+            </if>
             <if test="productName != null and productName != ''">
                 or PRODUCT_NAME like '%'||#{productName}||'%'
             </if>
             <if test="purchasePrice != null">
                 or PURCHASE_PRICE like '%'||#{purchasePrice}||'%'
             </if>
-            <if test="inventoryQuantity != null">
-                or INVENTORY_QUANTITY like '%'||#{inventoryQuantity}||'%'
+            <if test="inventory != null">
+                or INVENTORY like '%'||#{inventory}||'%'
             </if>
             <if test="marketPrice != null">
                 or MARKET_PRICE like '%'||#{marketPrice}||'%'
             </if>
             <if test="totalCost != null">
                 or TOTAL_COST like '%'||#{totalCost}||'%'
+            </if>
+            <if test="minimumStock != null">
+                or MINIMUM_STOCK like '%'||#{minimumStock}||'%'
             </if>
         </where>
     </select>
@@ -98,20 +182,26 @@
             <if test="productId != null">
                 and PRODUCT_ID = #{productId}
             </if>
+            <if test="productPicture != null and productPicture != ''">
+                and PRODUCT_PICTURE = #{productPicture}
+            </if>
             <if test="productName != null and productName != ''">
                 and PRODUCT_NAME = #{productName}
             </if>
             <if test="purchasePrice != null">
                 and PURCHASE_PRICE = #{purchasePrice}
             </if>
-            <if test="inventoryQuantity != null">
-                and INVENTORY_QUANTITY = #{inventoryQuantity}
+            <if test="inventory != null">
+                and INVENTORY = #{inventory}
             </if>
             <if test="marketPrice != null">
                 and MARKET_PRICE = #{marketPrice}
             </if>
             <if test="totalCost != null">
                 and TOTAL_COST = #{totalCost}
+            </if>
+            <if test="minimumStock != null">
+                and MINIMUM_STOCK = #{minimumStock}
             </if>
         </where>
     </select>
@@ -133,20 +223,26 @@
             <if test="productId != null">
                 PRODUCT_ID,
             </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE,
+            </if>
             <if test="productName != null">
                 PRODUCT_NAME,
             </if>
             <if test="purchasePrice != null">
                 PURCHASE_PRICE,
             </if>
-            <if test="inventoryQuantity != null">
-                INVENTORY_QUANTITY,
+            <if test="inventory != null">
+                INVENTORY,
             </if>
             <if test="marketPrice != null">
                 MARKET_PRICE,
             </if>
             <if test="totalCost != null">
                 TOTAL_COST,
+            </if>
+            <if test="minimumStock != null">
+                MINIMUM_STOCK,
             </if>
         </trim>
         values
@@ -164,20 +260,26 @@
             <if test="productId != null">
                 #{productId},
             </if>
+            <if test="productPicture != null">
+                #{productPicture},
+            </if>
             <if test="productName != null">
                 #{productName},
             </if>
             <if test="purchasePrice != null">
                 #{purchasePrice},
             </if>
-            <if test="inventoryQuantity != null">
-                #{inventoryQuantity},
+            <if test="inventory != null">
+                #{inventory},
             </if>
             <if test="marketPrice != null">
                 #{marketPrice},
             </if>
             <if test="totalCost != null">
                 #{totalCost},
+            </if>
+            <if test="minimumStock != null">
+                #{minimumStock},
             </if>
         </trim>
         <selectKey keyProperty="inventoryId" resultType="INTEGER" order="BEFORE">
@@ -203,20 +305,26 @@
                 <if test="entity.productId != null">
                     PRODUCT_ID,
                 </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE,
+                </if>
                 <if test="entity.productName != null">
                     PRODUCT_NAME,
                 </if>
                 <if test="entity.purchasePrice != null">
                     PURCHASE_PRICE,
                 </if>
-                <if test="entity.inventoryQuantity != null">
-                    INVENTORY_QUANTITY,
+                <if test="entity.inventory != null">
+                    INVENTORY,
                 </if>
                 <if test="entity.marketPrice != null">
                     MARKET_PRICE,
                 </if>
                 <if test="entity.totalCost != null">
                     TOTAL_COST,
+                </if>
+                <if test="entity.minimumStock != null">
+                    MINIMUM_STOCK,
                 </if>
             </trim>
             values
@@ -234,20 +342,26 @@
                 <if test="entity.productId != null">
                     #{entity.productId},
                 </if>
+                <if test="entity.productPicture != null">
+                    #{entity.productPicture},
+                </if>
                 <if test="entity.productName != null">
                     #{entity.productName},
                 </if>
                 <if test="entity.purchasePrice != null">
                     #{entity.purchasePrice},
                 </if>
-                <if test="entity.inventoryQuantity != null">
-                    #{entity.inventoryQuantity},
+                <if test="entity.inventory != null">
+                    #{entity.inventory},
                 </if>
                 <if test="entity.marketPrice != null">
                     #{entity.marketPrice},
                 </if>
                 <if test="entity.totalCost != null">
                     #{entity.totalCost},
+                </if>
+                <if test="entity.minimumStock != null">
+                    #{entity.minimumStock},
                 </if>
             </trim>
         </foreach>
@@ -269,20 +383,26 @@
             <if test="productId != null">
                 PRODUCT_ID = #{productId},
             </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE = #{productPicture},
+            </if>
             <if test="productName != null">
                 PRODUCT_NAME = #{productName},
             </if>
             <if test="purchasePrice != null">
                 PURCHASE_PRICE = #{purchasePrice},
             </if>
-            <if test="inventoryQuantity != null">
-                INVENTORY_QUANTITY = #{inventoryQuantity},
+            <if test="inventory != null">
+                INVENTORY = #{inventory},
             </if>
             <if test="marketPrice != null">
                 MARKET_PRICE = #{marketPrice},
             </if>
             <if test="totalCost != null">
                 TOTAL_COST = #{totalCost},
+            </if>
+            <if test="minimumStock != null">
+                MINIMUM_STOCK = #{minimumStock},
             </if>
         </set>
         where INVENTORY_ID = #{inventoryId}
@@ -305,20 +425,26 @@
                 <if test="entity.productId != null">
                     PRODUCT_ID = #{entity.productId},
                 </if>
+                <if test="entity.productPicture != null">
+                     PRODUCT_PICTURE = #{entity.productPicture},
+                </if>
                 <if test="entity.productName != null">
                     PRODUCT_NAME = #{entity.productName},
                 </if>
                 <if test="entity.purchasePrice != null">
                     PURCHASE_PRICE = #{entity.purchasePrice},
                 </if>
-                <if test="entity.inventoryQuantity != null">
-                    INVENTORY_QUANTITY = #{entity.inventoryQuantity},
+                <if test="entity.inventory != null">
+                    INVENTORY = #{entity.inventory},
                 </if>
                 <if test="entity.marketPrice != null">
                     MARKET_PRICE = #{entity.marketPrice},
                 </if>
                 <if test="entity.totalCost != null">
                     TOTAL_COST = #{entity.totalCost},
+                </if>
+                <if test="entity.minimumStock != null">
+                    MINIMUM_STOCK = #{entity.minimumStock},
                 </if>
             </set>
             where INVENTORY_ID = #{entity.inventoryId}

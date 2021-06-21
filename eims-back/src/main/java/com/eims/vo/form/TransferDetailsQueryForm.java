@@ -12,7 +12,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class TransferDetailsQueryForm implements Serializable {
-    private static final long serialVersionUID = 238017337683899000L;
+    private static final long serialVersionUID = 804208876236447747L;
 
     private Integer transferDetailId;
 
@@ -21,6 +21,8 @@ public class TransferDetailsQueryForm implements Serializable {
     private String transferDocunum;
 
     private Integer productId;
+
+    private String productPicture;
 
     private String productName;
 

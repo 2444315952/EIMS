@@ -18,7 +18,7 @@
         <result property="saleId" column="SALE_ID" jdbcType="INTEGER"/>
         <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
         <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
-        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="deliveryQuantity" column="DELIVERY_QUANTITY" jdbcType="INTEGER"/>
         <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
     </resultMap>
 
@@ -38,7 +38,7 @@
         <result property="saleId" column="SALE_ID" jdbcType="INTEGER"/>
         <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
         <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
-        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="deliveryQuantity" column="DELIVERY_QUANTITY" jdbcType="INTEGER"/>
         <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
 
         <collection property="outboundDetailList" javaType="list" ofType="com.eims.mybatis.entity.OutboundDetail">
@@ -82,10 +82,10 @@
         O.OUTBOUND_DETAIL_ID,  O.STOCK_OUT_ID,  O.STOCK_OUT_DOCUNUM,  O.PRODUCT_ID,  O.PRODUCT_PICTURE,  O.PRODUCT_NAME,  O.SPEC_MODEL,  O.PRODUCT_UNIT,  O.DELIVERY_QUANTITY,  O.COMMODITY_NOTE    </sql>
 
     <sql id="StockOutCol">
-        STOCK_OUT_ID, STOCK_OUT_DOCUNUM, DOCUMENT_DATE, COMPANY_ID, WORK_POINT_ID, EMPLOYEE_ID, EMPLOYEE_NAME, AUDITED, WAREHOUSE_ID, WAREHOUSE_NAME, OUTBOUND_TYPE, PURCH_RETURN_ID, SALE_ID, TRANSFER_ORDER_ID, BLITEM_ID, INVENTORY_QUANTITY, DOCUMENTS_NOTE    </sql>
+        STOCK_OUT_ID, STOCK_OUT_DOCUNUM, DOCUMENT_DATE, COMPANY_ID, WORK_POINT_ID, EMPLOYEE_ID, EMPLOYEE_NAME, AUDITED, WAREHOUSE_ID, WAREHOUSE_NAME, OUTBOUND_TYPE, PURCH_RETURN_ID, SALE_ID, TRANSFER_ORDER_ID, BLITEM_ID, DELIVERY_QUANTITY, DOCUMENTS_NOTE    </sql>
 
     <sql id="StockOutJoinCol">
-        S.STOCK_OUT_ID, S.STOCK_OUT_DOCUNUM, S.DOCUMENT_DATE, S.COMPANY_ID, S.WORK_POINT_ID, S.EMPLOYEE_ID, S.EMPLOYEE_NAME, S.AUDITED, S.WAREHOUSE_ID, S.WAREHOUSE_NAME, S.OUTBOUND_TYPE, S.PURCH_RETURN_ID, S.SALE_ID, S.TRANSFER_ORDER_ID, S.BLITEM_ID, S.INVENTORY_QUANTITY, S.DOCUMENTS_NOTE    </sql>
+        S.STOCK_OUT_ID, S.STOCK_OUT_DOCUNUM, S.DOCUMENT_DATE, S.COMPANY_ID, S.WORK_POINT_ID, S.EMPLOYEE_ID, S.EMPLOYEE_NAME, S.AUDITED, S.WAREHOUSE_ID, S.WAREHOUSE_NAME, S.OUTBOUND_TYPE, S.PURCH_RETURN_ID, S.SALE_ID, S.TRANSFER_ORDER_ID, S.BLITEM_ID, S.DELIVERY_QUANTITY, S.DOCUMENTS_NOTE    </sql>
 
     <sql id="PurchaseReturnCol">
         PURCH_RETURN_ID, COMPANY_ID, WORK_POINT_ID, PURCH_RETURN_DOCUNUM, PURCH_ID, PURCH_DOCUNUM, DOCUMENT_DATE, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, TRANSACTION_AMOUNT, REFUND_AMOUNT, AUDITED, IN_REFUND, IS_OUT, IS_ONLINE    </sql>
@@ -229,8 +229,8 @@
             <if test="blitemId != null">
                 or BLITEM_ID like '%'||#{blitemId}||'%'
             </if>
-            <if test="inventoryQuantity != null">
-                or INVENTORY_QUANTITY like '%'||#{inventoryQuantity}||'%'
+            <if test="deliveryQuantity != null">
+                or DELIVERY_QUANTITY like '%'||#{deliveryQuantity}||'%'
             </if>
             <if test="documentsNote != null and documentsNote != ''">
                 or DOCUMENTS_NOTE like '%'||#{documentsNote}||'%'
@@ -289,8 +289,8 @@
             <if test="blitemId != null">
                 and BLITEM_ID = #{blitemId}
             </if>
-            <if test="inventoryQuantity != null">
-                and INVENTORY_QUANTITY = #{inventoryQuantity}
+            <if test="deliveryQuantity != null">
+                and DELIVERY_QUANTITY = #{deliveryQuantity}
             </if>
             <if test="documentsNote != null and documentsNote != ''">
                 and DOCUMENTS_NOTE = #{documentsNote}
@@ -345,8 +345,8 @@
             <if test="blitemId != null">
                 BLITEM_ID,
             </if>
-            <if test="inventoryQuantity != null">
-                INVENTORY_QUANTITY,
+            <if test="deliveryQuantity != null">
+                DELIVERY_QUANTITY,
             </if>
             <if test="documentsNote != null">
                 DOCUMENTS_NOTE,
@@ -397,8 +397,8 @@
             <if test="blitemId != null">
                 #{blitemId},
             </if>
-            <if test="inventoryQuantity != null">
-                #{inventoryQuantity},
+            <if test="deliveryQuantity != null">
+                #{deliveryQuantity},
             </if>
             <if test="documentsNote != null">
                 #{documentsNote},
@@ -457,8 +457,8 @@
                 <if test="entity.blitemId != null">
                     BLITEM_ID,
                 </if>
-                <if test="entity.inventoryQuantity != null">
-                    INVENTORY_QUANTITY,
+                <if test="entity.deliveryQuantity != null">
+                    DELIVERY_QUANTITY,
                 </if>
                 <if test="entity.documentsNote != null">
                     DOCUMENTS_NOTE,
@@ -509,8 +509,8 @@
                 <if test="entity.blitemId != null">
                     #{entity.blitemId},
                 </if>
-                <if test="entity.inventoryQuantity != null">
-                    #{entity.inventoryQuantity},
+                <if test="entity.deliveryQuantity != null">
+                    #{entity.deliveryQuantity},
                 </if>
                 <if test="entity.documentsNote != null">
                     #{entity.documentsNote},
@@ -565,8 +565,8 @@
             <if test="blitemId != null">
                 BLITEM_ID = #{blitemId},
             </if>
-            <if test="inventoryQuantity != null">
-                INVENTORY_QUANTITY = #{inventoryQuantity},
+            <if test="deliveryQuantity != null">
+                DELIVERY_QUANTITY = #{deliveryQuantity},
             </if>
             <if test="documentsNote != null">
                 DOCUMENTS_NOTE = #{documentsNote},
@@ -622,8 +622,8 @@
                 <if test="entity.blitemId != null">
                     BLITEM_ID = #{entity.blitemId},
                 </if>
-                <if test="entity.inventoryQuantity != null">
-                    INVENTORY_QUANTITY = #{entity.inventoryQuantity},
+                <if test="entity.deliveryQuantity != null">
+                    DELIVERY_QUANTITY = #{entity.deliveryQuantity},
                 </if>
                 <if test="entity.documentsNote != null">
                     DOCUMENTS_NOTE = #{entity.documentsNote},

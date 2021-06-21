@@ -3,6 +3,7 @@ package com.eims.mybatis.entity;
 import java.math.BigDecimal;
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -36,9 +37,13 @@ public class Inventory implements Serializable {
 
     private BigDecimal purchasePrice;
 
-    private Integer inventoryQuantity;
+    private Integer inventory;
 
     private BigDecimal marketPrice;
 
     private BigDecimal totalCost;
+
+    private Integer minimumStock;
+
+    private Product product;
 }

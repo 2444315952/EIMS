@@ -5,6 +5,7 @@ import com.eims.vo.form.InventoryQueryForm;
 
 import java.util.List;
 
+import com.eims.vo.table.InventoryTable;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -23,6 +24,7 @@ public interface InventoryService {
      */
     Inventory queryById(Integer inventoryId);
 
+
     /**
      * 查询所有数据
      *
@@ -38,6 +40,13 @@ public interface InventoryService {
      * @return 对象列表
      */
     PageInfo<Inventory> queryBySearch(InventoryQueryForm inventoryQueryForm);
+
+    /**
+     * 查询完整库存信息
+     * @param inventoryQueryForm
+     * @return
+     */
+    PageInfo<InventoryTable> queryInventoryVo(InventoryQueryForm inventoryQueryForm);
 
     /**
      * 根据查询条件筛选数据
@@ -70,6 +79,7 @@ public interface InventoryService {
      * @return 实例对象
      */
     Inventory update(Inventory inventory);
+
 
     /**
      * 批量修改数据

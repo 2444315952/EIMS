@@ -27,7 +27,7 @@
 					<el-row>
 						<el-row>
 							<el-col :span="8" v-if="isAdd==true">
-								<el-form-item label="选单添加" style="float: left;" prop="sellOrderDocunum" required>
+								<el-form-item label="选单添加" style="float: left;" prop="sellOrderDocunum" >
 									<el-input v-model="ruleForm.sellOrderDocunum" size="medium" disabled>
 										<template #append>
 											<el-button icon="el-icon-plus" size="small"

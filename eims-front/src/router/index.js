@@ -27,6 +27,13 @@ import PaymentList from '../components/capital/PaymentList.vue'
 import Customer from '../components/basicData/Customer.vue'
 import Product from '../components/basicData/Product.vue'
 
+import dingdandetail from '../components/sell/dingdandetail.vue'
+import dingdanquery from '../components/sell/dingdanquery.vue'
+import sellbill from "../components/sell/SellBill.vue"
+import selldetail from '../components/sell/SellDetail.vue'
+import sellreturn from '../components/sell/SellReturn.vue'
+import sellreturndetail from '../components/sell/SellReturnDetail.vue'
+
 const routes = [{
 		path: '/',
 		redirect: '/Login'
@@ -36,6 +43,7 @@ const routes = [{
 		name: "Login",
 		component: Login
 	},
+
 	{
 		path: '/PurchaseList',
 		name: 'PurchaseList',
@@ -138,6 +146,38 @@ const routes = [{
 		path: '/Product',
 		name: 'Product',
 		component: Product
+	},
+	{
+		path: '/dingdandetail',
+		name: 'dingdandetail',
+		component: dingdandetail
+	},
+	{
+		path: '/dingdanquery',
+		name: 'dingdanquery',
+		component: dingdanquery
+	},
+
+	{
+		path: '/sellbill',
+		name: 'sellbill',
+		component: sellbill
+	},
+	{
+		path: '/selldetail/:sellId?',
+		name: 'selldetail',
+		component: selldetail
+	},
+
+	{
+		path: '/sellreturn',
+		name: 'sellreturn',
+		component: sellreturn
+	},
+	 {
+		path: '/sellreturndetail',
+		name: 'sellreturndetail',
+		component: sellreturndetail
 	}
 ]
 

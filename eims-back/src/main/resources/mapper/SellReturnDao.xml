@@ -67,7 +67,11 @@
         S.SELL_RETURN_ID, S.COMPANY_ID, S.WORK_POINT_ID, S.SELL_RETURN_DOCUNUM, S.DOCUMENT_DATE, S.AUTITED, S.RETURN_PAYMENT_TERM, S.EMPLOYEE_ID, S.EMPLOYEE_NAME, S.SELL_ID,S.SELL_DOCUNUM,S.CUSTOMER_ID, S.CUSTOMER_NAME, S.WAREHOUSE_ID, S.WAREHOUSE_NAME, S.RET_PAY_AMOUNT, S.RET_PAID_AMOUNT, S.RET_SELL_REMARK, S.REFUNDED, S.IN_STORAGE, S.SELL_RETURN_HIRTHDAY   </sql>
 
     <sql id="SellReturnCol">
+<<<<<<< HEAD
         SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID,S.SELL_DOCUNUM, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, IN_STORAGE, SELL_RETURN_HIRTHDAY   </sql>
+=======
+        SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, IN_STORAGE, SELL_RETURN_HIRTHDAY,SELL_DOCUNUM   </sql>
+>>>>>>> cce76d9f6560700ca74c7477c1a63df289d03018
 
 
     <sql id="ReturnBillsProductCol">
@@ -304,6 +308,9 @@
             <if test="sellReturnHirthday != null">
                 SELL_RETURN_HIRTHDAY,
             </if>
+            <if test="sellDocunum != null">
+                SELL_DOCUNUM,
+            </if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -367,6 +374,9 @@
             </if>
             <if test="sellReturnHirthday != null">
                 #{sellReturnHirthday},
+            </if>
+            <if test="sellDocunum != null">
+                #{sellDocunum},
             </if>
         </trim>
         <selectKey keyProperty="sellReturnId" resultType="INTEGER" order="BEFORE">
@@ -440,6 +450,9 @@
                 <if test="entity.sellReturnHirthday != null">
                     SELL_RETURN_HIRTHDAY,
                 </if>
+                <if test="sellDocunum != null">
+                    SELL_DOCUNUM,
+                </if>
             </trim>
             values
             <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -503,6 +516,9 @@
                 </if>
                 <if test="entity.sellReturnHirthday != null">
                     #{entity.sellReturnHirthday},
+                </if>
+                <if test="sellDocunum != null">
+                    #{sellDocunum},
                 </if>
             </trim>
         </foreach>
@@ -572,6 +588,10 @@
             <if test="sellReturnHirthday != null">
                 SELL_RETURN_HIRTHDAY = #{sellReturnHirthday},
             </if>
+
+            <if test="sellDocunum != null">
+                SELL_DOCUNUM= #{sellDocunum},
+            </if>
         </set>
         where SELL_RETURN_ID = #{sellReturnId}
     </update>
@@ -640,6 +660,9 @@
                 </if>
                 <if test="entity.sellReturnHirthday != null">
                     SELL_RETURN_HIRTHDAY = #{entity.sellReturnHirthday},
+                </if>
+                <if test="sellDocunum != null">
+                    SELL_DOCUNUM= #{sellDocunum},
                 </if>
             </set>
             where SELL_RETURN_ID = #{entity.sellReturnId}

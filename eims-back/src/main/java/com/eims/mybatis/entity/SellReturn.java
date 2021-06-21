@@ -67,4 +67,6 @@ public class SellReturn implements Serializable {
     private Date sellReturnHirthday;
 
     private List<ReturnBillsProduct> returnBillsProductList;
+
+    private String sellDocunum;
 }

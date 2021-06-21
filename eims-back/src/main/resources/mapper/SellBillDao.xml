@@ -8,7 +8,7 @@
         <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
         <result property="sellDocunum" column="SELL_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="billsType" column="BILLS_TYPE" jdbcType="VARCHAR"/>
-        <result property="sellDate" column="SELL_DATE" jdbcType="VARCHAR"/>
+        <result property="sellDate" column="SELL_DATE" jdbcType="TIMESTAMP"/>
         <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
         <result property="paymentTerm" column="PAYMENT_TERM" jdbcType="VARCHAR"/>
         <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
@@ -25,8 +25,29 @@
         <result property="isRetail" column="IS_RETAIL" jdbcType="INTEGER"/>
         <result property="received" column="RECEIVED" jdbcType="INTEGER"/>
         <result property="sellAddress" column="SELL_ADDRESS" jdbcType="VARCHAR"/>
+<<<<<<< HEAD
         <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
         <result property="outStorage" column="OUT_STORAGE" jdbcType="INTEGER"/>
+=======
+        <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="TIMESTAMP"/>
+        <result property="outStorage" column="OUT_STORAGE" jdbcType="INTEGER"/>
+        <collection property="sellDetails" ofType="com.eims.mybatis.entity.SellDetail" column="sellId">
+            <result property="sellDetailId" column="SELL_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+            <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productModel" column="PRODUCT_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
+            <result property="sellPrice" column="SELL_PRICE" jdbcType="VARCHAR"/>
+            <result property="sellQuantity" column="SELL_QUANTITY" jdbcType="INTEGER"/>
+            <result property="detailPayAmount" column="DETAIL_PAY_AMOUNT" jdbcType="VARCHAR"/>
+            <result property="detailPaidAmount" column="DETAIL_PAID_AMOUNT" jdbcType="VARCHAR"/>
+            <result property="detailDiscounts" column="DETAIL_DISCOUNTS" jdbcType="VARCHAR"/>
+            <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
+        </collection>
+>>>>>>> cce76d9f6560700ca74c7477c1a63df289d03018
     </resultMap>
 
     <resultMap type="com.eims.mybatis.entity.SellBill" id="SellBillListMap">
@@ -55,7 +76,7 @@
         <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
         <result property="outStorage" column="OUT_STORAGE" jdbcType="INTEGER"/>
 
-        <collection property="sellDetailList" javaType="list" ofType="com.eims.mybatis.entity.SellDetail">
+        <collection property="sellDetails" javaType="list" ofType="com.eims.mybatis.entity.SellDetail">
             <result property="sellDetailId" column="SELL_DETAIL_ID" jdbcType="INTEGER"/>
             <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
             <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
@@ -67,16 +88,20 @@
             <result property="sellQuantity" column="SELL_QUANTITY" jdbcType="INTEGER"/>
             <result property="detailPayAmount" column="DETAIL_PAY_AMOUNT" jdbcType="VARCHAR"/>
             <result property="detailPaidAmount" column="DETAIL_PAID_AMOUNT" jdbcType="VARCHAR"/>
-            <result property="detail_Discounts" column="DETAIL__DISCOUNTS" jdbcType="VARCHAR"/>
+            <result property="detailDiscounts" column="DETAIL_DISCOUNTS" jdbcType="VARCHAR"/>
             <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
         </collection>
     </resultMap>
 
-    <sql id="SellDetailCol">
-        D.SELL_DETAIL_ID, D.SELL_ID, D.PRODUCT_ID, D.PRODUCT_PICTURE, D.PRODUCT_NAME, D.PRODUCT_MODEL, D.PRODUCT_UNIT, D.SELL_PRICE, D.SELL_QUANTITY, D.DETAIL_PAY_AMOUNT, D.DETAIL_PAID_AMOUNT, D.DETAIL__DISCOUNTS, D.RETURNED    </sql>
-
     <sql id="SellBillCol">
-        SELL_ID, COMPANY_ID, WORK_POINT_ID, SELL_DOCUNUM, BILLS_TYPE, SELL_DATE, AUDITED, PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, BILL_PAY_AMOUNT, BILL_PAID_AMOUNT, SELL_DISCOUNTS, SELL_REMARK, RETURN_STATE, IS_RETAIL, RECEIVED, SELL_ADDRESS, SELL_HIRTHDAY    </sql>
+        SELL_ID, COMPANY_ID, WORK_POINT_ID, SELL_DOCUNUM, BILLS_TYPE, SELL_DATE, AUDITED, PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, BILL_PAY_AMOUNT, BILL_PAID_AMOUNT, SELL_DISCOUNTS, SELL_REMARK, RETURN_STATE, IS_RETAIL, RECEIVED, SELL_ADDRESS, SELL_HIRTHDAY, OUT_STORAGE    </sql>
+
+    <sql id="SellBillCol1">
+        S.SELL_ID, S.COMPANY_ID, S.WORK_POINT_ID, S.SELL_DOCUNUM, S.BILLS_TYPE, S.SELL_DATE, S.AUDITED, S.PAYMENT_TERM, S.EMPLOYEE_ID, S.EMPLOYEE_NAME, S.CUSTOMER_ID, S.CUSTOMER_NAME, S.WAREHOUSE_ID, S.WAREHOUSE_NAME, S.BILL_PAY_AMOUNT, S.BILL_PAID_AMOUNT, S.SELL_DISCOUNTS, S.SELL_REMARK, S.RETURN_STATE, S.IS_RETAIL, S.RECEIVED, S.SELL_ADDRESS, S.SELL_HIRTHDAY, S.OUT_STORAGE ,   </sql>
+
+    <sql id="SellDetailCol">
+        D.SELL_DETAIL_ID, D.PRODUCT_ID, D.PRODUCT_PICTURE, D.PRODUCT_NAME, D.PRODUCT_MODEL, D.PRODUCT_UNIT, D.MARKET_PRICE, D.SELL_PRICE, D.SELL_QUANTITY, D.DETAIL_PAY_AMOUNT, D.DETAIL_PAID_AMOUNT, D.DETAIL_DISCOUNTS, D.RETURNED    </sql>
+
 
     <sql id="SellBillJoinCol">
         B.SELL_ID, B.COMPANY_ID, B.WORK_POINT_ID, B.SELL_DOCUNUM, B.BILLS_TYPE, B.SELL_DATE, B.AUDITED, B.PAYMENT_TERM, B.EMPLOYEE_ID, B.EMPLOYEE_NAME, B.CUSTOMER_ID, B.CUSTOMER_NAME, B.WAREHOUSE_ID, B.WAREHOUSE_NAME, B.BILL_PAY_AMOUNT, B.BILL_PAID_AMOUNT, B.SELL_DISCOUNTS, B.SELL_REMARK, B.RETURN_STATE, B.IS_RETAIL, B.RECEIVED, B.SELL_ADDRESS, B.SELL_HIRTHDAY ,B.OUT_STORAGE   </sql>
@@ -93,28 +118,20 @@
     <select id="queryAll" resultMap="SellBillListMap">
         select
         <include refid="SellBillCol"></include>
-        from (select <include refid="SellBillCol"></include> from EIMS.SELL_BILL
-        <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
-        </where>
-        )
+        from  EIMS.SELL_BILL
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="SellBillMap">
         select
         <include refid="SellBillCol"></include>
-        from (select <include refid="SellBillCol"></include> from EIMS.SELL_BILL
-        <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
-        </where>
-        )
-
+        from EIMS.SELL_BILL
         <where>
             <if test="sellId != null">
                 or SELL_ID like '%'||#{sellId}||'%'
+            </if>
+            <if test="companyId != null">
+                or COMPANY_ID like '%'||#{companyId}||'%'
             </if>
             <if test="sellDocunum != null and sellDocunum != ''">
                 or SELL_DOCUNUM like '%'||#{sellDocunum}||'%'
@@ -186,16 +203,16 @@
     <select id="queryAndByPojo" resultMap="SellBillMap">
         select
         <include refid="SellBillCol"></include>
-        from (select <include refid="SellBillCol"></include> from EIMS.SELL_BILL
-        <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
-        </where>
-        )
-
+        from EIMS.SELL_BILL
         <where>
             <if test="sellId != null">
                 and SELL_ID = #{sellId}
+            </if>
+            <if test="companyId != null">
+                and COMPANY_ID = #{companyId}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
             </if>
             <if test="sellDocunum != null and sellDocunum != ''">
                 and SELL_DOCUNUM = #{sellDocunum}

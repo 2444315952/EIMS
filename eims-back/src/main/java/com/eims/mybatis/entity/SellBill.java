@@ -1,6 +1,7 @@
 package com.eims.mybatis.entity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.List;
@@ -14,14 +15,14 @@ import lombok.ToString;
  * (SellBill)实体类
  *
  * @author makejava
- * @since 2021-06-11 21:26:47
+ * @since 2021-06-15 23:54:47
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class SellBill implements Serializable {
-    private static final long serialVersionUID = -21198404183944975L;
+    private static final long serialVersionUID = -16668585167695035L;
 
     private Integer sellId;
 
@@ -33,7 +34,7 @@ public class SellBill implements Serializable {
 
     private String billsType;
 
-    private Object sellDate;
+    private Date sellDate;
 
     private Integer audited;
 
@@ -67,9 +68,18 @@ public class SellBill implements Serializable {
 
     private String sellAddress;
 
-    private Object sellHirthday;
 
+<<<<<<< HEAD
     private Integer outStorage;
 
     private List<SellDetail> sellDetailList;
+=======
+
+    private Date sellHirthday;
+
+    private Integer outStorage;
+
+    private List<SellDetail> sellDetails;
+
+>>>>>>> cce76d9f6560700ca74c7477c1a63df289d03018
 }

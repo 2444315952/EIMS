@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,8 @@ public class SellOrderBill implements Serializable {
     private Integer companyId;
 
     private Integer workPointId;
+
+    private String WorkPointName;
 
     private String sellOrderDocunum;
 
@@ -58,4 +61,6 @@ public class SellOrderBill implements Serializable {
     private String sellOrderAddress;
 
     private Date sellOrderHirthday;
+
+    private List<SellOrderDetail> sellOrderDetails;
 }

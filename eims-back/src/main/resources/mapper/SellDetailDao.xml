@@ -21,7 +21,11 @@
     </resultMap>
 
     <sql id="SellDetailCol">
+<<<<<<< HEAD
         SELL_DETAIL_ID, SELL_ID, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, PRODUCT_MODEL, PRODUCT_UNIT,MARKET_PRICE,SELL_PRICE, SELL_QUANTITY, DETAIL_PAY_AMOUNT, DETAIL_PAID_AMOUNT, DETAIL_DISCOUNTS, RETURNED    </sql>
+=======
+        SELL_DETAIL_ID, SELL_ID, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, PRODUCT_MODEL, PRODUCT_UNIT, MARKET_PRICE, SELL_PRICE, SELL_QUANTITY, DETAIL_PAY_AMOUNT, DETAIL_PAID_AMOUNT, DETAIL_DISCOUNTS, RETURNED    </sql>
+>>>>>>> cce76d9f6560700ca74c7477c1a63df289d03018
 
     <!--查询单个-->
     <select id="queryById" resultMap="SellDetailMap">
@@ -35,19 +39,14 @@
     <select id="queryAll" resultMap="SellDetailMap">
         select
         <include refid="SellDetailCol"></include>
-        from (select <include refid="SellDetailCol"></include> from EIMS.SELL_DETAIL
-        <where>
-        </where>)
+        from (select * from EIMS.SELL_DETAIL where work_point_id = #{workPointId})
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="SellDetailMap">
         select
         <include refid="SellDetailCol"></include>
-        from (select <include refid="SellDetailCol"></include> from EIMS.SELL_DETAIL
-        <where>
-        </where>)
-
+        from  EIMS.SELL_DETAIL
         <where>
             <if test="sellDetailId != null">
                 or SELL_DETAIL_ID like '%'||#{sellDetailId}||'%'
@@ -98,10 +97,7 @@
     <select id="queryAndByPojo" resultMap="SellDetailMap">
         select
         <include refid="SellDetailCol"></include>
-        from (select <include refid="SellDetailCol"></include> from EIMS.SELL_DETAIL
-        <where>
-        </where>)
-
+        from EIMS.SELL_DETAIL
         <where>
             <if test="sellDetailId != null">
                 and SELL_DETAIL_ID = #{sellDetailId}
@@ -448,6 +444,16 @@
         <foreach collection="list" item="entity" open="(" separator="," close=")">
             #{entity.sellDetailId}
         </foreach>
+    </delete>
+
+
+    <delete id="deleteSellDetilIdAndNotInKeyIds">
+        delete from (select   <include refid="SellDetailCol"></include> from EIMS.SELL_DETAIL where SELL_ID = #{sellId})
+        where SELL_DETAIL_ID not in
+        <foreach collection="keyIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
     </delete>
 </mapper>
 

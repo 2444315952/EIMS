@@ -71,6 +71,8 @@ public interface SellBillService {
      */
     SellBill update(SellBill sellBill);
 
+    SellBill updateanddetail(SellBill sellBill);
+
     /**
      * 批量修改数据
      *

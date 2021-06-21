@@ -36,6 +36,8 @@ public class SellReturnQueryForm implements Serializable {
 
     private Integer sellId;
 
+    private String sellDocunum;
+
     private Integer customerId;
 
     private String customerName;

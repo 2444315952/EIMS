@@ -98,6 +98,24 @@
         <result property="sellReturnHirthday" column="SELL_RETURN_HIRTHDAY" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <resultMap type="com.eims.mybatis.entity.Inventory" id="InventoryMap">
+        <result property="inventoryId" column="INVENTORY_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
+        <result property="warehouseName" column="WAREHOUSE_NAME" jdbcType="VARCHAR"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
+        <result property="inventory" column="INVENTORY" jdbcType="INTEGER"/>
+        <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
+        <result property="totalCost" column="TOTAL_COST" jdbcType="VARCHAR"/>
+        <result property="minimumStock" column="MINIMUM_STOCK" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="InventoryCol">
+        INVENTORY_ID, COMPANY_ID, WAREHOUSE_ID, WAREHOUSE_NAME, PRODUCT_ID, PRODUCT_NAME, PURCHASE_PRICE, INVENTORY, MARKET_PRICE, TOTAL_COST ,MINIMUM_STOCK   </sql>
+
+
     <sql id="ReturnBillsProductCol">
         RET_BP_ID, SELL_RETURN_ID, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, PRODUCT_MODEL, PRODUCT_UNIT, SELL_PRICE, SELL_QUANTITY, RET_BILL_PAY_AMOUNT, RET_BILL_PAID_AMOUNT    </sql>
 
@@ -120,6 +138,18 @@
         from EIMS.WAREHOUSE_WARRANT W left join EIMS.WAREHOUSING_DETAIL D on W.WAREHOUSE_WARRANT_ID=D.WAREHOUSE_WARRANT_ID
         where W.WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
     </select>
+
+
+    <!--审核入库单改变库存-->
+    <update id="auditStorage">
+        update EIMS.INVENTORY
+        <set>
+            <if test="inventory != null">
+                INVENTORY = (inventory + #{inventoryQuantity})
+            </if>
+        </set>
+        where WAREHOUSE_ID = #{warehouseId} and  PRODUCT_ID = #{productId}
+    </update>
 
     <!--晒选未入库的销售退货单-->
     <select id="querySellInStorage" resultMap="SellReturnMap">

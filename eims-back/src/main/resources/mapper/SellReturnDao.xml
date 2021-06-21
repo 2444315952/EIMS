@@ -13,6 +13,7 @@
         <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
         <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
         <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+        <result property="sellDocunum" column="SELL_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="customerId" column="CUSTOMER_ID" jdbcType="INTEGER"/>
         <result property="customerName" column="CUSTOMER_NAME" jdbcType="VARCHAR"/>
         <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
@@ -63,10 +64,10 @@
     </resultMap>
 
     <sql id="SellReturnjoinCol">
-        S.SELL_RETURN_ID, S.COMPANY_ID, S.WORK_POINT_ID, S.SELL_RETURN_DOCUNUM, S.DOCUMENT_DATE, S.AUTITED, S.RETURN_PAYMENT_TERM, S.EMPLOYEE_ID, S.EMPLOYEE_NAME, S.SELL_ID, S.CUSTOMER_ID, S.CUSTOMER_NAME, S.WAREHOUSE_ID, S.WAREHOUSE_NAME, S.RET_PAY_AMOUNT, S.RET_PAID_AMOUNT, S.RET_SELL_REMARK, S.REFUNDED, S.IN_STORAGE, S.SELL_RETURN_HIRTHDAY   </sql>
+        S.SELL_RETURN_ID, S.COMPANY_ID, S.WORK_POINT_ID, S.SELL_RETURN_DOCUNUM, S.DOCUMENT_DATE, S.AUTITED, S.RETURN_PAYMENT_TERM, S.EMPLOYEE_ID, S.EMPLOYEE_NAME, S.SELL_ID,S.SELL_DOCUNUM,S.CUSTOMER_ID, S.CUSTOMER_NAME, S.WAREHOUSE_ID, S.WAREHOUSE_NAME, S.RET_PAY_AMOUNT, S.RET_PAID_AMOUNT, S.RET_SELL_REMARK, S.REFUNDED, S.IN_STORAGE, S.SELL_RETURN_HIRTHDAY   </sql>
 
     <sql id="SellReturnCol">
-        SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, IN_STORAGE, SELL_RETURN_HIRTHDAY   </sql>
+        SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID,S.SELL_DOCUNUM, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, IN_STORAGE, SELL_RETURN_HIRTHDAY   </sql>
 
 
     <sql id="ReturnBillsProductCol">
@@ -129,6 +130,9 @@
             </if>
             <if test="sellId != null">
                 or SELL_ID like '%'||#{sellId}||'%'
+            </if>
+            <if test="sellDocunum != null and sellDocunum != ''">
+                or SELL_DOCUNUM like '%'||#{sellDocunum}||'%'
             </if>
             <if test="customerId != null">
                 or CUSTOMER_ID like '%'||#{customerId}||'%'
@@ -199,6 +203,9 @@
             <if test="sellId != null">
                 and SELL_ID = #{sellId}
             </if>
+            <if test="sellDocunum != null and sellDocunum != ''">
+                and SELL_DOCUNUM = #{sellDocunum}
+            </if>
             <if test="customerId != null">
                 and CUSTOMER_ID = #{customerId}
             </if>
@@ -264,6 +271,9 @@
             <if test="sellId != null">
                 SELL_ID,
             </if>
+            <if test="sellDocunum != null">
+                SELL_DOCUNUM,
+            </if>
             <if test="customerId != null">
                 CUSTOMER_ID,
             </if>
@@ -324,6 +334,9 @@
             </if>
             <if test="sellId != null">
                 #{sellId},
+            </if>
+            <if test="sellDocunum != null">
+                #{sellDocunum},
             </if>
             <if test="customerId != null">
                 #{customerId},
@@ -394,6 +407,9 @@
                 <if test="entity.sellId != null">
                     SELL_ID,
                 </if>
+                <if test="entity.sellDocunum != null">
+                    SELL_DOCUNUM,
+                </if>
                 <if test="entity.customerId != null">
                     CUSTOMER_ID,
                 </if>
@@ -454,6 +470,9 @@
                 </if>
                 <if test="entity.sellId != null">
                     #{entity.sellId},
+                </if>
+                <if test="entity.sellDocunum != null">
+                    #{entity.sellDocunum},
                 </if>
                 <if test="entity.customerId != null">
                     #{entity.customerId},
@@ -520,6 +539,9 @@
             <if test="sellId != null">
                 SELL_ID = #{sellId},
             </if>
+            <if test="sellDocunum != null">
+                SELL_DOCUNUM = #{sellDocunum},
+            </if>
             <if test="customerId != null">
                 CUSTOMER_ID = #{customerId},
             </if>
@@ -585,6 +607,9 @@
                 </if>
                 <if test="entity.sellId != null">
                     SELL_ID = #{entity.sellId},
+                </if>
+                <if test="entity.sellDocunum != null">
+                    SELL_DOCUNUM = #{entity.sellDocunum},
                 </if>
                 <if test="entity.customerId != null">
                     CUSTOMER_ID = #{entity.customerId},

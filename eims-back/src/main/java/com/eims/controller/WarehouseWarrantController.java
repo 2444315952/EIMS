@@ -1,8 +1,7 @@
 package com.eims.controller;
 
-import com.eims.mybatis.entity.Purchase;
-import com.eims.mybatis.entity.SellReturn;
-import com.eims.mybatis.entity.WarehouseWarrant;
+import com.eims.mybatis.entity.*;
+import com.eims.service.InventoryService;
 import com.eims.service.PurchaseService;
 import com.eims.vo.form.PurchaseQueryForm;
 import com.eims.vo.form.SellReturnQueryForm;
@@ -30,6 +29,8 @@ public class WarehouseWarrantController {
     @Resource
     private WarehouseWarrantService warehouseWarrantService;
 
+    @Resource
+    private InventoryService inventoryService;
 
     /**
      * 通过主键查询单条数据
@@ -133,6 +134,19 @@ public class WarehouseWarrantController {
     @PutMapping("/warehouseWarrant")
     public WarehouseWarrant update(@RequestBody WarehouseWarrant warehouseWarrant) {
         return this.warehouseWarrantService.update(warehouseWarrant);
+    }
+
+
+    /**
+     * 审核入库单改变库存
+     * @param inventoryQuantity
+     * @param warehouseId
+     * @param productId
+     * @return
+     */
+    @PutMapping("/inventory/update")
+    public Inventory updateInventory(Integer inventoryQuantity, Integer warehouseId, Integer productId){
+        return this.warehouseWarrantService.auditStorage(inventoryQuantity,warehouseId,productId);
     }
 
     /**

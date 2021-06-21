@@ -29,11 +29,13 @@ public class InventoryQueryForm implements Serializable {
 
     private BigDecimal purchasePrice;
 
-    private Integer inventoryQuantity;
+    private Integer inventory;
 
     private BigDecimal marketPrice;
 
     private BigDecimal totalCost;
+
+    private Integer minimumStock;
 
     private Integer pageNum;    //当前页
     private Integer pageSize;   //页大小

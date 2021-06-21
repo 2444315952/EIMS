@@ -2,6 +2,7 @@ package com.eims.mybatis.dao;
 
 import com.eims.mybatis.entity.Inventory;
 import com.eims.vo.form.InventoryQueryForm;
+import com.eims.vo.table.InventoryTable;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,6 +25,7 @@ public interface InventoryDao {
      */
     Inventory queryById(Integer inventoryId);
 
+
     /**
      * 查询所有数据
      *
@@ -31,6 +33,13 @@ public interface InventoryDao {
      * @return 实例对象
      */
     List<Inventory> queryAll(InventoryQueryForm inventoryQueryForm);
+
+    /**
+     * 查询完整库存信息
+     * @param inventoryQueryForm
+     * @return
+     */
+    List<InventoryTable> queryInventoryVo(InventoryQueryForm inventoryQueryForm);
 
     /**
      * 通过实体作为或者条件查询
@@ -71,6 +80,7 @@ public interface InventoryDao {
      * @return 影响行数
      */
     int update(Inventory inventory);
+
 
     /**
      * 批量修改数据

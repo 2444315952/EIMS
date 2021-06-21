@@ -26,6 +26,7 @@
         <result property="received" column="RECEIVED" jdbcType="INTEGER"/>
         <result property="sellAddress" column="SELL_ADDRESS" jdbcType="VARCHAR"/>
         <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
+        <result property="outStorage" column="OUT_STORAGE" jdbcType="INTEGER"/>
     </resultMap>
 
     <resultMap type="com.eims.mybatis.entity.SellBill" id="SellBillListMap">
@@ -52,6 +53,7 @@
         <result property="received" column="RECEIVED" jdbcType="INTEGER"/>
         <result property="sellAddress" column="SELL_ADDRESS" jdbcType="VARCHAR"/>
         <result property="sellHirthday" column="SELL_HIRTHDAY" jdbcType="VARCHAR"/>
+        <result property="outStorage" column="OUT_STORAGE" jdbcType="INTEGER"/>
 
         <collection property="sellDetailList" javaType="list" ofType="com.eims.mybatis.entity.SellDetail">
             <result property="sellDetailId" column="SELL_DETAIL_ID" jdbcType="INTEGER"/>
@@ -77,7 +79,7 @@
         SELL_ID, COMPANY_ID, WORK_POINT_ID, SELL_DOCUNUM, BILLS_TYPE, SELL_DATE, AUDITED, PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, BILL_PAY_AMOUNT, BILL_PAID_AMOUNT, SELL_DISCOUNTS, SELL_REMARK, RETURN_STATE, IS_RETAIL, RECEIVED, SELL_ADDRESS, SELL_HIRTHDAY    </sql>
 
     <sql id="SellBillJoinCol">
-        B.SELL_ID, B.COMPANY_ID, B.WORK_POINT_ID, B.SELL_DOCUNUM, B.BILLS_TYPE, B.SELL_DATE, B.AUDITED, B.PAYMENT_TERM, B.EMPLOYEE_ID, B.EMPLOYEE_NAME, B.CUSTOMER_ID, B.CUSTOMER_NAME, B.WAREHOUSE_ID, B.WAREHOUSE_NAME, B.BILL_PAY_AMOUNT, B.BILL_PAID_AMOUNT, B.SELL_DISCOUNTS, B.SELL_REMARK, B.RETURN_STATE, B.IS_RETAIL, B.RECEIVED, B.SELL_ADDRESS, B.SELL_HIRTHDAY    </sql>
+        B.SELL_ID, B.COMPANY_ID, B.WORK_POINT_ID, B.SELL_DOCUNUM, B.BILLS_TYPE, B.SELL_DATE, B.AUDITED, B.PAYMENT_TERM, B.EMPLOYEE_ID, B.EMPLOYEE_NAME, B.CUSTOMER_ID, B.CUSTOMER_NAME, B.WAREHOUSE_ID, B.WAREHOUSE_NAME, B.BILL_PAY_AMOUNT, B.BILL_PAID_AMOUNT, B.SELL_DISCOUNTS, B.SELL_REMARK, B.RETURN_STATE, B.IS_RETAIL, B.RECEIVED, B.SELL_ADDRESS, B.SELL_HIRTHDAY ,B.OUT_STORAGE   </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="SellBillListMap">
@@ -174,6 +176,9 @@
             <if test="sellHirthday != null">
                 or SELL_HIRTHDAY like '%'||#{sellHirthday}||'%'
             </if>
+            <if test="outStorage != null">
+                or OUT_STORAGE like '%'||#{outStorage}||'%'
+            </if>
         </where>
     </select>
 
@@ -252,6 +257,9 @@
             <if test="sellHirthday != null">
                 and SELL_HIRTHDAY = #{sellHirthday}
             </if>
+            <if test="outStorage != null">
+                and OUT_STORAGE = #{outStorage}
+            </if>
         </where>
     </select>
 
@@ -326,6 +334,9 @@
             <if test="sellHirthday != null">
                 SELL_HIRTHDAY,
             </if>
+            <if test="outStorage != null">
+                OUT_STORAGE,
+            </if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -395,6 +406,9 @@
             </if>
             <if test="sellHirthday != null">
                 #{sellHirthday},
+            </if>
+            <if test="outStorage != null">
+                #{outStorage},
             </if>
         </trim>
         <selectKey keyProperty="sellId" resultType="INTEGER" order="BEFORE">
@@ -474,6 +488,9 @@
                 <if test="entity.sellHirthday != null">
                     SELL_HIRTHDAY,
                 </if>
+                <if test="entity.outStorage != null">
+                    OUT_STORAGE,
+                </if>
             </trim>
             values
             <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -543,6 +560,9 @@
                 </if>
                 <if test="entity.sellHirthday != null">
                     #{entity.sellHirthday},
+                </if>
+                <if test="entity.outStorage != null">
+                    #{entity.outStorage},
                 </if>
             </trim>
         </foreach>
@@ -618,6 +638,9 @@
             <if test="sellHirthday != null">
                 SELL_HIRTHDAY = #{sellHirthday},
             </if>
+            <if test="outStorage != null">
+                OUT_STORAGE = #{outStorage},
+            </if>
         </set>
         where SELL_ID = #{sellId}
     </update>
@@ -692,6 +715,9 @@
                 </if>
                 <if test="entity.sellHirthday != null">
                     SELL_HIRTHDAY = #{entity.sellHirthday},
+                </if>
+                <if test="entity.outStorage != null">
+                    OUT_STORAGE = #{entity.outStorage},
                 </if>
             </set>
             where SELL_ID = #{entity.sellId}

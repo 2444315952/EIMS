@@ -1,168 +1,176 @@
 <template>
 	<div id="Addblitem">
-		<el-container>
-			<el-container>
-				<el-main>
-					<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-row></el-row>
-						<el-row></el-row>
-						<el-row>
-							<el-col :span="2">
-								<el-form-item label="调拨单号:" prop="requisition">
-								</el-form-item>
-							</el-col>
-							<el-col :span="6">
-								<el-input width="250px" v-model="ruleForm.requisition"></el-input>
-							</el-col>
-							<el-col :span="1"></el-col>
-							<el-col :span="15">
-								<el-form-item label="单据日期:" required>
-									<el-col :span="11">
-										<el-form-item prop="date1">
-											<el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1"
-												style="width: 100%;"></el-date-picker>
-										</el-form-item>
-									</el-col>
-									<el-col class="line" :span="2">-</el-col>
-									<el-col :span="11">
-										<el-form-item prop="date2">
-											<el-time-picker placeholder="选择时间" v-model="ruleForm.date2"
-												style="width: 100%;">
-											</el-time-picker>
-										</el-form-item>
-									</el-col>
-								</el-form-item>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :span="2">
-								<span class="dialog-footer">
-									<el-form-item label="盘点仓库:" prop="warehouseName"></el-form-item>
-								</span>
-							</el-col>
-							<el-col :span="7">
-								<el-select v-model="ruleForm.export" placeholder="请选择"
-									style="width: 275px;float: left;">
-									<el-option label="默认仓" value="shanghai"></el-option>
-									<el-option label="深圳分店" value="beijing"></el-option>
+		<el-breadcrumb separator-class="el-icon-arrow-right">
+			<el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+			<el-breadcrumb-item><a href="/blitem">盘点单列表</a></el-breadcrumb-item>
+			<el-breadcrumb-item>盘点单</el-breadcrumb-item>
+		</el-breadcrumb>
+		<el-container style="padding-top:15px;">
+			<el-main style="background-color:#F9FAFC">
+				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+					<el-row></el-row>
+					<el-row></el-row>
+					<el-row>
+						<el-col :span="8">
+							<el-form-item label="单据编号:" prop="blitemDocunum">
+								<el-input v-model="ruleForm.blitemDocunum" :disabled="true"
+									style="float: left; width: 250px;"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="7">
+							<el-form-item label="单据日期:" prop="documentDate">
+								<el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.documentDate"
+									:disabled="isdisabled" style="width:250px; float: left;"></el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="1"></el-col>
+						<el-col :span="7">
+							<el-form-item label="盘点仓库:" prop="warehouseName">
+								<el-select v-model="ruleForm.warehouseName" @change="selectFoldWarehouse"
+									@click="queryFoldWarehouse()" :disabled="isdisabled" placeholder="请选择"
+									style="width: 250px;float: left;">
+									<el-option v-for="item in SelecFoltList" :label="item.warehouseName"
+										:key="item.value" :value="item.warehouseName"></el-option>
 								</el-select>
-							</el-col>
-							<el-col :span="2">
-								<el-form-item label="业务员:" prop="requisition">
-								</el-form-item>
-							</el-col>
-							<el-col :span="6">
-								<el-input width="100px" v-model="ruleForm.EmployeeName"></el-input>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :span="1"></el-col>
-							<el-col :span="22">
-								<el-table ref="multipleTable" :data="Product" :height="tableHeight"
-									tooltip-effect="dark" style="width: 100%; text-align :center;"
-									@selection-change="handleSelectionChange">
-									<el-table-column label="操作" width="100">
-										<template #default="scope">
-											<el-button icon="el-icon-circle-plus" size="mini"
-												@click="addrow(scope.$index)" circle></el-button>
-											<el-button icon="el-icon-remove" size="mini"
-												@click="deleteRow(scope.$index,Product)" circle>
-											</el-button>
-										</template>
-									</el-table-column>
-									<el-table-column prop="SpecModel" label="产品图片" width="80">
-									</el-table-column>
-									<el-table-column label="产品名称" width="180">
-										<template #default="append">
-											<el-input v-model="ruleForm.ProductName" placeholder="请输入产品名称">
-												<template #suffix>
-													<el-button icon="el-icon-more" style="border: none;" size="small"
-														@click="setProduct = true"></el-button>
-
-												</template>
-											</el-input>
-										</template>
-									</el-table-column>
-									<el-table-column prop="SpecModel" label="产品规格" width="90">
-									</el-table-column>
-									<el-table-column prop="Unit" label="单位" width="90">
-									</el-table-column>
-									<el-table-column prop="OutboundQuantity" label="库存数量" width="90" show-overflow-tooltip>
-									</el-table-column>
-									<el-table-column label="盘点数量" width="90" show-overflow-tooltip>
-										<el-input v-model="ruleForm.OutboundQuantity"> </el-input>
-									</el-table-column>
-									<el-table-column prop="OutboundQuantity" label="盈亏数" width="90" show-overflow-tooltip>
-									</el-table-column>
-									<el-table-column label="商品行备注" width="205" show-overflow-tooltip>
-										<el-input v-model="ruleForm.CommodityNote"> </el-input>
-									</el-table-column>
-
-								</el-table>
-							</el-col>
-							<el-col :span="1"></el-col>
-						</el-row>
-						<el-row></el-row>
-						<el-row></el-row>
-						<el-row></el-row>
-						<el-row>
-							<el-col :span="8">
-								<el-form-item label="单据备注:" prop="DocumentsNote">
-									<el-input type="textarea" v-model="ruleForm.DocumentsNote"></el-input>
-								</el-form-item>
-							</el-col>
-						</el-row>
-						<el-row></el-row>
-						<el-row></el-row>
-						<el-row></el-row>
-						<el-form-item>
-							<el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-							<el-button @click="resetForm('ruleForm')">取消</el-button>
-						</el-form-item>
-					</el-form>
-
-					<el-dialog title="选择商品" v-model="setProduct" :width="'730px'">
-						<span class="font-style">商品:</span>&nbsp;
-						<el-input class="inline-input" placeholder="请输入单据编号或备注" style="width: 240px;" v-model="project"
-							size="medium">
-							<template #append>
-								<el-button icon="el-icon-search" size="small" @click="search"></el-button>
-							</template>
-						</el-input>
-						<el-row></el-row>
-						<el-row></el-row>
-						<el-row>
-							<el-col :span="1"></el-col>
-							<el-col :span="22">
-								<el-table :data="Product" tooltip-effect="dark" style="width: 100%; text-align: center;"
-									max-height="500" @selection-change="handleSelectionChange">
-									<el-table-column type="selection" width="55">
-									</el-table-column>
-									<el-table-column label="产品图片" width="150" property="ProductName">
-									</el-table-column>
-									<el-table-column label="产品名称" width="155" property="ProductName">
-									</el-table-column>
-									<el-table-column label="产品规格" width="100" property="SpecModel">
-									</el-table-column>
-									<el-table-column label="产品数量" property="ProductNumber" width="100"
-										show-overflow-tooltip>
-										<el-input v-model="ruleForm.ProductNumber"> </el-input>
-									</el-table-column>
-									<el-table-column property="Unit" label="产品单位" width="100" show-overflow-tooltip>
-									</el-table-column>
-								</el-table>
-							</el-col>
-							<el-col :span="1"></el-col>
-						</el-row>
-						<template #footer>
-							<span class="dialog-footer">
-								<el-button @click="setProduct = false">取 消</el-button>
-								<el-button type="primary" @click="setProduct = false">确定</el-button>
-							</span>
+							</el-form-item>
+						</el-col>
+					</el-row>
+					<br/>
+					<el-row>
+						<!-- <el-col :span="1"></el-col>
+						<el-col :span="24"> -->
+							<el-table ref="multipleTable" :data="ruleForm.transferDetailsList" :height="tableHeight"
+								max-height="265" tooltip-effect="dark" 
+								style="width:100%; text-align :center; height: 265px;"
+								@selection-change="handleSelectionChange">
+								<el-table-column label="操作" width="90">
+									<template #default="scope">
+										<el-button type="primary" icon="el-icon-plus" size="mini" @click="addRow()"
+											circle :disabled="isdisabled">
+										</el-button>
+										<el-button type="primary" icon="el-icon-minus" size="mini"
+											@click="removeRow(scope.$index)" circle :disabled="isdisabled"></el-button>
+									</template>
+								</el-table-column>
+								<el-table-column label="产品名称" width="155">
+									<template #default="append">
+										<el-input v-model="ruleForm.transferDetailsList[append.$index].productName"
+											placeholder="请选择产品" :disabled="isdisabled">
+											<template #suffix>
+												<el-button icon="el-icon-more" style="border: none;" size="small"
+													@click="getProduct()" :disabled="isdisabled"></el-button>
+					
+											</template>
+										</el-input>
+									</template>
+								</el-table-column>
+								<el-table-column label="产品图片" width="120">
+									<template #default="scope">
+										<img v-if="typeof(this.ruleForm.transferDetailsList[0].productId) != 'undefined'"
+											:src="ruleForm.transferDetailsList[scope.$index].productPicture"
+											style="width: 40px; height: 40px;" />
+									</template>
+								</el-table-column>
+								<el-table-column prop="specModel" label="规格" width="100">
+								</el-table-column>
+								<el-table-column prop="productUnit" label="单位" width="100">
+								</el-table-column>
+								<el-table-column label="库存数量" width="100" prop="inventory" show-overflow-tooltip>
+								</el-table-column>
+								<el-table-column label="库存金额" width="100" prop="purchasePrice">
+								</el-table-column>
+								<el-table-column label="盘点数量" width="160" prop=" physicalInventory" show-overflow-tooltip>
+									<template #default="scope">
+										<el-input-number
+											v-model="ruleForm.transferDetailsList[scope.$index].physicalInventory"
+											size="small" :min="1" :precision="0">
+										</el-input-number>
+									</template>
+								</el-table-column>
+								<el-table-column label="盘点金额" prop="physicalAmount" width="100" show-overflow-tooltip>
+								</el-table-column>
+								<el-table-column label="数量差额" prop="quantityVariance" width="100" show-overflow-tooltip>
+								</el-table-column>
+								<el-table-column label="差异金额" prop="differenceAmount" width="100" show-overflow-tooltip>
+								</el-table-column>
+							</el-table>
+						<!-- </el-col>
+						<el-col :span="1"></el-col> -->
+					</el-row>
+					<br/>
+					<br/>
+					<el-row>
+						<el-col :span="7">
+							<el-form-item label="单据备注:" prop="DocumentsNote">
+								<el-input type="textarea" v-model="ruleForm.DocumentsNote"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="2"></el-col>
+						<el-col :span="7">
+							<el-form-item label="业务员:" prop="employeeName">
+								<el-select v-model="ruleForm.employeeName" @change="selectEmployee"
+									:disabled="isdisabled" placeholder="请选择" @click="queryEmployee()"
+									style="float:left; width: 250px;">
+									<el-option v-for="item in employeeList" :label="item.employeeName"
+										:value="item.employeeName"></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+					</el-row>
+					<br/>
+					<el-row>
+						<el-col :span="6"></el-col>
+						<el-col :span="6">
+							<el-form-item>
+								<el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+								<el-button @click="resetForm('ruleForm')">取消</el-button>
+							</el-form-item>
+						</el-col>
+						<el-col :span="9"></el-col>
+					</el-row>
+				</el-form>
+		
+				<el-dialog title="选择商品" v-model="setProduct" :width="'730px'">
+					<span class="font-style">商品:</span>&nbsp;
+					<el-input class="inline-input" placeholder="请输入单据编号或备注" style="width: 240px;" v-model="project"
+						size="medium">
+						<template #append>
+							<el-button icon="el-icon-search" size="small" @click="search"></el-button>
 						</template>
-					</el-dialog>
-				</el-main>
-			</el-container>
+					</el-input>
+					<el-row></el-row>
+					<el-row></el-row>
+					<el-row>
+						<el-col :span="1"></el-col>
+						<el-col :span="22">
+							<el-table :data="Product" tooltip-effect="dark" style="width: 100%; text-align: center;"
+								max-height="500" @selection-change="handleSelectionChange">
+								<el-table-column type="selection" width="55">
+								</el-table-column>
+								<el-table-column label="产品图片" width="150" property="ProductName">
+								</el-table-column>
+								<el-table-column label="产品名称" width="155" property="ProductName">
+								</el-table-column>
+								<el-table-column label="产品规格" width="100" property="SpecModel">
+								</el-table-column>
+								<el-table-column label="产品数量" property="ProductNumber" width="100"
+									show-overflow-tooltip>
+									<el-input v-model="ruleForm.ProductNumber"> </el-input>
+								</el-table-column>
+								<el-table-column property="Unit" label="产品单位" width="100" show-overflow-tooltip>
+								</el-table-column>
+							</el-table>
+						</el-col>
+						<el-col :span="1"></el-col>
+					</el-row>
+					<template #footer>
+						<span class="dialog-footer">
+							<el-button @click="setProduct = false">取 消</el-button>
+							<el-button type="primary" @click="setProduct = false">确定</el-button>
+						</span>
+					</template>
+				</el-dialog>
+			</el-main>
 		</el-container>
 	</div>
 </template>
@@ -172,74 +180,46 @@
 	export default {
 		data() {
 			return {
-				Product: [{
-					number: '1',
-					ProductName: '2016-05-02',
-					SpecModel: '王小虎',
-					ProductNumber: '上海市普陀区金沙江路 1518 弄',
-					Unit: '1',
-				}, {
-					number: '2',
-					ProductName: '2016-05-02',
-					SpecModel: '王小虎',
-					ProductNumber: '上海市普陀区金沙江路 1518 弄',
-					Unit: '2',
-				}],
+				Product: [{}],
 				setProduct: false,
 				ruleForm: {
-					number: '',
-					requisition: '',
-					export: '',
-					fold: '',
+					ProductNumber:1,
+					transferDetailsList:[{}],
+					blitemDocunum:'',
+					warehouseName:'',
+					employeeName:'',
 					OutboundQuantity: '',
-					ProductNumber: '',
-					CommodityNote: '',
-					date1: '',
-					date2: '',
-					delivery: false,
-					DocumentsNote: ''
+					documentsNote: '',
 				},
 				rules: {
-					requisition: [{
+					blitemDocunum: [{
 							required: true,
-							message: '请输入单据编号',
+							message: '请输入盘点单号',
 							trigger: 'blur'
 						},
 						{
 							min: 3,
-							max: 5,
-							message: '长度在 3 到 5 个字符',
+							max: 20,
+							message: '长度在 3 到 20 个字符',
 							trigger: 'blur'
 						}
 					],
-					export: [{
+					warehouseName: [{
 						required: true,
-						message: '请选择调出仓库',
+						message: '请选择要盘点的仓库',
 						trigger: 'change'
 					}],
-					fold: [{
-						required: true,
-						message: '请选择调入仓库',
-						trigger: 'change'
-					}],
-					date1: [{
+					documentDate: [{
 						type: 'date',
 						required: true,
 						message: '请选择日期',
 						trigger: 'change'
 					}],
-					date2: [{
-						type: 'date',
+					employeeName: [{
 						required: true,
-						message: '请选择时间',
+						message: '请选择业务员',
 						trigger: 'change'
 					}],
-					type: [{
-						type: 'array',
-						required: true,
-						message: '请至少选择一个活动性质',
-						trigger: 'change'
-					}]
 				}
 			};
 		},
@@ -287,14 +267,23 @@
 		height: 100%;
 		width: 100%;
 	}
-
-	#Addblitem .el-header,
-	#Addblitem .el-footer {
-		background-color: #B3C0D1;
-		color: #333;
-		text-align: center;
-		line-height: 60px;
+	
+	/* #Addblitem .underline-input {
+		border: 0px;
+		outline: none;
+		width: 105px;
+		padding: 1px 0px;
+		border-bottom: 1px solid rgb(204, 204, 204);
 	}
+	
+	#Addblitem .el-footer {
+		padding-bottom: 20px;
+	}
+	
+	
+	.underline-input:hover {
+		border-bottom: 1px solid rgb(35, 134, 238);
+	} */
 
 	#Addblitem .el-aside {
 		background-color: #D3DCE6;
@@ -332,7 +321,7 @@
 	/* .el-input__inner{
 			width: 200px;
 		} */
-	# .font-style {
+	#Addblitem .font-style {
 		text-align: right;
 		vertical-align: middle;
 		font-size: 14px;
@@ -347,7 +336,9 @@
 	}
 
 	#Addblitem .el-table td,
-	#Addblitem .el-table th {
+	#Addblitem .el-table th,
+	#Addblitem .el-table table{
 		padding: 6px 0;
+		/* border-color:#606266; */
 	}
 </style>

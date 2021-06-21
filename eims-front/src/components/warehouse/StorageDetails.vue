@@ -134,7 +134,6 @@
 							</el-input>
 						</el-col>
 					</el-row>
-
 					<el-row></el-row>
 					<el-row></el-row>
 					<el-row>
@@ -530,10 +529,11 @@
 							id: this.SalesRow.sellReturnId
 						}
 					}).then(res => {
-						console.log(res)
+						// console.log("详情数据为：'")
+						// console.log(res)
 						this.ruleForm.warehousingDetailList = res.data.returnBillsProductList
 						this.detailSaleToWarehousing()
-						//this.ruleForm.warehouseName = res.data.warehouseName
+						this.ruleForm.warehouseName = res.data.returnBillsProductList.warehouseName
 					}).catch(err => {
 
 					})

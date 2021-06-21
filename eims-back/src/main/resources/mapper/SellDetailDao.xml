@@ -10,16 +10,18 @@
         <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
         <result property="productModel" column="PRODUCT_MODEL" jdbcType="VARCHAR"/>
         <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+        <result property="marketPrice" column="MARKET_PRICE" jdbcType="VARCHAR"/>
         <result property="sellPrice" column="SELL_PRICE" jdbcType="VARCHAR"/>
         <result property="sellQuantity" column="SELL_QUANTITY" jdbcType="INTEGER"/>
         <result property="detailPayAmount" column="DETAIL_PAY_AMOUNT" jdbcType="VARCHAR"/>
         <result property="detailPaidAmount" column="DETAIL_PAID_AMOUNT" jdbcType="VARCHAR"/>
-        <result property="detail_Discounts" column="DETAIL__DISCOUNTS" jdbcType="VARCHAR"/>
+        <result property="detailDiscounts" column="DETAIL_DISCOUNTS" jdbcType="VARCHAR"/>
         <result property="returned" column="RETURNED" jdbcType="INTEGER"/>
+
     </resultMap>
 
     <sql id="SellDetailCol">
-        SELL_DETAIL_ID, SELL_ID, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, PRODUCT_MODEL, PRODUCT_UNIT, SELL_PRICE, SELL_QUANTITY, DETAIL_PAY_AMOUNT, DETAIL_PAID_AMOUNT, DETAIL__DISCOUNTS, RETURNED    </sql>
+        SELL_DETAIL_ID, SELL_ID, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, PRODUCT_MODEL, PRODUCT_UNIT,MARKET_PRICE,SELL_PRICE, SELL_QUANTITY, DETAIL_PAY_AMOUNT, DETAIL_PAID_AMOUNT, DETAIL_DISCOUNTS, RETURNED    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="SellDetailMap">
@@ -68,6 +70,9 @@
             <if test="productUnit != null and productUnit != ''">
                 or PRODUCT_UNIT like '%'||#{productUnit}||'%'
             </if>
+            <if test="marketPrice != null">
+                or MARKET_PRICE like '%'||#{marketPrice}||'%'
+            </if>
             <if test="sellPrice != null">
                 or SELL_PRICE like '%'||#{sellPrice}||'%'
             </if>
@@ -80,8 +85,8 @@
             <if test="detailPaidAmount != null">
                 or DETAIL_PAID_AMOUNT like '%'||#{detailPaidAmount}||'%'
             </if>
-            <if test="detail_Discounts != null">
-                or DETAIL__DISCOUNTS like '%'||#{detail_Discounts}||'%'
+            <if test="detailDiscounts != null">
+                or DETAIL_DISCOUNTS like '%'||#{detailDiscounts}||'%'
             </if>
             <if test="returned != null">
                 or RETURNED like '%'||#{returned}||'%'
@@ -119,6 +124,9 @@
             <if test="productUnit != null and productUnit != ''">
                 and PRODUCT_UNIT = #{productUnit}
             </if>
+            <if test="marketPrice != null">
+                and MARKET_PRICE = #{marketPrice}
+            </if>
             <if test="sellPrice != null">
                 and SELL_PRICE = #{sellPrice}
             </if>
@@ -131,8 +139,8 @@
             <if test="detailPaidAmount != null">
                 and DETAIL_PAID_AMOUNT = #{detailPaidAmount}
             </if>
-            <if test="detail_Discounts != null">
-                and DETAIL__DISCOUNTS = #{detail_Discounts}
+            <if test="detailDiscounts != null">
+                and DETAIL_DISCOUNTS = #{detailDiscounts}
             </if>
             <if test="returned != null">
                 and RETURNED = #{returned}
@@ -163,6 +171,9 @@
             <if test="productUnit != null">
                 PRODUCT_UNIT,
             </if>
+            <if test="marketPrice != null">
+                MARKET_PRICE,
+            </if>
             <if test="sellPrice != null">
                 SELL_PRICE,
             </if>
@@ -175,8 +186,8 @@
             <if test="detailPaidAmount != null">
                 DETAIL_PAID_AMOUNT,
             </if>
-            <if test="detail_Discounts != null">
-                DETAIL__DISCOUNTS,
+            <if test="detailDiscounts != null">
+                DETAIL_DISCOUNTS,
             </if>
             <if test="returned != null">
                 RETURNED,
@@ -203,6 +214,9 @@
             <if test="productUnit != null">
                 #{productUnit},
             </if>
+            <if test="marketPrice != null">
+                #{marketPrice},
+            </if>
             <if test="sellPrice != null">
                 #{sellPrice},
             </if>
@@ -215,8 +229,8 @@
             <if test="detailPaidAmount != null">
                 #{detailPaidAmount},
             </if>
-            <if test="detail_Discounts != null">
-                #{detail_Discounts},
+            <if test="detailDiscounts != null">
+                #{detailDiscounts},
             </if>
             <if test="returned != null">
                 #{returned},
@@ -251,6 +265,9 @@
                 <if test="entity.productUnit != null">
                     PRODUCT_UNIT,
                 </if>
+                <if test="entity.marketPrice != null">
+                    MARKET_PRICE,
+                </if>
                 <if test="entity.sellPrice != null">
                     SELL_PRICE,
                 </if>
@@ -263,8 +280,8 @@
                 <if test="entity.detailPaidAmount != null">
                     DETAIL_PAID_AMOUNT,
                 </if>
-                <if test="entity.detail_Discounts != null">
-                    DETAIL__DISCOUNTS,
+                <if test="entity.detailDiscounts != null">
+                    DETAIL_DISCOUNTS,
                 </if>
                 <if test="entity.returned != null">
                     RETURNED,
@@ -291,6 +308,9 @@
                 <if test="entity.productUnit != null">
                     #{entity.productUnit},
                 </if>
+                <if test="entity.marketPrice != null">
+                    #{entity.marketPrice},
+                </if>
                 <if test="entity.sellPrice != null">
                     #{entity.sellPrice},
                 </if>
@@ -303,8 +323,8 @@
                 <if test="entity.detailPaidAmount != null">
                     #{entity.detailPaidAmount},
                 </if>
-                <if test="entity.detail_Discounts != null">
-                    #{entity.detail_Discounts},
+                <if test="entity.detailDiscounts != null">
+                    #{entity.detailDiscounts},
                 </if>
                 <if test="entity.returned != null">
                     #{entity.returned},
@@ -335,6 +355,9 @@
             <if test="productUnit != null">
                 PRODUCT_UNIT = #{productUnit},
             </if>
+            <if test="marketPrice != null">
+                MARKET_PRICE = #{marketPrice},
+            </if>
             <if test="sellPrice != null">
                 SELL_PRICE = #{sellPrice},
             </if>
@@ -347,8 +370,8 @@
             <if test="detailPaidAmount != null">
                 DETAIL_PAID_AMOUNT = #{detailPaidAmount},
             </if>
-            <if test="detail_Discounts != null">
-                DETAIL__DISCOUNTS = #{detail_Discounts},
+            <if test="detailDiscounts != null">
+                DETAIL_DISCOUNTS = #{detailDiscounts},
             </if>
             <if test="returned != null">
                 RETURNED = #{returned},
@@ -380,6 +403,9 @@
                 <if test="entity.productUnit != null">
                     PRODUCT_UNIT = #{entity.productUnit},
                 </if>
+                <if test="entity.marketPrice != null">
+                    MARKET_PRICE = #{entity.marketPrice},
+                </if>
                 <if test="entity.sellPrice != null">
                     SELL_PRICE = #{entity.sellPrice},
                 </if>
@@ -392,8 +418,8 @@
                 <if test="entity.detailPaidAmount != null">
                     DETAIL_PAID_AMOUNT = #{entity.detailPaidAmount},
                 </if>
-                <if test="entity.detail_Discounts != null">
-                    DETAIL__DISCOUNTS = #{entity.detail_Discounts},
+                <if test="entity.detailDiscounts != null">
+                    DETAIL_DISCOUNTS = #{entity.detailDiscounts},
                 </if>
                 <if test="entity.returned != null">
                     RETURNED = #{entity.returned},

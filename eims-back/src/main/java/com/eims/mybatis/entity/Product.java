@@ -47,4 +47,6 @@ public class Product implements Serializable {
     private String remake;
 
     private Integer companyId;
+
+    private Inventory inventory;
 }

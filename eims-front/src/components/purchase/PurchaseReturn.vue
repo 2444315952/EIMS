@@ -200,10 +200,8 @@
 						</el-col>
 					</el-row>
 				</el-footer>
-
 			</el-container>
 		</el-form>
-
 	</div>
 </template>
 

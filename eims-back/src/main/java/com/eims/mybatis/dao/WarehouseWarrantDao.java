@@ -28,6 +28,8 @@ public interface WarehouseWarrantDao {
      */
     WarehouseWarrant queryById(Integer warehouseWarrantId);
 
+
+
     /**
      * 搜索框筛选出已入库采购单的数据
      * @param purchaseQueryForm
@@ -41,6 +43,16 @@ public interface WarehouseWarrantDao {
      * @return
      */
     List<SellReturn> querySellInStorage(SellReturnQueryForm sellReturnQueryForm);
+
+    /**
+     * 根据入库单改变库存
+     * @param inventoryQuantity
+     * @param warehouseId
+     * @param productId
+     * @return
+     */
+    int auditStorage(@Param("inventoryQuantity") Integer inventoryQuantity, @Param("warehouseId") Integer warehouseId,@Param("productId") Integer productId);
+
 
     /**
      * 查询所有数据

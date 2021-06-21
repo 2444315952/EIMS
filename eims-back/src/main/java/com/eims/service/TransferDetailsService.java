@@ -11,7 +11,7 @@ import com.github.pagehelper.PageInfo;
  * (TransferDetails)表服务接口
  *
  * @author makejava
- * @since 2021-06-16 10:35:20
+ * @since 2021-06-16 23:18:25
  */
 public interface TransferDetailsService {
 
@@ -86,6 +86,13 @@ public interface TransferDetailsService {
      * @return 是否成功
      */
     boolean deleteById(Integer transferDetailId);
+
+    /**
+     * 通过调拨单主键删除明细数据
+     * @param transferId
+     * @return
+     */
+    boolean deleteByFk(Integer transferId);
 
     /**
      * 批量删除数据

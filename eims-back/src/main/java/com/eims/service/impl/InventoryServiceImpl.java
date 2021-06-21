@@ -1,9 +1,11 @@
 package com.eims.service.impl;
 
 import com.eims.mybatis.entity.Inventory;
+import com.eims.mybatis.entity.Product;
 import com.eims.vo.form.InventoryQueryForm;
 import com.eims.mybatis.dao.InventoryDao;
 import com.eims.service.InventoryService;
+import com.eims.vo.table.InventoryTable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,6 +35,19 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public Inventory queryById(Integer inventoryId) {
         return this.inventoryDao.queryById(inventoryId);
+    }
+
+
+    /**
+     * 查询所有库存信息
+     * @param inventoryQueryForm
+     * @return
+     */
+    @Override
+    public PageInfo<InventoryTable> queryInventoryVo(InventoryQueryForm inventoryQueryForm) {
+        Page<InventoryTable> page=PageHelper.startPage(inventoryQueryForm.getPageNum(),inventoryQueryForm.getPageSize());
+        List<InventoryTable> inventoryList=this.inventoryDao.queryInventoryVo(inventoryQueryForm);
+        return new PageInfo<>(inventoryList);
     }
 
     /**
@@ -108,6 +123,7 @@ public class InventoryServiceImpl implements InventoryService {
         this.inventoryDao.update(inventory);
         return this.queryById(inventory.getInventoryId());
     }
+
 
     /**
      * 批量修改数据

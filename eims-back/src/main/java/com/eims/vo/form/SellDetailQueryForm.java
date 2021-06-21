@@ -29,6 +29,8 @@ public class SellDetailQueryForm implements Serializable {
 
     private String productUnit;
 
+    private BigDecimal marketPrice;
+
     private BigDecimal sellPrice;
 
     private Integer sellQuantity;
@@ -37,7 +39,7 @@ public class SellDetailQueryForm implements Serializable {
 
     private BigDecimal detailPaidAmount;
 
-    private BigDecimal detail_Discounts;
+    private BigDecimal detailDiscounts;
 
     private Integer returned;
 

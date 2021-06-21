@@ -11,7 +11,7 @@ import java.util.List;
  * (TransferDetails)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-16 10:35:20
+ * @since 2021-06-16 23:18:25
  */
 @Mapper
 public interface TransferDetailsDao {
@@ -87,6 +87,13 @@ public interface TransferDetailsDao {
      * @return 影响行数
      */
     int deleteById(Integer transferDetailId);
+
+    /**
+     * 通过调拨单主键删除明细
+     * @param transferId
+     * @return
+     */
+    int deleteByFk(Integer transferId);
 
     /**
      * 通过主键列表删除数据

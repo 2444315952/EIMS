@@ -15,7 +15,7 @@
     </resultMap>
 
     <sql id="EmployeeCol">
-        EMPLOYEE_ID, EMPLOYEE_NAME, EMPLOYEE_PHONE, EMPLOYEE_PWD, ON_JOB, WORK_POINT_ID, WORK_POINT_NAME, COMPANY_ID, COMPANY_NAME    </sql>
+        EMPLOYEE_ID, EMPLOYEE_NAME, EMPLOYEE_PHONE, EMPLOYEE_PWD, WORK_POINT_ID, WORK_POINT_NAME, COMPANY_ID, COMPANY_NAME    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="EmployeeMap">

@@ -63,14 +63,11 @@ public class SellBillQueryForm implements Serializable {
     private Date sellHirthday;
 
     private Integer outStorage;
-<<<<<<< HEAD
-
-=======
     private BigDecimal receivedMoney;
     private BigDecimal dateNumber1;
     private BigDecimal dateNumber2;
     private Date currentDate;
->>>>>>> 7b81ea70d6eb70764eb4aed1de8dd7cc5ae744b2
+
     private Integer pageNum;    //当前页
     private Integer pageSize;   //页大小
 

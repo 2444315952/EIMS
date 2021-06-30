@@ -188,10 +188,10 @@ public class WarehouseWarrantServiceImpl implements WarehouseWarrantService {
          //从详情数据里面拿入库数量和id
          for(WarehousingDetail warehousingDetail:warehouseWarrant.getWarehousingDetailList())
             this.warehouseWarrantDao.auditStorage(warehousingDetail.getInventoryQuantity(),warehouseWarrant.getWarehouseId(),warehousingDetail.getProductId());
-         this.inventoryDao.queryProduct(inventory.getCompanyId(),inventory.getWarehouseId(),inventory.getProductId());
-         if (inventory.getProductId()!=warehouseWarrant.getWarehousingDetailList().get(0).getProductId()){
-
-         }
+//         this.inventoryDao.queryProduct(inventory.getCompanyId(),inventory.getWarehouseId(),inventory.getProductId());
+//         if (inventory.getProductId()!=warehouseWarrant.getWarehousingDetailList().get(0).getProductId()){
+//
+//         }
          return true;
      }
 

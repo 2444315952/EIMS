@@ -168,8 +168,8 @@ public class BlitemServiceImpl implements BlitemService {
             System.out.println("库存数量为：+++++++++++++");
             System.out.println(baldetail.getInventory());
 
-//            if(baldetail.getInventory()==baldetail.getPhysicalInventory())
-//                continue;
+            if(baldetail.getInventory()==baldetail.getPhysicalInventory())
+                continue;
 
             //如果盘点数量大于库存数量就进行入库处理
             if(baldetail.getPhysicalInventory()>baldetail.getInventory()){

@@ -269,7 +269,7 @@
 					type: 'warning'
 				}).then(() => {
 					this.axios({
-						url: "http://localhost:8089/eims/inventory/update",
+						url: "http://localhost:8089/eims/inventory/updateStorage",
 						method: "put",
 						params: {
 							"warehouseWarrantId": val

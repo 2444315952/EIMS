@@ -8,8 +8,8 @@
 				<el-col :span="12">
 					<el-breadcrumb separator-class="el-icon-arrow-right" style="padding-bottom: 16px">
 						<el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-						<el-breadcrumb-item><a href="/sellorderbill">销售订单列表</a></el-breadcrumb-item>
-						<el-breadcrumb-item><a href="/">销售订单</a></el-breadcrumb-item>
+						<el-breadcrumb-item><a href="/sellbill">销售退货单列表</a></el-breadcrumb-item>
+						<el-breadcrumb-item><a href="/">销售退货单</a></el-breadcrumb-item>
 						
 					</el-breadcrumb>
 				</el-col>
@@ -25,24 +25,16 @@
 
 				<el-main style="background-color: white;">
 					<el-row>
-						<el-form-item label="" style="float: left;" prop="sellOrderDocunum" v-if="ruleForm.audited==3">
-						<h3 style="color: red;">已驳回</h3>
-						</el-form-item>
-						<el-form-item label="" style="float: left;" prop="sellOrderDocunum" v-if="ruleForm.audited==1">
-						<h3 style="color: red;">已驳回</h3>
-						</el-form-item>
-					</el-row>
-					<el-row>
 						<el-col :span="8">
-							<el-form-item label="单据编号" style="float: left;" prop="sellOrderDocunum">
-								<el-input v-model="ruleForm.sellOrderDocunum" size="medium" disabled></el-input>
+							<el-form-item label="单据编号" style="float: left;" prop="sellReturnDocunum">
+								<el-input v-model="ruleForm.sellReturnDocunum" size="medium" disabled></el-input>
 							</el-form-item>
 						</el-col>
 
 						<el-col :span="8">
-							<el-form-item label="单据日期" style="float: left;" prop="sellOrderDate" required>
+							<el-form-item label="退货日期" style="float: left;" prop="sellReturnHirthday" required>
 								<el-date-picker type="datetime" placeholder="选择日期" size="medium"
-									v-model="ruleForm.sellOrderDate" style="width: 206px;"></el-date-picker>
+									v-model="ruleForm.sellReturnHirthday" style="width: 206px;"></el-date-picker>
 							</el-form-item>
 						</el-col>
 
@@ -58,23 +50,23 @@
 					</el-row>
 					<el-row>
 						<el-col :span="8">
-							<el-form-item label="客户" style="float: left;" prop="customerName" required>
-								<el-input v-model="ruleForm.customerName" size="medium" disabled>
+							<el-form-item label="销售单" style="float: left;" prop="sellDocunum" required>
+								<el-input v-model="ruleForm.sellDocunum" size="medium" disabled>
 									<template #append>
 										<el-button icon="el-icon-plus" size="small"
-											@click="supplier.dialogVisible = true;supplierLoadData()">
+											@click="sellBill.dialogVisible = true;sellBillLoadData()">
 										</el-button>
 									</template>
 								</el-input>
 							</el-form-item>
 						</el-col>
 					
-						<el-dialog title="客户" v-model="supplier.dialogVisible">
+						<el-dialog title="销售单" v-model="sellBill.dialogVisible">
 							<el-row type="flex" justify="end" style="padding-bottom: 12px;">
 								<el-col :span="7.5">
-									<el-input v-model="supplier.searchInput" placeholder="请搜索供应商名称" size="small">
+									<el-input v-model="sellBill.searchInput" placeholder="请搜索销售单编号. " size="small">
 										<template #append>
-											<el-button @click="supplierLoadData()" icon="el-icon-search" size="mini">
+											<el-button @click="sellBillLoadData()" icon="el-icon-search" size="mini">
 											</el-button>
 										</template>
 									</el-input>
@@ -82,86 +74,49 @@
 
 							</el-row>
 
-							<el-table :data="supplier.tableData" max-height="286" style="height: 286px;"
-								highlight-current-row @current-change="supplierSelectionChange">
-								<el-table-column property="customerName" label="客户名称"></el-table-column>
-								<el-table-column property="contact" label="联系人"></el-table-column>
-								<el-table-column property="contactNumber" label="联系电话"></el-table-column>
-								<el-table-column property="contactAddress" label="联系地址"></el-table-column>
+							<el-table :data="sellBill.tableData" max-height="286" style="height: 286px;"
+								highlight-current-row @current-change="sellBillSelectionChange" >
+								<el-table-column property="sellDocunum" label="销售单编号"></el-table-column>
+								<el-table-column property="sellHirthday" label="单据日期 "></el-table-column>
+								<el-table-column property="customerName" label="客户"></el-table-column>
+								<el-table-column property="employeeName" label="业务员"></el-table-column>
+								<el-table-column property="warehouseName" label="出库仓库"></el-table-column>
+								<!-- <el-table-column property="sellAddress" label="地址"></el-table-column> -->
+								<el-table-column property="billPaidAmount" label="成交金额"></el-table-column>
 							</el-table>
 							
 							<el-row>
 								<el-col :span="24">
 									<el-pagination style="float: right;margin-top: 15px;"
-										@size-change="supplierSizeChange" @current-change="supplierCurrentChange"
-										:page-sizes="[10,20,40,80]" :page-size="supplier.pageParam.pageSize"
-										layout="total, sizes, prev, pager, next, jumper" :total="supplier.tableTotal">
+										@size-change="sellBillSizeChange" @current-change="sellBillCurrentChange"
+										:page-sizes="[10,20,40,80]" :page-size="sellBill.pageParam.pageSize"
+										layout="total, sizes, prev, pager, next, jumper" :total="sellBill.tableTotal">
 									</el-pagination>
 								</el-col>
 							</el-row>
 
 							<template #footer>
 								<span class="dialog-footer">
-									<el-button @click="supplier.dialogVisible = false" size="medium">取 消</el-button>
-									<el-button type="primary" @click="supplierConfirmButton" size="medium">确 定
+									<el-button @click="sellBill.dialogVisible = false" size="medium">取 消</el-button>
+									<el-button type="primary" @click="sellBillConfirmButton" size="medium">确 定
 									</el-button>
 								</span>
 							</template>
 						</el-dialog>
 
 						<el-col :span="8">
-							<el-form-item label="出库仓库" style="float: left;" prop="warehouseName">
-								<el-input v-model="ruleForm.warehouseName" size="medium" disabled>
-									<template #append>
-										<el-button icon="el-icon-plus" size="small"
-											@click="warehouse.dialogVisible = true;warehouseLoadData()"></el-button>
-									</template>
+							<el-form-item label="客户" style="float: left;" prop="customerName">
+								<el-input v-model="ruleForm.customerName" size="medium" disabled>
+									
 								</el-input>
 							</el-form-item>
 						</el-col>
 
-						<el-dialog title="仓库" v-model="warehouse.dialogVisible">
-							<el-row type="flex" justify="end" style="padding-bottom: 12px;">
-								<el-col :span="7.5">
-									<el-input v-model="warehouse.searchInput" placeholder="请搜索仓库名称" size="small">
-										<template #append>
-											<el-button icon="el-icon-search" @click="warehouseLoadData()" size="mini">
-											</el-button>
-										</template>
-									</el-input>
-								</el-col>
-
-							</el-row>
-
-							<el-table :data="warehouse.tableData" max-height="286" style="height: 286px;"
-								highlight-current-row @current-change="warehouseSelectionChange">
-								<el-table-column property="warehouseName" label="仓库名称"></el-table-column>
-								<el-table-column property="employeeName" label="联系人"></el-table-column>
-								<el-table-column property="phone" label="联系电话"></el-table-column>
-								<el-table-column property="warehouseAddress" label="联系地址"></el-table-column>
-							</el-table>
-							<el-row>
-								<el-col :span="24">
-									<el-pagination style="float: right;margin-top: 15px;"
-										@size-change="warehouseSizeChange" @current-change="warehouseCurrentChange"
-										:page-sizes="[10,20,40,80]" :page-size="warehouse.pageParam.pageSize"
-										layout="total, sizes, prev, pager, next, jumper" :total="warehouse.tableTotal">
-									</el-pagination>
-								</el-col>
-							</el-row>
-
-							<template #footer>
-								<span class="dialog-footer">
-									<el-button @click="warehouse.dialogVisible = false" size="medium">取 消</el-button>
-									<el-button type="primary" @click="warehouseConfirmButton" size="medium">确 定
-									</el-button>
-								</span>
-							</template>
-						</el-dialog>
+						
 						
 						<el-col :span="8">
-							<el-form-item label="地址" style="float: left;" prop="sellOrderAddress">
-								<el-input v-model="ruleForm.sellOrderAddress" size="medium">
+							<el-form-item label="仓库" style="float: left;" prop="warehouseName">
+								<el-input v-model="ruleForm.warehouseName" size="medium" disabled>
 									
 								</el-input>
 							</el-form-item>
@@ -169,11 +124,11 @@
 
 					</el-row>
 
-					<el-table :data="ruleForm.sellOrderDetailList" show-summary max-height="402"
+					<el-table :data="ruleForm.sellDetails" show-summary max-height="402"
 						style="width: 100%;height:402px;">
 						<el-table-column label="产品名称" prop="productName">
 							<template #default="scope">
-								<el-input v-model="ruleForm.sellOrderDetailList[scope.$index].productName"
+								<el-input v-model="ruleForm.sellDetails[scope.$index].productName"
 									style="width: 170px" size="small" disabled>
 									<template #append>
 										<el-button icon="el-icon-plus" size="mini"
@@ -190,7 +145,7 @@
 						<el-table-column label="销售价" prop="sellPrice">
 						
 							<template #default="scope">
-								<el-input-number v-model="ruleForm.sellOrderDetailList[scope.$index].sellPrice"
+								<el-input-number v-model="ruleForm.sellDetails[scope.$index].sellPrice"
 									@change="changePriceOrQuantity(scope.$index)" controls-position="right" size="small"
 									style="width: 130px;" :precision="2">
 								</el-input-number>
@@ -198,22 +153,22 @@
 						</el-table-column>
 						<el-table-column label="采购数量" prop="sellQuantity">
 							<template #default="scope">
-								<el-input-number v-model="ruleForm.sellOrderDetailList[scope.$index].sellQuantity"
+								<el-input-number v-model="ruleForm.sellDetails[scope.$index].sellQuantity"
 									@change="changePriceOrQuantity(scope.$index)" size="small" :min="1" :precision="0">
 								</el-input-number>
 							</template>
 						</el-table-column>
-						<el-table-column label="小计" prop="orderDetailPaidAmount">
+						<el-table-column label="小计" prop="detailPaidAmount">
 						</el-table-column>
 						
-						<el-table-column label="优惠" prop="orderDetailDiscounts">
+						<el-table-column label="优惠" prop="detailDiscounts">
 						</el-table-column>
 						<el-table-column label="操作" width="100">
 							<template #default="scope">
 								<el-button type="primary" icon="el-icon-plus" size="mini" @click="addRow()" circle>
 								</el-button>
 								<el-button type="primary" icon="el-icon-minus" size="mini"
-									@click="removeRow(scope.$index)" circle></el-button>
+									@click="removeRow(scope.$index,scope.rows)" circle></el-button>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -232,13 +187,13 @@
 						</el-row>
 
 						<el-table :data="product.tableData " max-height="286" style="height: 286px;"
-							@selection-change="productSelectionChange">
+							@selection-change="productSelectionChange" >
 							<el-table-column type="selection" width="25">
 							</el-table-column>
 							<el-table-column property="productName" label="产品名称"></el-table-column>
 							<el-table-column property="specModel" label="规格型号"></el-table-column>
 							<el-table-column property="productUnit" label="产品单位"></el-table-column>
-							<el-table-column property="inventory" label="仓库数量"></el-table-column>
+							<el-table-column property="referCost" label="参考成本价"></el-table-column>
 							<el-table-column property="marketPrice" label="市场价"></el-table-column>
 						</el-table>
 						<el-row>
@@ -250,7 +205,6 @@
 								</el-pagination>
 							</el-col>
 						</el-row>
-						
 
 						<template #footer>
 							<span class="dialog-footer">
@@ -259,37 +213,49 @@
 								</el-button>
 							</span>
 						</template>
-						
 					</el-dialog>
-					
-					
-					<el-row style="margin-top: 10px;">
-						<el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="ruleForm.sellRemark">
-						</el-input>
-					</el-row>
-					<el-row>
-										
-						<!-- 	<el-col :span="4">
-							<div class="grid-content bg-purple">
-								<h1>应收金额</h1>
-							</div>
-						</el-col> -->
-						<el-col :span="4">
-							<div class="grid-content bg-purple-light">
-								<h1>优惠金额 <el-input v-model="ruleForm.orderSellDiscounts" disabled></el-input>
-								</h1>
-							</div>
-						</el-col>
-						<el-col :span="4">
-							<div class="grid-content bg-purple-light">
-								<h1>金额<el-input v-model="ruleForm.orderPaidAmount" disabled></el-input>
-								</h1>
-							</div>
-						</el-col>
-					</el-row>
-										
 				</el-main>
 			
+					<el-footer style="height: 106px;">
+					
+									<el-row style="margin-top: 10px;">
+										<el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="ruleForm.sellRemark">
+										</el-input>
+									</el-row>
+									<el-row>
+					
+										<!-- 	<el-col :span="4">
+											<div class="grid-content bg-purple">
+												<h1>应收金额</h1>
+											</div>
+										</el-col> -->
+										<el-col :span="4">
+											<div class="grid-content bg-purple-light">
+												<h1>优惠金额 <el-input v-model="ruleForm.sellDiscounts" disabled></el-input>
+												</h1>
+											</div>
+										</el-col>
+										<el-col :span="4">
+											<div class="grid-content bg-purple-light">
+												<h1>金额<el-input v-model="ruleForm.billPaidAmount" disabled></el-input>
+												</h1>
+											</div>
+										</el-col>
+									</el-row>
+					
+					
+					
+					
+					
+									<el-row>
+					
+					
+									
+					
+					</div>
+					</el-footer>
+			
+
 			</el-container>
 		</el-form>
 
@@ -303,15 +269,15 @@
 			return {
 				isAdd: true,
 				ruleForm: {
-					sellOrderDetailList: [{}]
+					sellDetails: [{}]
 				},
 				rules: {
-					sellOrderDocunum: [{
+					sellReturnDocunum: [{
 						required: true,
 						message: '请输入单据编号',
 						trigger: 'change'
 					}],
-					sellOrderDate: [{
+					sellReturnHirthday: [{
 						type: 'date',
 						required: true,
 						message: '请选择单据日期',
@@ -331,7 +297,7 @@
 
 				docuNumSequence: '',
 				employeeSelectValue: [],
-				supplier: {
+				sellBill: {
 					dialogVisible: false,
 					searchInput: '',
 					tableData: [],
@@ -342,17 +308,7 @@
 						"pageSize": 10
 					}
 				},
-				warehouse: {
-					dialogVisible: false,
-					searchInput: '',
-					tableData: [],
-					tableTotal: '',
-					singleSelection: {},
-					pageParam: {
-						"pageNum": 1,
-						"pageSize": 10
-					}
-				},
+				
 				product: {
 					dialogVisible: false,
 					searchInput: '',
@@ -371,28 +327,24 @@
 		methods: {
 			loadData(){
 				this.axios({
-					url: "http://localhost:8089/eims/sellOrderBill/one",
+					url: "http://localhost:8089/eims/sellBill/one",
 					method: "get",
 					params: {
-						"id": this.ruleForm.sellOrderId
+						"id": this.ruleForm.sellId
 					}
 				}).then(response => {
 					this.ruleForm = response.data
 					
 					console.log("初始化的数据为")
 					console.log(this.ruleForm)
-					console.log(this.ruleForm.sellOrderDetailList)
-					this.ruleForm.sellOrderDetailList.forEach(detail => {
-						detail.marketPrice=detail.orderDetailPayAmount/detail.sellQuantity
-						
-						
-						})
+					console.log(this.ruleForm.sellDetails)
 				}).catch(error => {
 				
 				})
 			},
 			getDocuNum(prefix) {
 				const nowDate = new Date()
+				
 
 				var month = nowDate.getMonth() + 1
 				month = month > 10 ? month : '0' + month
@@ -400,18 +352,19 @@
 				var date = nowDate.getDate()
 				date = date > 10 ? date : '0' + date
 
-				this.ruleForm.sellOrderDocunum = prefix + "-" + nowDate.getFullYear() + month + date + "-"
+				this.ruleForm.sellReturnDocunum = prefix + "-" + nowDate.getFullYear() + month + date + "-"
 
 				this.axios({
-					url: 'http://localhost:8089/eims/sellOrderBill/search',
+					url: 'http://localhost:8089/eims/sellReturn/search',
 					method: 'get',
 					params: {
-						'sellOrderDocunum': this.ruleForm.sellOrderDocunum
+						'sellReturnDocunum': this.ruleForm.sellReturnDocunum
 					}
 				}).then(response => {
 					console.log(response)
-					const docuNumSequence = (Array(5).join(0) + (response.data.list.length + 1)).slice(-5)
-					this.ruleForm.sellOrderDocunum = this.ruleForm.sellOrderDocunum + docuNumSequence
+					const sellReturnDocunum = (Array(5).join(0) + (response.data.list.length + 1)).slice(-5)
+					this.ruleForm.sellReturnDocunum = this.ruleForm.sellReturnDocunum + sellReturnDocunum
+					console.log(sellReturnDocunum)
 				}).catch(error => {
 
 				})
@@ -437,67 +390,92 @@
 						this.ruleForm.employeeId = e.employeeId
 				})
 			},
-			supplierLoadData() {
+			sellBillLoadData() {
 				this.axios({
-					url: 'http://localhost:8089/eims/customer/search',
+					url: 'http://localhost:8089/eims/sellBill/screen',
 					method: 'get',
 					params: Object.assign({
-						'customerName': this.supplier.searchInput
-					}, this.supplier.pageParam)
+						// 控制显示单据是否能退货
+						'returnState': 0,
+						'outStorage': 0
+						
+					}, this.sellBill.pageParam)
 				}).then(response => {
 					console.log(response.data.list)
-					this.supplier.tableData = response.data.list
-					this.supplier.tableTotal = response.data.total
+					this.sellBill.tableData = response.data.list
+					this.sellBill.tableTotal = response.data.total
+					
 				}).catch(error => {
 
 				})
 			},
-			supplierSelectionChange(val) {
-				this.supplier.singleSelection = val
+			sellBillSelectionChange(val) {
+				console.log(val)
+				this.sellBill.singleSelection = val
 			},
-			supplierSizeChange(val) {
-				this.supplier.pageParam.pageSize = val
-				this.supplierLoadData()
+			sellBillSizeChange(val) {
+				this.sellBill.pageParam.pageSize = val
+				this.sellBillLoadData()
 			},
-			supplierCurrentChange(val) {
-				this.supplier.pageParam.pageNum = val
-				this.supplierLoadData()
+			sellBillCurrentChange(val) {
+				this.sellBill.pageParam.pageNum = val
+				this.sellBillLoadData()
 			},
-			supplierConfirmButton() {
-				this.supplier.dialogVisible = false
-				this.ruleForm.companyId = this.supplier.singleSelection.companyId
-				this.ruleForm.workPointId = this.supplier.singleSelection.companyId
-				this.ruleForm.customerId = this.supplier.singleSelection.customerId
-				this.ruleForm.customerName = this.supplier.singleSelection.customerName
-				this.ruleForm.paymentTerm = "不知道"
-				this.ruleForm.sellOrderAddress= this.supplier.singleSelection.contact + " " + this.supplier.singleSelection.contactNumber + " " + this.supplier.singleSelection
-					.contactAddress + " "
-					console.log(this.ruleForm.sellOrderAddress)
+			sellBillConfirmButton() {
+				this.sellBill.dialogVisible = false
+				this.ruleForm=this.sellBill.singleSelection
+				console.log(this.sellBill.singleSelection)
+				
+				this.axios({
+					url: 'http://localhost:8089/eims/sellDetail/search',
+					method: 'get',
+					params: Object.assign({
+						'sellId': this.ruleForm.sellId
+					}, this.sellBill.pageParam)
+				}).then(response => {
+					this.ruleForm.sellDetails = response.data.list
+					this.getDocuNum("SRT")
+					console.log(response.data.list)
+					
+					
+				}).catch(error => {
+				
+				})
+				
+				
+				// this.ruleForm.companyId = this.supplier.singleSelection.companyId
+				// this.ruleForm.workPointId = this.supplier.singleSelection.companyId
+				// this.ruleForm.customerId = this.supplier.singleSelection.customerId
+				// this.ruleForm.customerName = this.supplier.singleSelection.customerName
+				// this.ruleForm.paymentTerm = "不知道"
+				// this.ruleForm.sellAddress= this.supplier.singleSelection.contact + " " + this.supplier.singleSelection.contactNumber + " " + this.supplier.singleSelection
+				// 	.contactAddress + " "
+				// 	console.log(this.ruleForm.sellAddress)
 			},
 			productOpenDialog(index) {
 				this.product.sourceRowIndex = index
 				this.product.dialogVisible = true
 				this.productLoadData()
-				console.log(this.ruleForm.sellOrderDetailList)
+				console.log(this.ruleForm.sellDetails)
 			},
 			productLoadData() {
-				this.axios({
-					url: 'http://localhost:8089/eims/inventory/all',
-					method: 'get',
-					params: Object.assign({
-						
-					}, this.product.pageParam)
-				}).then(response => {
-					this.product.tableData = response.data.list
-					this.product.tableTotal = response.data.total
-				}).catch(error => {
+				// this.axios({
+				// 	url: 'http://localhost:8089/eims/inventory/all',
+				// 	method: 'get',
+				// 	params: Object.assign({
+				// 		'productName': this.product.searchInput
+				// 	}, this.product.pageParam)
+				// }).then(response => {
+				// 	this.product.tableData = response.data.list
+				// 	this.product.tableTotal = response.data.total
+				// }).catch(error => {
 
-				})
+				// })
 			},
 			productSelectionChange(val) {
 				this.product.multipleSelection = val
 				console.log("选中产品后:")
-				console.log(this.ruleForm.sellOrderDetailList)
+				console.log(this.ruleForm.sellDetails)
 			},
 			productSizeChange(val) {
 				this.product.pageParam.pageSize = val
@@ -511,29 +489,27 @@
 				this.product.dialogVisible = false
 				
 				console.log("点击确定按钮后")
-				console.log(this.ruleForm.sellOrderDetailList)
+				console.log(this.ruleForm.sellDetails)
 
 				this.product.multipleSelection.forEach(detail => {
 					console.log()
 					
 					//设置明细默认的采购量和小计，和采购单据编号
 					detail.sellQuantity = 1
-					detail.orderDetailPaidAmount = detail.marketPrice
-					detail.sellOrderDocunum = this.ruleForm.sellOrderDocunum
+					detail.detailPaidAmount = detail.marketPrice
+					detail.sellReturnDocunum = this.ruleForm.sellReturnDocunum
 					detail.sellPrice = detail.marketPrice
-					detail.orderDetailPaidAmount=detail.marketPrice
-					detail.orderDetailPayAmount=detail.marketPrice
-					detail.orderDetailDiscounts=0
+					detail.detailPaidAmount=detail.marketPrice
+					detail.detailPayAmount=detail.marketPrice
+					detail.detailDiscounts=0
 					detail.productModel=detail.specModel
-					detail.sellOrderId=this.ruleForm.sellOrderId
+					detail.sellId=this.ruleForm.sellId
 					console.log("marketPrice"+detail.marketPrice)
-				
-					this.ruleForm.sellOrderDetailList[this.product.sourceRowIndex] = detail
+					this.ruleForm.sellDetails[this.product.sourceRowIndex] = detail
 						
 					this.product.sourceRowIndex++
 
 				})
-					
 				
 				
 				// console.log("循环后的值")
@@ -554,64 +530,29 @@
 
 			},
 			
-			warehouseLoadData() {
-				this.axios({
-					url: 'http://localhost:8089/eims/warehouse/search',
-					method: 'get',
-					params: Object.assign({
-						'warehouseName': this.warehouse.searchInput
-					}, this.warehouse.pageParam)
-				}).then(response => {
-					this.warehouse.tableData = response.data.list
-					this.warehouse.tableTotal = response.data.total
-				}).catch(error => {
-
-				})
-			},
-			warehouseSelectionChange(val) {
-				this.warehouse.singleSelection = val
-			},
-			warehouseSizeChange(val) {
-				this.warehouse.pageParam.pageSize = val
-				this.warehouseLoadData()
-			},
-			warehouseCurrentChange(val) {
-				this.warehouse.pageParam.pageNum = val
-				this.warehouseLoadData()
-			},
-			warehouseConfirmButton() {
-				this.warehouse.dialogVisible = false
-				this.ruleForm.warehouseId = this.warehouse.singleSelection.warehouseId
-				this.ruleForm.warehouseName = this.warehouse.singleSelection.warehouseName
-			},
+			
 			addRow() {
-				this.ruleForm.sellOrderDetailList.push({});
+				this.ruleForm.sellDetails.push({});
 			},
-			removeRow(index) {
-				if (this.ruleForm.sellOrderDetailList.length > 1)
-					this.ruleForm.sellOrderDetailList.splice(index, 1);
-					this.productConfirmButton(productName)					
+			removeRow(index,rows) {
+				if (this.ruleForm.sellDetails.length > 1)
+					this.ruleForm.sellDetails.splice(index, 1);
+					console.log("减去的产品"+rows)
+					this.productConfirmButton()					
 			},
 			
 			changePriceOrQuantity(index) {
-				const detail = this.ruleForm.sellOrderDetailList[index]
-			
-			
-			
-				console.log("detail-----------"+detail)
+				const detail = this.ruleForm.sellDetails[index]
 				const subtotal = detail.sellPrice * detail.sellQuantity
-				console.log("subtotal-----------"+subtotal)
 				// const subtotal1 = detail.marketPrice1 * detail.sellQuantity
 				//计算交易金额
-				this.ruleForm.sellOrderDetailList[index].orderDetailPaidAmount = subtotal
+				this.ruleForm.sellDetails[index].detailPaidAmount = subtotal
 				//计算应付
-				this.ruleForm.sellOrderDetailList[index].orderDetailPayAmount= detail.marketPrice * detail.sellQuantity
-				console.log("baba"+ detail.sellQuantity )
-				console.log("baba"+ detail.marketPrice )
+				this.ruleForm.sellDetails[index].detailPayAmount= detail.marketPrice * detail.sellQuantity
 				//计算优惠金额
-				this.ruleForm.sellOrderDetailList[index].orderDetailDiscounts= detail.marketPrice * detail.sellQuantity- subtotal
+				this.ruleForm.sellDetails[index].detailDiscounts= detail.marketPrice * detail.sellQuantity-subtotal
 				
-				console.log(detail.marketPrice+"*"+detail.sellQuantity+"-"+subtotal)
+			
 				
 				this.calcTransactionAmount()
 			},
@@ -619,63 +560,70 @@
 				var transactionAmount = 0
 				var transactionAmount1 = 0
 				var transactionAmount2 = 0
-				this.ruleForm.sellOrderDetailList.forEach(detail => {
-					transactionAmount += detail.orderDetailPaidAmount
-					transactionAmount1 += detail.orderDetailPayAmount
-					transactionAmount2 += detail.orderDetailDiscounts  
-					
+				this.ruleForm.sellDetails.forEach(detail => {
+					transactionAmount += detail.detailPaidAmount
+					transactionAmount1 += detail.detailPayAmount
+					transactionAmount2 += detail.detailDiscounts
 				})
-				console.log(this.ruleForm.sellOrderDetailList)
-				
 				this.ruleForm.transactionAmount = transactionAmount
-				this.ruleForm.orderPaidAmount=transactionAmount
-				this.ruleForm.orderPayAmount=transactionAmount1
-				this.ruleForm.orderSellDiscounts=transactionAmount2
+				this.ruleForm.billPaidAmount=transactionAmount
+				this.ruleForm.billPayAmount=transactionAmount1
+				this.ruleForm.sellDiscounts=transactionAmount2
 				console.log("金额是:" +transactionAmount)
 				console.log("原价是:" +transactionAmount1)
 				console.log("优惠是:" +transactionAmount2)
 			},
 			submitForm(formName) {
 
-				const list = this.ruleForm.sellOrderDetailList
+				const list = this.ruleForm.sellDetails
 				for(var i=0;i<list.length;i++){
 					if (typeof(list[i].productId) == "undefined" || list[i].marketPrice == "") {
 						this.$message({
 							type: 'warning',
-							message: '请选择订单产品'
+							message: '请选择采购产品'
 						})
 						return false
 					} else if (typeof(list[i].marketPrice) == "undefined" || list[i].marketPrice == "") {
 						this.$message({
 							type: 'warning',
-							message: '请填写订单价'
+							message: '请填写采购价'
 						})
 						return false
 					} else if (typeof(list[i].sellQuantity) == "undefined" || list[i].sellQuantity == "") {
 						this.$message({
 							type: 'warning',
-							message: '请填写订单数量'
+							message: '请填写采购数量'
 						})
 						return false
 					}
 				}
-
+				this.ruleForm.returnBillsProductList=this.ruleForm.sellDetails
+				this.ruleForm.retPayAmount=this.ruleForm.billPayAmount
+				this.ruleForm.retPaidAmount=this.ruleForm.billPaidAmount
+				this.ruleForm.returnBillsProductList.forEach(m => {
+					
+					m.retBillPayAmount=m.detailPayAmount
+					m.retBillPaidAmount=m.detailPaidAmount
+				})
+				console.log(this.ruleForm.returnBillsProductList)
+				// this.ruleForm.ReturnBillsProduct.retBillPayAmount=this.ruleForm.sellDetails.billPayAmount
+				// this.ruleForm.ReturnBillsProduct.retBillPaidAmount=this.ruleForm.sellDetails.billPaidAmount
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
 
 						if (this.isAdd) {
 							this.axios({
-								url: 'http://localhost:8089/eims/sellOrderBill',
+								url: 'http://localhost:8089/eims/sellReturn',
 								method: 'post',
 								data: this.ruleForm
 							}).then(response => {
 								this.$message({
 									type: 'success',
-									message: '销售订单数据新增成功！'
+									message: '采购退货单数据新增成功！'
 								})
 
 								this.$router.push({
-									name: 'dingdanquery'
+									name: 'sellreturn'
 								})
 							}).catch(error => {
 
@@ -711,21 +659,19 @@
 								this.loadData()
 								return false
 							}
-							this.ruleForm.audited=0
-							console.log("修改的值"+this.ruleForm)
-							
+						
 							this.axios({
-								url:'http://localhost:8089/eims/sellOrderBill/detail',
+								url:'http://localhost:8089/eims/sellBill/detail',
 								method:'put',
 								data:this.ruleForm
 							}).then(response=>{
 								this.$message({
 									type:'success',
-									message:'销售订单信息更改成功！'
+									message:'采购单信息更改成功！'
 								})
 								
 								this.$router.push({
-									name:'dingdanquery'
+									name:'sellbill'
 								})
 							}).catch(error=>{
 								
@@ -740,19 +686,17 @@
 			}
 		},
 		created() {
-			this.ruleForm.sellOrderId = this.$route.params.sellOrderId
-			this.isAdd = typeof(this.ruleForm.sellOrderId) == "undefined" || this.ruleForm.sellOrderId == ""
-			console.log(this.ruleForm.sellOrderId)
+			this.ruleForm.sellId = this.$route.params.sellId
+			this.isAdd = typeof(this.ruleForm.sellId) == "undefined" || this.ruleForm.sellId == ""
+			console.log(this.ruleForm.sellId)
 			if (this.isAdd)
 			
-				this.getDocuNum("SO")
+				this.getDocuNum("SRT")
 			else 
 			
 				this.loadData()
 		}
 	}
-	
-	
 </script>
 
 <style>

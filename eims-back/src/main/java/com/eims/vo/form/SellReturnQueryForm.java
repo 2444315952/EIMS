@@ -57,7 +57,9 @@ public class SellReturnQueryForm implements Serializable {
     private Integer inStorage;
 
     private Date sellReturnHirthday;
-
+    private BigDecimal dateNumber1;
+    private BigDecimal dateNumber2;
+    private Date currentDate;
     private Integer pageNum;    //当前页
     private Integer pageSize;   //页大小
 

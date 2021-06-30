@@ -13,57 +13,44 @@ import lombok.ToString;
 @NoArgsConstructor
 @Data
 @ToString
-public class SellBillQueryForm implements Serializable {
-    private static final long serialVersionUID = 399854273831313422L;
+public class GatherQueryForm implements Serializable {
+    private static final long serialVersionUID = 499051625101891523L;
 
-    private Integer sellId;
+    private Integer gatherId;
 
     private Integer companyId;
 
     private Integer workPointId;
 
+    private String gatherDocunum;
+
+    private Date documentDate;
+
+    private Integer sellId;
+
     private String sellDocunum;
-
-    private String billsType;
-
-    private Date sellDate;
-
-    private Integer audited;
-
-    private String paymentTerm;
-
-    private Integer employeeId;
-
-    private String employeeName;
 
     private Integer customerId;
 
     private String customerName;
 
-    private Integer warehouseId;
+    private Integer employeeId;
 
-    private String warehouseName;
+    private String employeeName;
 
-    private BigDecimal billPayAmount;
+    private BigDecimal gatherAmount;
 
-    private BigDecimal billPaidAmount;
+    private String remark;
 
-    private BigDecimal sellDiscounts;
+    private Integer audited;
 
-    private String sellRemark;
+    private Integer moneyAccountId;
 
-    private Integer returnState;
+    private String accountName;
 
-    private Integer isRetail;
+    private Date gatherBirthday;
 
-    private Integer received;
-
-    private String sellAddress;
-
-    private Date sellHirthday;
-
-    private Integer outStorage;
-    private BigDecimal receivedMoney;
+    private Integer sellType;
     private BigDecimal dateNumber1;
     private BigDecimal dateNumber2;
     private Date currentDate;

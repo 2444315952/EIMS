@@ -96,4 +96,6 @@ public interface SellBillService {
      * @return 是否成功
      */
     boolean deleteBatch(List<Integer> ids);
+
+    PageInfo<SellBill> queryByDate(Integer datenumber);
 }

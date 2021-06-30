@@ -42,6 +42,7 @@
 									<el-radio>不限</el-radio>
 									<el-radio label="0">未审核</el-radio>
 									<el-radio label="1">已审核</el-radio>
+									<el-radio label="3">已驳回</el-radio>
 								</el-radio-group>
 							</el-form-item>
 
@@ -88,6 +89,8 @@
 						<template #default="scope">
 							<p v-if="tableData[scope.$index].audited == 0">未审核</p>
 							<p v-if="tableData[scope.$index].audited == 1">已审核</p>
+							<p v-if="tableData[scope.$index].audited == 2">已生成销售单</p>
+							<p v-if="tableData[scope.$index].audited == 3">已驳回</p>
 						</template>
 					</el-table-column>
 					<el-table-column label="应付金额" prop="orderPayAmount">
@@ -99,6 +102,8 @@
 						<template #default="scope">
 							<el-button v-if="tableData[scope.$index].audited == 0"
 								@click="handleAudit(scope.row.sellOrderId)" type="text">审核</el-button>
+								<el-button v-if="tableData[scope.$index].audited == 0"
+									@click="handleAudit1(scope.row.sellOrderId)" type="text">驳回</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -166,6 +171,7 @@
 					method: 'get',
 					params: this.pageParam
 				}).then((response) => {
+					console.log(response.data.list)
 					this.tableData = response.data.list
 					this.tableTotal = response.data.total
 				}).catch((error) => {
@@ -227,6 +233,34 @@
 					})
 				})
 
+			},
+			handleAudit1(val) {
+				console.log(val)
+				this.$confirm('此操作将驳回订单，是否继续？', '提示', {
+					confirmButtonTest: '确定',
+					cancelButtonTest: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.axios({
+						url: "http://localhost:8089/eims/sellOrderBill",
+						method: "put",
+						data: {sellOrderId:val,audited:3}
+					}).then(response => {
+						this.loadData()
+						this.$message({
+							type: 'success',
+							message: '驳回成功'
+						})
+					}).catch(error => {
+			
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消操作'
+					})
+				})
+			
 			},
 			handleDelete() {
 				var isHaveAudited = false

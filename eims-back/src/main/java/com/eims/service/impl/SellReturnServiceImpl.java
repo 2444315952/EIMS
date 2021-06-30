@@ -77,6 +77,7 @@ public class SellReturnServiceImpl implements SellReturnService {
      */
     @Override
     public PageInfo<SellReturn> queryBySearch(SellReturnQueryForm sellReturnQueryForm) {
+        sellReturnQueryForm.setCurrentDate(new Date());
         Page<SellReturn> page = PageHelper.startPage(sellReturnQueryForm.getPageNum(), sellReturnQueryForm.getPageSize());
         List<SellReturn> sellReturnList = this.sellReturnDao.queryOrByPojo(sellReturnQueryForm);
         return new PageInfo<>(sellReturnList);
@@ -106,6 +107,7 @@ public class SellReturnServiceImpl implements SellReturnService {
 
 
         sellReturn.setDocumentDate(new Date());
+        sellReturn.setAutited(0);
         this.sellReturnDao.insert(sellReturn);
         log.debug("主键id是:{}",sellReturn.getSellReturnId());
         List<ReturnBillsProduct> returnBillsProductList=sellReturn.getReturnBillsProductList();

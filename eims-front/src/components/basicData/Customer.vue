@@ -150,7 +150,7 @@
 		</el-form>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button @click="setshop = false">取 消</el-button>
+				<el-button @click="setshop = false;upview()">取 消</el-button>
 				<el-button type="primary" @click="setshop = false,update()">确 定</el-button>
 			</span>
 		</template>
@@ -659,6 +659,7 @@
 					alert("必填未填完!")
 
 				} else {
+					console.log(this.Customer)
 					var _this = this
 					this.axios.post("http://127.0.0.1:8089/eims/customer", this.Customer)
 						.then(function(response) {

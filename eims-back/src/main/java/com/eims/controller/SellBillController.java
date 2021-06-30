@@ -157,4 +157,15 @@ public class SellBillController {
     public boolean deleteBatch(@RequestBody List<Integer> ids) {
         return this.sellBillService.deleteBatch(ids);
     }
+
+    /**
+     * 通过主键查询单条数据
+     *
+     * @param datenumber 主键
+     * @return 单条数据
+     */
+    @GetMapping("/sellBill/date")
+    public  PageInfo<SellBill> selectDate(Integer datenumber) {
+        return this.sellBillService.queryByDate(datenumber);
+    }
 }

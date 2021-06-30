@@ -25,6 +25,14 @@
 
 				<el-main style="background-color: white;">
 					<el-row>
+						<el-form-item label="" style="float: left;" prop="sellOrderDocunum" v-if="ruleForm.audited==3">
+						<h3 style="color: red;">已驳回</h3>
+						</el-form-item>
+						<el-form-item label="" style="float: left;" prop="sellOrderDocunum" v-if="ruleForm.audited==1">
+						<h3 style="color: red;">已审核</h3>
+						</el-form-item>
+					</el-row>
+					<el-row>
 						<el-row>
 							<el-col :span="8" v-if="isAdd==true">
 								<el-form-item label="选单添加" style="float: left;" prop="sellOrderDocunum" >
@@ -258,6 +266,13 @@
 						
 						<el-table-column label="优惠" prop="detailDiscounts">
 						</el-table-column>
+						<el-table-column label="退货状态" prop="returned" v-if="isAdd==false">
+							<template #default="scope">
+								<p v-if="ruleForm.sellDetails[scope.$index].returned == 0">未退货</p>
+								<p v-if="ruleForm.sellDetails[scope.$index].returned == 1">已退货</p>
+								
+							</template>
+						</el-table-column>
 						<el-table-column label="操作" width="100">
 							<template #default="scope">
 								<el-button type="primary" icon="el-icon-plus" size="mini" @click="addRow()" circle>
@@ -288,7 +303,7 @@
 							<el-table-column property="productName" label="产品名称"></el-table-column>
 							<el-table-column property="specModel" label="规格型号"></el-table-column>
 							<el-table-column property="productUnit" label="产品单位"></el-table-column>
-							<el-table-column property="referCost" label="参考成本价"></el-table-column>
+							<el-table-column property="inventory" label="仓库数量"></el-table-column>
 							<el-table-column property="marketPrice" label="市场价"></el-table-column>
 						</el-table>
 						<el-row>
@@ -447,8 +462,8 @@
 					url: 'http://localhost:8089/eims/sellOrderBill/screen',
 					method: 'get',
 					params: Object.assign({
-						// 控制显示单据是否能退货
-						'audited': 0,
+						// 控制显示单据是否能添加
+						'audited': 1,
 						
 						'sellOrderDocunum':this.sellOrderBill.searchInput,
 						'customerName':this.sellOrderBill.searchInput,
@@ -594,11 +609,13 @@
 				})
 			},
 			supplierLoadData() {
+			
 				this.axios({
 					url: 'http://localhost:8089/eims/customer/search',
 					method: 'get',
 					params: Object.assign({
-						'customerName': this.supplier.searchInput
+						'customerName': this.supplier.searchInput,
+						
 					}, this.supplier.pageParam)
 				}).then(response => {
 					console.log(response.data.list)
@@ -638,7 +655,7 @@
 			},
 			productLoadData() {
 				this.axios({
-					url: 'http://localhost:8089/eims/product/search',
+					url: 'http://localhost:8089/eims/inventory/all',
 					method: 'get',
 					params: Object.assign({
 						'productName': this.product.searchInput
@@ -737,6 +754,7 @@
 				this.warehouse.dialogVisible = false
 				this.ruleForm.warehouseId = this.warehouse.singleSelection.warehouseId
 				this.ruleForm.warehouseName = this.warehouse.singleSelection.warehouseName
+				this.ruleForm.sellDetails=[{}];
 			},
 			addRow() {
 				this.ruleForm.sellDetails.push({});
@@ -744,6 +762,7 @@
 			removeRow(index) {
 				if (this.ruleForm.sellDetails.length > 1)
 					this.ruleForm.sellDetails.splice(index, 1);
+					productName
 					this.productConfirmButton()					
 			},
 			
@@ -786,19 +805,19 @@
 					if (typeof(list[i].productId) == "undefined" || list[i].marketPrice == "") {
 						this.$message({
 							type: 'warning',
-							message: '请选择采购产品'
+							message: '请选择销售产品'
 						})
 						return false
 					} else if (typeof(list[i].marketPrice) == "undefined" || list[i].marketPrice == "") {
 						this.$message({
 							type: 'warning',
-							message: '请填写采购价'
+							message: '请填写销售价'
 						})
 						return false
 					} else if (typeof(list[i].sellQuantity) == "undefined" || list[i].sellQuantity == "") {
 						this.$message({
 							type: 'warning',
-							message: '请填写采购数量'
+							message: '请填写销售数量'
 						})
 						return false
 					}
@@ -806,6 +825,7 @@
 
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
+						
 
 						if (this.isAdd) {
 							this.axios({
@@ -815,7 +835,7 @@
 							}).then(response => {
 								this.$message({
 									type: 'success',
-									message: '采购单数据新增成功！'
+									message: '销售单数据新增成功！'
 								})
 
 								this.$router.push({
@@ -855,15 +875,16 @@
 								this.loadData()
 								return false
 							}
-						
+							this.ruleForm.audited=0
 							this.axios({
+								
 								url:'http://localhost:8089/eims/sellBill/detail',
 								method:'put',
 								data:this.ruleForm
 							}).then(response=>{
 								this.$message({
 									type:'success',
-									message:'采购单信息更改成功！'
+									message:'销售单信息更改成功！'
 								})
 								
 								this.$router.push({
@@ -884,6 +905,7 @@
 		created() {
 			this.ruleForm.sellId = this.$route.params.sellId
 			this.isAdd = typeof(this.ruleForm.sellId) == "undefined" || this.ruleForm.sellId == ""
+			console.log("isAdd:"+this.isAdd)
 			console.log(this.ruleForm.sellId)
 			if (this.isAdd)
 			

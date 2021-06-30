@@ -33,7 +33,10 @@ import sellbill from "../components/sell/SellBill.vue"
 import selldetail from '../components/sell/SellDetail.vue'
 import sellreturn from '../components/sell/SellReturn.vue'
 import sellreturndetail from '../components/sell/SellReturnDetail.vue'
-
+import sellaccounts from '../components/sell/SellAccounts.vue'
+import moneyaccount from '../components/basicData/MoneyAccount.vue'
+import sellaccountreturn from '../components/sell/SellAccountsReturn.vue'
+import sellbillgather from '../components/sell/SellBillGather.vue'
 const routes = [{
 		path: '/',
 		redirect: '/Login'
@@ -175,9 +178,30 @@ const routes = [{
 		component: sellreturn
 	},
 	 {
-		path: '/sellreturndetail',
+		path: '/sellreturndetail/:sellReturnId?',
 		name: 'sellreturndetail',
 		component: sellreturndetail
+	},
+	 {
+		path: '/sellaccounts',
+		name: 'sellaccounts',
+		component: sellaccounts
+	},
+	 {
+		path: '/moneyaccount',
+		name: 'moneyaccount',
+		component: moneyaccount
+	},
+	
+	 {
+		path: '/sellaccountreturn',
+		name: 'sellaccountreturn',
+		component: sellaccountreturn
+	},
+	{
+		path: '/sellbillgather',
+		name: 'sellbillgather',
+		component: sellbillgather
 	}
 ]
 

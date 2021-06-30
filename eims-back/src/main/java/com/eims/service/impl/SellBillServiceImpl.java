@@ -71,6 +71,7 @@ public class SellBillServiceImpl implements SellBillService {
      */
     @Override
     public PageInfo<SellBill> queryBySearch(SellBillQueryForm sellBillQueryForm) {
+        sellBillQueryForm.setCurrentDate(new Date());
         Page<SellBill> page = PageHelper.startPage(sellBillQueryForm.getPageNum(), sellBillQueryForm.getPageSize());
         List<SellBill> sellBillList = this.sellBillDao.queryOrByPojo(sellBillQueryForm);
         return new PageInfo<>(sellBillList);
@@ -101,6 +102,7 @@ public class SellBillServiceImpl implements SellBillService {
     @Override
     public SellBill insert(SellBill sellBill) {
         sellBill.setSellHirthday(new Date());
+        sellBill.setAudited(0);
         this.sellBillDao.insert(sellBill);
         log.debug("主键id是:{}",sellBill.getSellId());
         List<SellDetail> sellDetailList=sellBill.getSellDetails();
@@ -124,7 +126,7 @@ public class SellBillServiceImpl implements SellBillService {
                 log.debug("SellOrderId的值是:{}",sellBill.getSellOrderId());
                 SellOrderBill sellOrderBill=new SellOrderBill();
                 sellOrderBill.setSellOrderId(sellBill.getSellOrderId());
-                sellOrderBill.setAudited(2);
+                sellOrderBill.setAudited(1);
                 sellOrderBillDao.update(sellOrderBill);
 
 
@@ -246,5 +248,19 @@ public class SellBillServiceImpl implements SellBillService {
     public boolean deleteBatch(List<Integer> ids) {
         int row = this.sellBillDao.deleteBatch(ids);
         return ids.size() == row;
+    }
+
+    /**
+     * 日期查询
+     *
+     * @param datenumber 日期相差天数
+     * @return 影响行数
+     */
+
+    @Override
+    public PageInfo<SellBill> queryByDate(Integer datenumber) {
+//        Page<SellBill> page = PageHelper.startPage(sellBillQueryForm.getPageNum(), sellBillQueryForm.getPageSize());
+//        List<SellBill> sellBillList = this.sellBillDao.queryAll(sellBillQueryForm);
+        return null;
     }
 }

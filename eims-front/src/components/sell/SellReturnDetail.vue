@@ -125,52 +125,31 @@
 					</el-row>
 
 					<el-table :data="ruleForm.sellDetails" show-summary max-height="402"
-						style="width: 100%;height:402px;">
+						style="width: 100%;height:402px;" @selection-change="handleSelectionChange">
+						<el-table-column type="selection" width="55">
+							
+						</el-table-column>
+						
 						<el-table-column label="产品名称" prop="productName">
-							<template #default="scope">
-								<el-input v-model="ruleForm.sellDetails[scope.$index].productName"
-									style="width: 170px" size="small" disabled>
-									<template #append>
-										<el-button icon="el-icon-plus" size="mini"
-											@click="productOpenDialog(scope.$index)">
-										</el-button>
-									</template>
-								</el-input>
-							</template>
+						
+								
 						</el-table-column>
 						<el-table-column label="规格型号" prop="productModel">
 						</el-table-column>
 						<el-table-column label="产品单位" prop="productUnit">
 						</el-table-column>
-						<el-table-column label="销售价" prop="sellPrice">
-						
-							<template #default="scope">
-								<el-input-number v-model="ruleForm.sellDetails[scope.$index].sellPrice"
-									@change="changePriceOrQuantity(scope.$index)" controls-position="right" size="small"
-									style="width: 130px;" :precision="2">
-								</el-input-number>
-							</template>
+						<el-table-column label="销售价" prop="sellPrice">	
+						</el-table-column>
+						<el-table-column label="优惠" prop="detailDiscounts">
 						</el-table-column>
 						<el-table-column label="采购数量" prop="sellQuantity">
-							<template #default="scope">
-								<el-input-number v-model="ruleForm.sellDetails[scope.$index].sellQuantity"
-									@change="changePriceOrQuantity(scope.$index)" size="small" :min="1" :precision="0">
-								</el-input-number>
-							</template>
+							
 						</el-table-column>
 						<el-table-column label="小计" prop="detailPaidAmount">
 						</el-table-column>
 						
-						<el-table-column label="优惠" prop="detailDiscounts">
-						</el-table-column>
-						<el-table-column label="操作" width="100">
-							<template #default="scope">
-								<el-button type="primary" icon="el-icon-plus" size="mini" @click="addRow()" circle>
-								</el-button>
-								<el-button type="primary" icon="el-icon-minus" size="mini"
-									@click="removeRow(scope.$index)" circle></el-button>
-							</template>
-						</el-table-column>
+						
+						
 					</el-table>
 
 					<el-dialog title="产品" v-model="product.dialogVisible">
@@ -241,7 +220,7 @@
 												</h1>
 											</div>
 										</el-col>
-									</el-row>
+										
 					
 					
 					
@@ -270,6 +249,7 @@
 				isAdd: true,
 				ruleForm: {
 					sellDetails: [{}]
+					
 				},
 				rules: {
 					sellReturnDocunum: [{
@@ -323,24 +303,67 @@
 				}
 			}
 		},
+		computed:{
+			searchCondition() {
+				return {
+					"sellReturnId": this.ruleForm.sellReturnId
+					
+				}
+			}
+		},
 		
 		methods: {
+			
+			  handleSelectionChange(val) {
+				  this.ruleForm.sellDetails1=val
+				  var aa=0
+				  var bb=0
+				  this.ruleForm.sellDetails1.forEach(detail=>{
+					  aa+=detail.detailDiscounts
+					  bb+=detail.detailPaidAmount
+				  })
+				  this.ruleForm.sellDiscounts=aa
+				  this.ruleForm.billPaidAmount=bb
+				  
+			        console.log(val)
+			      },
 			loadData(){
 				this.axios({
-					url: "http://localhost:8089/eims/sellBill/one",
+					url: "http://localhost:8089/eims/sellReturn/one",
 					method: "get",
 					params: {
-						"id": this.ruleForm.sellId
+						"id": this.ruleForm.sellReturnId
 					}
 				}).then(response => {
 					this.ruleForm = response.data
 					
 					console.log("初始化的数据为")
-					console.log(this.ruleForm)
-					console.log(this.ruleForm.sellDetails)
+					console.log("宝气"+this.ruleForm)
+					 console.log(this.ruleForm.sellDetails)
 				}).catch(error => {
 				
 				})
+				 var searchForm = Object.assign(this.searchCondition)
+				this.axios({
+					url: "http://localhost:8089/eims/returnBillsProduct/search",
+					method: "get",
+					params: searchForm
+				}).then(response => {
+					 this.ruleForm.sellDetails = response.data.list
+					
+					console.log("初始化的数据为")
+					// console.log("宝气"+response.data)
+					 console.log(this.ruleForm.sellDetails)
+					 this.ruleForm.sellDetails.forEach(detail => {
+					 	detail.detailPaidAmount=detail.retBillPaidAmount
+						detail.detailDiscounts=detail.retBillPayAmount-detail.retBillPaidAmount
+					 	
+					 	
+					 	})
+				}).catch(error => {
+				
+				})
+				
 			},
 			getDocuNum(prefix) {
 				const nowDate = new Date()
@@ -397,7 +420,7 @@
 					params: Object.assign({
 						// 控制显示单据是否能退货
 						'returnState': 0,
-						'outStorage': 1
+						'outStorage': 0
 						
 					}, this.sellBill.pageParam)
 				}).then(response => {
@@ -424,17 +447,23 @@
 			sellBillConfirmButton() {
 				this.sellBill.dialogVisible = false
 				this.ruleForm=this.sellBill.singleSelection
+				
+				this.ruleForm.sellDiscounts=0
+				this.ruleForm.billPaidAmount=0
+				this.ruleForm.sellDetails1=[{}]
 				console.log(this.sellBill.singleSelection)
 				
 				this.axios({
-					url: 'http://localhost:8089/eims/sellDetail/search',
+					url: 'http://localhost:8089/eims/sellDetail/screen',
 					method: 'get',
 					params: Object.assign({
 						'sellId': this.ruleForm.sellId
-					}, this.sellBill.pageParam)
+					})
 				}).then(response => {
+					console.log("sellid:"+this.ruleForm.sellId)
 					this.ruleForm.sellDetails = response.data.list
 					this.getDocuNum("SRT")
+					console.log("this.sellBill.pageParam:"+this.sellBill.pageParam)
 					console.log(response.data.list)
 					
 					
@@ -459,18 +488,18 @@
 				console.log(this.ruleForm.sellDetails)
 			},
 			productLoadData() {
-				this.axios({
-					url: 'http://localhost:8089/eims/product/search',
-					method: 'get',
-					params: Object.assign({
-						'productName': this.product.searchInput
-					}, this.product.pageParam)
-				}).then(response => {
-					this.product.tableData = response.data.list
-					this.product.tableTotal = response.data.total
-				}).catch(error => {
+				// this.axios({
+				// 	url: 'http://localhost:8089/eims/inventory/all',
+				// 	method: 'get',
+				// 	params: Object.assign({
+				// 		'productName': this.product.searchInput
+				// 	}, this.product.pageParam)
+				// }).then(response => {
+				// 	this.product.tableData = response.data.list
+				// 	this.product.tableTotal = response.data.total
+				// }).catch(error => {
 
-				})
+				// })
 			},
 			productSelectionChange(val) {
 				this.product.multipleSelection = val
@@ -531,14 +560,8 @@
 			},
 			
 			
-			addRow() {
-				this.ruleForm.sellDetails.push({});
-			},
-			removeRow(index) {
-				if (this.ruleForm.sellDetails.length > 1)
-					this.ruleForm.sellDetails.splice(index, 1);
-					this.productConfirmButton()					
-			},
+			
+			
 			
 			changePriceOrQuantity(index) {
 				const detail = this.ruleForm.sellDetails[index]
@@ -555,62 +578,64 @@
 				
 				this.calcTransactionAmount()
 			},
-			calcTransactionAmount() {
-				var transactionAmount = 0
-				var transactionAmount1 = 0
-				var transactionAmount2 = 0
-				this.ruleForm.sellDetails.forEach(detail => {
-					transactionAmount += detail.detailPaidAmount
-					transactionAmount1 += detail.detailPayAmount
-					transactionAmount2 += detail.detailDiscounts
-				})
-				this.ruleForm.transactionAmount = transactionAmount
-				this.ruleForm.billPaidAmount=transactionAmount
-				this.ruleForm.billPayAmount=transactionAmount1
-				this.ruleForm.sellDiscounts=transactionAmount2
-				console.log("金额是:" +transactionAmount)
-				console.log("原价是:" +transactionAmount1)
-				console.log("优惠是:" +transactionAmount2)
-			},
+			// calcTransactionAmount() {
+			// 	var transactionAmount = 0
+			// 	var transactionAmount1 = 0
+			// 	var transactionAmount2 = 0
+			// 	this.ruleForm.sellDetails.forEach(detail => {
+			// 		transactionAmount += detail.detailPaidAmount
+			// 		transactionAmount1 += detail.detailPayAmount
+			// 		transactionAmount2 += detail.detailDiscounts
+			// 	})
+			// 	this.ruleForm.transactionAmount = transactionAmount
+			// 	this.ruleForm.billPaidAmount=transactionAmount
+			// 	this.ruleForm.billPayAmount=transactionAmount1
+			// 	this.ruleForm.sellDiscounts=transactionAmount2
+			// 	console.log("金额是:" +transactionAmount)
+			// 	console.log("原价是:" +transactionAmount1)
+			// 	console.log("优惠是:" +transactionAmount2)
+			// },
 			submitForm(formName) {
+				console.log(this.ruleForm)
 
-				const list = this.ruleForm.sellDetails
+				const list = this.ruleForm.sellDetails1
+				console.log(this.ruleForm.sellDetails1)
 				for(var i=0;i<list.length;i++){
 					if (typeof(list[i].productId) == "undefined" || list[i].marketPrice == "") {
 						this.$message({
 							type: 'warning',
-							message: '请选择采购产品'
+							message: '请选择退货`产品'
 						})
 						return false
 					} else if (typeof(list[i].marketPrice) == "undefined" || list[i].marketPrice == "") {
 						this.$message({
 							type: 'warning',
-							message: '请填写采购价'
+							message: '请填写退货价'
 						})
 						return false
 					} else if (typeof(list[i].sellQuantity) == "undefined" || list[i].sellQuantity == "") {
 						this.$message({
 							type: 'warning',
-							message: '请填写采购数量'
+							message: '请填写退货数量'
 						})
 						return false
 					}
 				}
-				this.ruleForm.returnBillsProductList=this.ruleForm.sellDetails
-				this.ruleForm.retPayAmount=this.ruleForm.billPayAmount
-				this.ruleForm.retPaidAmount=this.ruleForm.billPaidAmount
+				this.ruleForm.returnBillsProductList=this.ruleForm.sellDetails1
+				this.ruleForm.retPayAmount=this.ruleForm.billPaidAmount
+				this.ruleForm.retPaidAmount=0
 				this.ruleForm.returnBillsProductList.forEach(m => {
 					
 					m.retBillPayAmount=m.detailPayAmount
 					m.retBillPaidAmount=m.detailPaidAmount
 				})
-				console.log(this.ruleForm.returnBillsProductList)
-				// this.ruleForm.ReturnBillsProduct.retBillPayAmount=this.ruleForm.sellDetails.billPayAmount
-				// this.ruleForm.ReturnBillsProduct.retBillPaidAmount=this.ruleForm.sellDetails.billPaidAmount
+				console.log("最终"+this.ruleForm.returnBillsProductList)
+				
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
 
 						if (this.isAdd) {
+							console.log(this.ruleForm)
 							this.axios({
 								url: 'http://localhost:8089/eims/sellReturn',
 								method: 'post',
@@ -618,7 +643,7 @@
 							}).then(response => {
 								this.$message({
 									type: 'success',
-									message: '采购退货单数据新增成功！'
+									message: '销售退货单数据新增成功！'
 								})
 
 								this.$router.push({
@@ -629,24 +654,24 @@
 							})
 						} else {
 						
-							if(this.ruleForm.audited == 1){
+							if(this.ruleForm.autited == 1){
 								this.$message({
 									type:'info',
 									message:'已审核的数据无法更改'
 								})
 								this.loadData()
 								return false
-							}else if(this.ruleForm.outStorage == 1){
+							}else if(this.ruleForm.inStorage == 1){
 								this.$message({
 									type:'info',
-									message:'已出库的数据无法更改'
+									message:'已入库的数据无法更改'
 								})
 								this.loadData()
 								return false
-							}else if(this.ruleForm.paymentStatus == 1 || this.ruleForm.paymentStatus == 2){
+							}else if(this.ruleForm.refunded == 1 || this.ruleForm.refunded == 2){
 								this.$message({
 									type:'info',
-									message:'已付款的数据无法更改'
+									message:'已退款的数据无法更改'
 								})
 								this.loadData()
 								return false
@@ -666,7 +691,7 @@
 							}).then(response=>{
 								this.$message({
 									type:'success',
-									message:'采购单信息更改成功！'
+									message:'销售退货单信息更改成功！'
 								})
 								
 								this.$router.push({
@@ -685,9 +710,9 @@
 			}
 		},
 		created() {
-			this.ruleForm.sellId = this.$route.params.sellId
-			this.isAdd = typeof(this.ruleForm.sellId) == "undefined" || this.ruleForm.sellId == ""
-			console.log(this.ruleForm.sellId)
+			this.ruleForm.sellReturnId = this.$route.params.sellReturnId
+			this.isAdd = typeof(this.ruleForm.sellReturnId) == "undefined" || this.ruleForm.sellReturnId == ""
+			console.log(this.ruleForm.sellReturnId)
 			if (this.isAdd)
 			
 				this.getDocuNum("SRT")

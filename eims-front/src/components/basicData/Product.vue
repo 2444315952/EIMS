@@ -112,9 +112,7 @@
 					<el-form-item label="规格型号" :label-width="formLabelWidth">
 						<el-input v-model="Product1.specModel" size="small" clearable></el-input>
 					</el-form-item>
-					<el-form-item label="颜色" :label-width="formLabelWidth">
-						<el-input size="small" clearable></el-input>
-					</el-form-item>
+					
 					<el-form-item label="参考成本价(必填)" :label-width="formLabelWidth">
 						<el-input v-model="Product1.referCost" size="small" clearable></el-input>
 					</el-form-item>
@@ -123,9 +121,7 @@
 					<el-form-item label="商品编号(必填)" :label-width="formLabelWidth" disabled>
 						<el-input v-model="Product1.productNumber" autocomplete="off " size="small"></el-input>
 					</el-form-item>
-					<el-form-item label="商品条码" :label-width="formLabelWidth">
-						<el-input size="small"></el-input>
-					</el-form-item>
+					
 					<el-form-item label="单位" :label-width="formLabelWidth">
 						<el-input size="small" v-model="Product1.productUnit"></el-input>
 					</el-form-item>
@@ -153,21 +149,13 @@
 				<el-col :span="5">
 
 					<el-form-item label="备注" :label-width="formLabelWidth">
-						<el-input v-model="Product.remake" size="small"></el-input>
+						<el-input v-model="Product.remake" size="small" type="textarea" style="width: 500px;"></el-input>
 					</el-form-item>
 
 				</el-col>
 				<el-col :span="5">
-					<el-form-item label="期初库存" :label-width="formLabelWidth">
-						<el-input autocomplete="off" size="small"></el-input>
-					</el-form-item>
-					<el-form-item label="期初仓库(必填)" :label-width="formLabelWidth">
-						<el-select v-model="value" placeholder="请选择" id="select1" size="small">
-							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-							</el-option>
-						</el-select>
-					</el-form-item>
-
+					
+					
 				</el-col>
 			</el-row>
 			<el-col :span="5">
@@ -185,7 +173,7 @@
 		</el-form>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button @click="setshop = false">取 消</el-button>
+				<el-button @click="setshop = false;productallsel()">取 消</el-button>
 				<el-button type="primary" @click="setshop = false,update()">确 定</el-button>
 			</span>
 		</template>
@@ -209,9 +197,7 @@
 					<el-form-item label="规格型号" :label-width="formLabelWidth">
 						<el-input v-model="Product.specModel" size="small" clearable></el-input>
 					</el-form-item>
-					<el-form-item label="颜色" :label-width="formLabelWidth">
-						<el-input size="small" clearable></el-input>
-					</el-form-item>
+					
 					<el-form-item label="参考成本价(必填)" :label-width="formLabelWidth">
 						<el-input v-model="Product.referCost" size="small" clearable></el-input>
 					</el-form-item>
@@ -220,9 +206,7 @@
 					<el-form-item label="商品编号(必填)" :label-width="formLabelWidth">
 						<el-input v-model="Product.productNumber" autocomplete="off " size="small"></el-input>
 					</el-form-item>
-					<el-form-item label="商品条码" :label-width="formLabelWidth">
-						<el-input size="small"></el-input>
-					</el-form-item>
+					
 					<el-form-item label="单位" :label-width="formLabelWidth">
 						<el-input size="small" v-model="Product.productUnit"></el-input>
 					</el-form-item>
@@ -250,21 +234,13 @@
 				<el-col :span="5">
 
 					<el-form-item label="备注" :label-width="formLabelWidth">
-						<el-input v-model="Product.remake" size="small"></el-input>
+						<el-input v-model="Product.remake" size="small" type="textarea" style="width: 500px;"></el-input>
 					</el-form-item>
 
 				</el-col>
 				<el-col :span="5">
-					<el-form-item label="期初库存" :label-width="formLabelWidth">
-						<el-input autocomplete="off" size="small"></el-input>
-					</el-form-item>
-					<el-form-item label="期初仓库(必填)" :label-width="formLabelWidth">
-						<el-select v-model="value" placeholder="请选择" id="select1" size="small">
-							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-							</el-option>
-						</el-select>
-					</el-form-item>
-
+					
+					
 				</el-col>
 			</el-row>
 			<el-col :span="5">
@@ -400,7 +376,7 @@
 
 			<span class="dialog-footer">
 				<el-button type="primary" @click="addshoptypeupdate = false,updateshoptypeaddaxios()">添 加</el-button>
-				<el-button type="primary" @click="addshoptypeupdate = false">返 回</el-button>
+				<el-button type="primary" @click="addshoptypeupdate = false;productalltypesel()">返 回</el-button>
 			</span>
 		</template>
 	</el-dialog>

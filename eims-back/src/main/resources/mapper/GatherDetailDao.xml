@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.GatherDetailDao">
+
+    <resultMap type="com.eims.mybatis.entity.GatherDetail" id="GatherDetailMap">
+        <result property="gatherDetailId" column="GATHER_DETAIL_ID" jdbcType="INTEGER"/>
+        <result property="gatherId" column="GATHER_ID" jdbcType="INTEGER"/>
+        <result property="gatherDocunum" column="GATHER_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+        <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+        <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+        <result property="gatherPrice" column="GATHER_PRICE" jdbcType="VARCHAR"/>
+        <result property="gatherQuantity" column="GATHER_QUANTITY" jdbcType="INTEGER"/>
+        <result property="gatherSubtotal" column="GATHER_SUBTOTAL" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="GatherDetailCol">
+        GATHER_DETAIL_ID, GATHER_ID, GATHER_DOCUNUM, PRODUCT_NAME, PRODUCT_PICTURE, SPEC_MODEL, PRODUCT_UNIT, GATHER_PRICE, GATHER_QUANTITY, GATHER_SUBTOTAL    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="GatherDetailMap">
+        select
+        <include refid="GatherDetailCol"></include>
+        from EIMS.GATHER_DETAIL
+        where GATHER_DETAIL_ID = #{gatherDetailId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="GatherDetailMap">
+        select
+        <include refid="GatherDetailCol"></include>
+        from (select * from EIMS.GATHER_DETAIL where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="GatherDetailMap">
+        select
+        <include refid="GatherDetailCol"></include>
+        from (select * from EIMS.GATHER_DETAIL where work_point_id = #{workPointId})
+        <where>
+            <if test="gatherDetailId != null">
+                or GATHER_DETAIL_ID like '%'||#{gatherDetailId}||'%'
+            </if>
+            <if test="gatherId != null">
+                or GATHER_ID like '%'||#{gatherId}||'%'
+            </if>
+            <if test="gatherDocunum != null and gatherDocunum != ''">
+                or GATHER_DOCUNUM like '%'||#{gatherDocunum}||'%'
+            </if>
+            <if test="productName != null and productName != ''">
+                or PRODUCT_NAME like '%'||#{productName}||'%'
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                or PRODUCT_PICTURE like '%'||#{productPicture}||'%'
+            </if>
+            <if test="specModel != null and specModel != ''">
+                or SPEC_MODEL like '%'||#{specModel}||'%'
+            </if>
+            <if test="productUnit != null and productUnit != ''">
+                or PRODUCT_UNIT like '%'||#{productUnit}||'%'
+            </if>
+            <if test="gatherPrice != null">
+                or GATHER_PRICE like '%'||#{gatherPrice}||'%'
+            </if>
+            <if test="gatherQuantity != null">
+                or GATHER_QUANTITY like '%'||#{gatherQuantity}||'%'
+            </if>
+            <if test="gatherSubtotal != null">
+                or GATHER_SUBTOTAL like '%'||#{gatherSubtotal}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="GatherDetailMap">
+        select
+        <include refid="GatherDetailCol"></include>
+        from EIMS.GATHER_DETAIL
+        <where>
+            <if test="gatherDetailId != null">
+                and GATHER_DETAIL_ID = #{gatherDetailId}
+            </if>
+            <if test="gatherId != null">
+                and GATHER_ID = #{gatherId}
+            </if>
+            <if test="gatherDocunum != null and gatherDocunum != ''">
+                and GATHER_DOCUNUM = #{gatherDocunum}
+            </if>
+            <if test="productName != null and productName != ''">
+                and PRODUCT_NAME = #{productName}
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                and PRODUCT_PICTURE = #{productPicture}
+            </if>
+            <if test="specModel != null and specModel != ''">
+                and SPEC_MODEL = #{specModel}
+            </if>
+            <if test="productUnit != null and productUnit != ''">
+                and PRODUCT_UNIT = #{productUnit}
+            </if>
+            <if test="gatherPrice != null">
+                and GATHER_PRICE = #{gatherPrice}
+            </if>
+            <if test="gatherQuantity != null">
+                and GATHER_QUANTITY = #{gatherQuantity}
+            </if>
+            <if test="gatherSubtotal != null">
+                and GATHER_SUBTOTAL = #{gatherSubtotal}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.GATHER_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            GATHER_DETAIL_ID,
+            <if test="gatherId != null">
+                GATHER_ID,
+            </if>
+            <if test="gatherDocunum != null">
+                GATHER_DOCUNUM,
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME,
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE,
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL,
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT,
+            </if>
+            <if test="gatherPrice != null">
+                GATHER_PRICE,
+            </if>
+            <if test="gatherQuantity != null">
+                GATHER_QUANTITY,
+            </if>
+            <if test="gatherSubtotal != null">
+                GATHER_SUBTOTAL,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{gatherDetailId},
+            <if test="gatherId != null">
+                #{gatherId},
+            </if>
+            <if test="gatherDocunum != null">
+                #{gatherDocunum},
+            </if>
+            <if test="productName != null">
+                #{productName},
+            </if>
+            <if test="productPicture != null">
+                #{productPicture},
+            </if>
+            <if test="specModel != null">
+                #{specModel},
+            </if>
+            <if test="productUnit != null">
+                #{productUnit},
+            </if>
+            <if test="gatherPrice != null">
+                #{gatherPrice},
+            </if>
+            <if test="gatherQuantity != null">
+                #{gatherQuantity},
+            </if>
+            <if test="gatherSubtotal != null">
+                #{gatherSubtotal},
+            </if>
+        </trim>
+        <selectKey keyProperty="gatherDetailId" resultType="INTEGER" order="BEFORE">
+            select SEQ_GATHER_DETAIL.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.GATHER_DETAIL
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                GATHER_DETAIL_ID,
+                <if test="entity.gatherId != null">
+                    GATHER_ID,
+                </if>
+                <if test="entity.gatherDocunum != null">
+                    GATHER_DOCUNUM,
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME,
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE,
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL,
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT,
+                </if>
+                <if test="entity.gatherPrice != null">
+                    GATHER_PRICE,
+                </if>
+                <if test="entity.gatherQuantity != null">
+                    GATHER_QUANTITY,
+                </if>
+                <if test="entity.gatherSubtotal != null">
+                    GATHER_SUBTOTAL,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_GATHER_DETAIL.NEXTVAL,
+                <if test="entity.gatherId != null">
+                    #{entity.gatherId},
+                </if>
+                <if test="entity.gatherDocunum != null">
+                    #{entity.gatherDocunum},
+                </if>
+                <if test="entity.productName != null">
+                    #{entity.productName},
+                </if>
+                <if test="entity.productPicture != null">
+                    #{entity.productPicture},
+                </if>
+                <if test="entity.specModel != null">
+                    #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    #{entity.productUnit},
+                </if>
+                <if test="entity.gatherPrice != null">
+                    #{entity.gatherPrice},
+                </if>
+                <if test="entity.gatherQuantity != null">
+                    #{entity.gatherQuantity},
+                </if>
+                <if test="entity.gatherSubtotal != null">
+                    #{entity.gatherSubtotal},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.GATHER_DETAIL
+        <set>
+            <if test="gatherId != null">
+                GATHER_ID = #{gatherId},
+            </if>
+            <if test="gatherDocunum != null">
+                GATHER_DOCUNUM = #{gatherDocunum},
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME = #{productName},
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE = #{productPicture},
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL = #{specModel},
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT = #{productUnit},
+            </if>
+            <if test="gatherPrice != null">
+                GATHER_PRICE = #{gatherPrice},
+            </if>
+            <if test="gatherQuantity != null">
+                GATHER_QUANTITY = #{gatherQuantity},
+            </if>
+            <if test="gatherSubtotal != null">
+                GATHER_SUBTOTAL = #{gatherSubtotal},
+            </if>
+        </set>
+        where GATHER_DETAIL_ID = #{gatherDetailId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.GATHER_DETAIL
+            <set>
+                <if test="entity.gatherId != null">
+                    GATHER_ID = #{entity.gatherId},
+                </if>
+                <if test="entity.gatherDocunum != null">
+                    GATHER_DOCUNUM = #{entity.gatherDocunum},
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME = #{entity.productName},
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE = #{entity.productPicture},
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL = #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT = #{entity.productUnit},
+                </if>
+                <if test="entity.gatherPrice != null">
+                    GATHER_PRICE = #{entity.gatherPrice},
+                </if>
+                <if test="entity.gatherQuantity != null">
+                    GATHER_QUANTITY = #{entity.gatherQuantity},
+                </if>
+                <if test="entity.gatherSubtotal != null">
+                    GATHER_SUBTOTAL = #{entity.gatherSubtotal},
+                </if>
+            </set>
+            where GATHER_DETAIL_ID = #{entity.gatherDetailId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.GATHER_DETAIL where GATHER_DETAIL_ID = #{gatherDetailId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.GATHER_DETAIL where GATHER_DETAIL_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.GATHER_DETAIL where GATHER_DETAIL_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.gatherDetailId}
+        </foreach>
+    </delete>
+</mapper>
+

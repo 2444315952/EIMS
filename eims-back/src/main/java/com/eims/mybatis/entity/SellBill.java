@@ -76,5 +76,5 @@ public class SellBill implements Serializable {
 
     private List<SellDetail> sellDetails;
 
-
+    private BigDecimal receivedMoney;
 }

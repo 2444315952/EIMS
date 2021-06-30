@@ -1,94 +1,92 @@
 package com.eims.mybatis.dao;
 
-import com.eims.mybatis.entity.SellBill;
-import com.eims.vo.form.SellBillQueryForm;
-import com.github.pagehelper.PageInfo;
+import com.eims.mybatis.entity.Gather;
+import com.eims.vo.form.GatherQueryForm;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 
 /**
- * (SellBill)表数据库访问层
+ * (Gather)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-11 21:26:47
+ * @since 2021-06-27 20:23:02
  */
 @Mapper
-public interface SellBillDao {
+public interface GatherDao {
 
     /**
      * 通过ID查询单条数据
      *
-     * @param sellId 主键
+     * @param gatherId 主键
      * @return 实例对象
      */
-    SellBill queryById(Integer sellId);
+    Gather queryById(Integer gatherId);
 
     /**
      * 查询所有数据
      *
-     * @param sellBillQueryForm 实例对象
+     * @param gatherQueryForm 实例对象
      * @return 实例对象
      */
-    List<SellBill> queryAll(SellBillQueryForm sellBillQueryForm);
+    List<Gather> queryAll(GatherQueryForm gatherQueryForm);
 
     /**
      * 通过实体作为或者条件查询
      *
-     * @param sellBillQueryForm 实例对象
+     * @param gatherQueryForm 实例对象
      * @return 对象列表
      */
-    List<SellBill> queryOrByPojo(SellBillQueryForm sellBillQueryForm);
+    List<Gather> queryOrByPojo(GatherQueryForm gatherQueryForm);
 
     /**
      * 通过实体作为并且条件查询
      *
-     * @param sellBillQueryForm 实例对象
+     * @param gatherQueryForm 实例对象
      * @return 对象列表
      */
-    List<SellBill> queryAndByPojo(SellBillQueryForm sellBillQueryForm);
+    List<Gather> queryAndByPojo(GatherQueryForm gatherQueryForm);
 
     /**
      * 新增数据
      *
-     * @param sellBill 实例对象
+     * @param gather 实例对象
      * @return 影响行数
      */
-    int insert(SellBill sellBill);
+    int insert(Gather gather);
 
     /**
      * 批量新增数据
      *
-     * @param sellBillList 实例对象列表
+     * @param gatherList 实例对象列表
      * @return 影响行数
      */
-    int insertBatch(List<SellBill> sellBillList);
+    int insertBatch(List<Gather> gatherList);
 
     /**
      * 修改数据
      *
-     * @param sellBill 实例对象
+     * @param gather 实例对象
      * @return 影响行数
      */
-    int update(SellBill sellBill);
+    int update(Gather gather);
 
     /**
      * 批量修改数据
      *
-     * @param sellBillList 实例对象列表
+     * @param gatherList 实例对象列表
      * @return 影响行数
      */
-    int updateBatch(List<SellBill> sellBillList);
+    int updateBatch(List<Gather> gatherList);
 
     /**
      * 通过主键删除数据
      *
-     * @param sellId 主键
+     * @param gatherId 主键
      * @return 影响行数
      */
-    int deleteById(Integer sellId);
+    int deleteById(Integer gatherId);
 
     /**
      * 通过主键列表删除数据
@@ -101,11 +99,9 @@ public interface SellBillDao {
     /**
      * 批量对象列表删除数据
      *
-     * @param sellBillList 实例对象列表
+     * @param gatherList 实例对象列表
      * @return 影响行数
      */
-    int deleteBatchByEntities(List<SellBill> sellBillList);
-
-
+    int deleteBatchByEntities(List<Gather> gatherList);
 }
 

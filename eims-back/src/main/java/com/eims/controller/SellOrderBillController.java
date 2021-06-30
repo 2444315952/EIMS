@@ -80,9 +80,7 @@ public class SellOrderBillController {
      */
     @PostMapping("/sellOrderBill")
     public SellOrderBill insert(@RequestBody SellOrderBill sellOrderBill) {
-
         return this.sellOrderBillService.insert(sellOrderBill);
-
     }
 
     /**
@@ -109,6 +107,7 @@ public class SellOrderBillController {
 
     @PutMapping("/sellOrderBill/detail")
     public SellOrderBill updateSellAndDetail(@RequestBody SellOrderBill sellOrderBill) {
+        System.out.println("sellorderbill:"+sellOrderBill);
         return this.sellOrderBillService.updateSellAndDetail(sellOrderBill);
     }
 

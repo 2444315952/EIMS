@@ -11,7 +11,7 @@
 			<el-main style="background-color:#F9FAFC">
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 					<el-row>
-						<el-col :span="9">
+						<el-col :span="11">
 							<el-form-item label="单据编号:" prop="stockOutDocunum">
 								<el-input v-model="ruleForm.stockOutDocunum" :disabled="true"
 									style="float: left; width: 250px;"></el-input>
@@ -20,17 +20,16 @@
 						<el-col :span="7">
 							<el-form-item label="单据日期:" prop="documentDate">
 								<el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.documentDate"
-									:disabled="isdisabled" style="width: 100%; float: left;"></el-date-picker>
+									:disabled="isdisabled" style="width:250px; float: left;"></el-date-picker>
 							</el-form-item>
 						</el-col>
 						<el-col class="line" :span="6"></el-col>
-						<el-col class="line" :span="2"></el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="9">
+						<el-col :span="11">
 							<el-form-item label="出库类型:" prop="outboundType">
 								<el-select v-model="ruleForm.outboundType" placeholder="请选择" :disabled="isdisabled"
-									style="width: 250px;float: left;">
+									@change="ruleForm.outboundDetailList=[{}];ruleForm.warehouseName=''" style="width: 250px;float: left;">
 									<el-option label="销售单" value="销售单"></el-option>
 									<el-option label="采购退货单" value="采购退货单"></el-option>
 								</el-select>
@@ -39,27 +38,66 @@
 								</el-button>
 							</el-form-item>
 						</el-col>
-						<el-col :span="9">
-							<el-form-item label="出库仓库:" prop="warehouseId">
-								<el-select v-model="ruleForm.warehouseName" @change="selectWarehouse"
-									@click="queryWarehouse()" :disabled="isdisabled" placeholder="请选择"
-									style="width: 250px;float: left;">
-									<el-option v-for="item in SelectList" :label="item.warehouseName"
-										:value="item.warehouseName"></el-option>
-								</el-select>
+						<el-col :span="8">
+							<el-form-item label="出库仓库" style="float: left;" prop="warehouseName">
+								<el-input v-model="ruleForm.warehouseName" style="width: 250px;" size="medium" disabled>
+									<template #append>
+										<el-button icon="el-icon-plus" size="small"
+											@click="openWarehouseDialog()"></el-button>
+									</template>
+								</el-input>
 							</el-form-item>
 						</el-col>
+
+						<el-dialog title="仓库" v-model="warehouse.dialogVisible">
+							<el-row type="flex" justify="end" style="padding-bottom: 12px;">
+								<el-col :span="7.5">
+									<el-input v-model="warehouse.searchInput" placeholder="请搜索仓库名称" size="small">
+										<template #append>
+											<el-button icon="el-icon-search" @click="warehouseLoadData()" size="mini">
+											</el-button>
+										</template>
+									</el-input>
+								</el-col>
+
+							</el-row>
+
+							<el-table :data="warehouse.tableData" max-height="286" style="height: 286px;"
+								highlight-current-row @current-change="warehouseSelectionChange">
+								<el-table-column property="warehouseName" label="仓库名称"></el-table-column>
+								<el-table-column property="employeeName" label="联系人"></el-table-column>
+								<el-table-column property="phone" label="联系电话"></el-table-column>
+								<el-table-column property="warehouseAddress" label="联系地址"></el-table-column>
+							</el-table>
+							<el-row>
+								<el-col :span="24">
+									<el-pagination style="float: right;margin-top: 15px;"
+										@size-change="warehouseSizeChange" @current-change="warehouseCurrentChange"
+										:page-sizes="[10,20,40,80]" :page-size="warehouse.pageParam.pageSize"
+										layout="total, sizes, prev, pager, next, jumper" :total="warehouse.tableTotal">
+									</el-pagination>
+								</el-col>
+							</el-row>
+
+							<template #footer>
+								<span class="dialog-footer">
+									<el-button @click="warehouse.dialogVisible = false" size="medium">取 消</el-button>
+									<el-button type="primary" @click="warehouseConfirmButton" size="medium">确 定
+									</el-button>
+								</span>
+							</template>
+						</el-dialog>
 						<el-col :span="6">
 						</el-col>
 					</el-row>
-					<br/>
+					<br />
 					<el-row>
 						<el-col :span="1"></el-col>
 						<el-col :span="22">
 							<el-table ref="multipleTable" :data="ruleForm.outboundDetailList" :height="tableHeight"
 								tooltip-effect="dark" style="width:100%; text-align :center; height:230px;"
 								max-height="230" @selection-change="handleSelectionChange">
-<!-- 								<el-table-column label="操作" width="85">
+								<!-- 								<el-table-column label="操作" width="85">
 									<template #default="scope">
 										<el-button icon="el-icon-remove" size="mini" :disabled="isdisabled"
 											@click="deleteRow(scope.$index,Product)" circle>
@@ -68,29 +106,31 @@
 								</el-table-column> -->
 								<el-table-column label="产品名称" prop="productName" width="200">
 								</el-table-column>
-								<el-table-column label="产品图片" width="150">
+								<el-table-column label="产品图片" width="165">
 									<template #default="scope">
-										<img :src="scope.row.productPicture" style="width: 60px; height: 45px;"
+										<img v-if="typeof(this.ruleForm.outboundDetailList[0].productId) != 'undefined'"
+											:src="scope.row.productPicture" style="width: 60px; height: 45px;"
 											class="productPicture" />
 									</template>
 								</el-table-column>
-								<el-table-column prop="specModel" label="产品规格" width="130">
+								<el-table-column prop="specModel" label="产品规格" width="165">
 								</el-table-column>
-								<el-table-column prop="productUnit" label="单位" width="130">
+								<el-table-column prop="productUnit" label="单位" width="165">
 								</el-table-column>
-								<el-table-column label="数量" width="130" prop="deliveryQuantity" show-overflow-tooltip>
+								<el-table-column label="数量" width="165" prop="deliveryQuantity" show-overflow-tooltip>
 								</el-table-column>
-								<el-table-column label="备注" prop="commodityNote" width="405" show-overflow-tooltip>
+								<el-table-column label="备注" prop="commodityNote" width="410" show-overflow-tooltip>
 									<template #default="scope">
-										<el-input v-model="ruleForm.outboundDetailList[scope.$index].commodityNote" :disabled="isdisabled"></el-input>
+										<el-input v-model="ruleForm.outboundDetailList[scope.$index].commodityNote"
+											:disabled="isdisabled"></el-input>
 									</template>
 								</el-table-column>
 							</el-table>
 						</el-col>
 						<el-col :span="1"></el-col>
 					</el-row>
-					<br/>
-					<br/>
+					<br />
+					<br />
 					<el-row>
 						<el-form-item label="单据备注:" prop="documentsNote">
 							<el-input type="textarea" v-model="ruleForm.documentsNote" :disabled="isdisabled">
@@ -98,7 +138,7 @@
 						</el-form-item>
 						<el-col :span="1"></el-col>
 						<el-col :span="7">
-							<el-form-item label="业务员:" prop="employeeId">
+							<el-form-item label="业务员:" prop="employeeName">
 								<el-select v-model="ruleForm.employeeName" @change="selectEmployee"
 									:disabled="isdisabled" placeholder="请选择" @click="queryEmployee()"
 									style="float:left; width: 250px;">
@@ -109,10 +149,22 @@
 						</el-col>
 					</el-row>
 					<br />
-					<el-form-item>
-						<el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-						<el-button @click="$router.push({name:'Odo'})">取消</el-button>
-					</el-form-item>
+					<el-row>
+						<el-col :span="8"></el-col>
+						<el-col :span="5">
+							<el-form-item>
+								<el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+								<el-button @click="$router.push({name:'Odo'})">取消</el-button>
+							</el-form-item>
+						</el-col>
+						<el-col :span="4"></el-col>
+						<el-col :span="7">
+							<el-form-item label="驳回原因:" prop="reason" v-if="ruleForm.audited==2">
+								<span class="ReasonClass" >{{ruleForm.reason}}</span>
+							</el-form-item>
+						</el-col>
+					</el-row>
+					
 				</el-form>
 				<el-dialog title="销售单" v-model="SelectSalaOrder" :width="'800px'">
 					<el-row>
@@ -264,6 +316,17 @@
 					//workPointId: 1
 					//currentPage,pagesize:对应后端的
 				},
+				warehouse: {
+					dialogVisible: false,
+					searchInput: '',
+					tableData: [],
+					tableTotal: '',
+					singleSelection: {},
+					pageParam: {
+						"pageNum": 1,
+						"pageSize": 10
+					}
+				},
 				searchInput: '',
 				SelPurchReturn: false,
 				isAdd: true,
@@ -273,6 +336,7 @@
 				isdisabled: false,
 				SelectList: [],
 				PurchInput: [],
+				wareRow:null,
 				employeeList: [],
 				queryType: 'all',
 				PurchRow: null,
@@ -280,6 +344,7 @@
 				select: false,
 				ruleForm: {
 					outboundType: '',
+					reason:'',
 					sellRemark: '',
 					outboundDetailList: [{}],
 					stockOutDocunum: '',
@@ -371,11 +436,57 @@
 					}
 				}).then(res => {
 					console.log(res)
-					const docuNumSequence = (Array(5).join(0) + (res.data.list.length) + 1).slice(-5)
+					const docuNumSequence = (Array(5).join(0) + ( res.data.list.length + 1)).slice(-5)
 					this.ruleForm.stockOutDocunum = this.ruleForm.stockOutDocunum + docuNumSequence
 				}).catch(err => {
 
 				})
+			},
+			
+			openWarehouseDialog(){
+				if(this.ruleForm.storageType == "销售单"){
+					this.warehouse.dialogVisible = true;
+					this.warehouseLoadData()
+				}
+			},
+			
+			warehouseLoadData() {
+				this.axios({
+					url: 'http://localhost:8089/eims/warehouse/search',
+					method: 'get',
+					params: Object.assign({
+						'warehouseName': this.warehouse.searchInput
+					}, this.warehouse.pageParam)
+				}).then(response => {
+					this.warehouse.tableData = response.data.list
+					this.warehouse.tableTotal = response.data.total
+				}).catch(error => {
+			
+				})
+			},
+			warehouseSelectionChange(val) {
+				this.wareRow = val
+				this.warehouse.singleSelection = val
+			},
+			warehouseSizeChange(val) {
+				this.warehouse.pageParam.pageSize = val
+				this.warehouseLoadData()
+			},
+			warehouseCurrentChange(val) {
+				this.warehouse.pageParam.pageNum = val
+				this.warehouseLoadData()
+			},
+			warehouseConfirmButton() {
+				if(this.wareRow==null){
+					this.$message({
+						type: 'info',
+						message: '请选择出库仓库'
+					});
+				}else{
+					this.ruleForm.warehouseId = this.warehouse.singleSelection.warehouseId
+					this.ruleForm.warehouseName = this.warehouse.singleSelection.warehouseName
+					this.warehouse.dialogVisible = false
+				}
 			},
 
 			currentChange(val) {
@@ -481,11 +592,26 @@
 						}
 					}).then(res => {
 						console.log(res)
-						this.ruleForm.outboundDetailList = res.data.sellDetailList
+						this.ruleForm.outboundDetailList = res.data.sellDetails
 						this.detailSalesOrderToStockOut()
-						//this.ruleForm.warehouseName = res.data.warehouseName
+						this.ruleForm.warehouseId=res.data.warehouseId
+						this.ruleForm.warehouseName = res.data.warehouseName
 					}).catch(err => {
 
+					})
+					
+					this.axios({
+					url:"http://localhost:8089/eims/sellBill",
+					method:'put',
+					data:{
+						"sellId":this.SalasRow.sellId,
+						"outStorage":1
+					}
+					}).then(res=>{
+						console.log("出库信息：")
+						console.log(res)
+					}).catch(err=>{
+						
 					})
 					this.SelectSalaOrder = false
 				}
@@ -508,14 +634,28 @@
 					}).then(res => {
 						console.log(res)
 						this.ruleForm.outboundDetailList = res.data.purchaseDetailList
+						this.ruleForm.warehouseId=res.data.warehouseId
+						this.ruleForm.warehouseName = res.data.warehouseName
 						this.detailPurReturnToStockOut()
 					}).catch(err => {
 
 					})
+					
+					this.axios({
+					url:"http://localhost:8089/eims/purchaseReturn",
+					method:'put',
+					data:{
+						"purchReturnId":this.PurchRow.purchReturnId,
+						"outStorage":1
+					}
+					}).then(res=>{
+						console.log("出库信息：")
+						console.log(res)
+					}).catch(err=>{
+						
+					})
 					this.SelPurchReturn = false
 				}
-
-
 			},
 			//把采购退货单的数据赋值给出库单中没有的
 			detailPurReturnToStockOut() {
@@ -524,7 +664,7 @@
 					detail.stockOutDocunum = this.ruleForm.stockOutDocunum
 					//detail.inventoryQuantity = detail.purchaseQuantity
 					detail.commodityNote = this.ruleForm.commodityNote
-					detail.deliveryQuantity=detail.purchaseQuantity
+					detail.deliveryQuantity = detail.purchaseQuantity
 
 					totalQuantity = totalQuantity + detail.purchaseQuantity
 				})
@@ -538,8 +678,8 @@
 					detail.deliveryQuantity = detail.sellQuantity
 					detail.specModel = detail.productModel
 					detail.commodityNote = this.ruleForm.commodityNote
-					
-					detail.deliveryQuantity=detail.sellQuantity
+
+					detail.deliveryQuantity = detail.sellQuantity
 
 					totalQuantity = totalQuantity + detail.sellQuantity
 				})
@@ -640,6 +780,16 @@
 
 			//点击保存新增入库单
 			submitForm(formName) {
+				const list=this.ruleForm.outboundDetailList
+				for(var i=0;i<list.length;i++){
+					if(typeof(list[i].productId)=="undefined"){
+						this.$message({
+							type: 'warning',
+							message: '请选择要出库的产品'
+						})
+						return false
+					}
+				}
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
 						if (this.isAdd) {
@@ -768,13 +918,13 @@
 		background-color: #E9EEF3;
 		color: #333;
 		text-align: center;
-		height: 600px;
+		height: 100%;
 
 	}
-	
-	#addOdo .el-container{
-		background-color:#E9EEF3;
-		border:1px solid rgb(235,238,245) 
+
+	#addOdo .el-container {
+		background-color: #E9EEF3;
+		border: 1px solid rgb(235, 238, 245)
 	}
 
 	#addOdo .el-row {
@@ -788,6 +938,11 @@
 	#addOdo .row-bg {
 		padding: 10px 0;
 		background-color: #f9fafc;
+	}
+	
+	#addOdo .ReasonClass{
+		font-size: 26px;
+		color: #ff0000;
 	}
 
 	#addOdo .item {

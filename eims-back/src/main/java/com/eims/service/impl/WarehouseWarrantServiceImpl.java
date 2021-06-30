@@ -10,6 +10,7 @@ import com.eims.vo.form.WarehouseWarrantQueryForm;
 import com.eims.mybatis.dao.WarehouseWarrantDao;
 import com.eims.service.WarehouseWarrantService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,6 +34,9 @@ public class WarehouseWarrantServiceImpl implements WarehouseWarrantService {
 
     @Resource
     private WarehousingDetailDao warehousingDetailDao;
+
+    @Resource
+    private InventoryDao inventoryDao;
 
     /**
      * 通过ID查询单条数据
@@ -97,14 +101,12 @@ public class WarehouseWarrantServiceImpl implements WarehouseWarrantService {
         this.warehouseWarrantDao.insert(warehouseWarrant);
 
         //设置入库单明细的入库单id
-        for(WarehousingDetail detail:warehouseWarrant.getWarehousingDetailList())
-            detail.setWarehouseWarrantId(warehouseWarrant.getWarehouseWarrantId());
-
-        log.debug("明细是：{}",warehouseWarrant.getWarehousingDetailList().toString());
-        log.debug("大小是：{}",warehouseWarrant.getWarehousingDetailList().size());
-
-        //新增明细
-        this.warehousingDetailDao.insertBatch(warehouseWarrant.getWarehousingDetailList());
+        if(warehouseWarrant.getWarehousingDetailList()!=null){
+            for(WarehousingDetail detail:warehouseWarrant.getWarehousingDetailList())
+                detail.setWarehouseWarrantId(warehouseWarrant.getWarehouseWarrantId());
+            //新增明细
+            this.warehousingDetailDao.insertBatch(warehouseWarrant.getWarehousingDetailList());
+        }
 
         return this.queryById(warehouseWarrant.getWarehouseWarrantId());
     }
@@ -169,18 +171,30 @@ public class WarehouseWarrantServiceImpl implements WarehouseWarrantService {
         return this.queryById(warehouseWarrant.getWarehouseWarrantId());
     }
 
+
     /**
-     * 根据入库单该库存
-     * @param inventoryQuantity
-     * @param warehouseId
-     * @param productId
+     * 审核入库单改变库存
+     * @param warehouseWarrantId
      * @return
      */
-     public Inventory auditStorage(Integer inventoryQuantity, Integer warehouseId, Integer productId) {
-//         for(WarehousingDetail detail :warehouseWarrant.getWarehousingDetailList())
-//             this.warehouseWarrantDao.auditStorage(warehouseWarrant.getWarehouseId(),detail.getProductId(),detail.getInventoryQuantity());
-         return  null;
+     public boolean auditStorage(Integer warehouseWarrantId) {
+         System.out.println("入库单id:");
+         System.out.println(warehouseWarrantId);
+         Inventory inventory=new Inventory();
+        //查询单个拿到详情数据
+         WarehouseWarrant warehouseWarrant= this.warehouseWarrantDao.queryById(warehouseWarrantId);
+         warehouseWarrant.setAudited(1);
+         this.warehouseWarrantDao.update(warehouseWarrant);
+         //从详情数据里面拿入库数量和id
+         for(WarehousingDetail warehousingDetail:warehouseWarrant.getWarehousingDetailList())
+            this.warehouseWarrantDao.auditStorage(warehousingDetail.getInventoryQuantity(),warehouseWarrant.getWarehouseId(),warehousingDetail.getProductId());
+         this.inventoryDao.queryProduct(inventory.getCompanyId(),inventory.getWarehouseId(),inventory.getProductId());
+         if (inventory.getProductId()!=warehouseWarrant.getWarehousingDetailList().get(0).getProductId()){
+
+         }
+         return true;
      }
+
     /**
      * 批量修改数据
      *

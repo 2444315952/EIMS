@@ -7,6 +7,7 @@
         <result property="purchReturnId" column="PURCH_RETURN_ID" jdbcType="INTEGER"/>
         <result property="purchReturnDocunum" column="PURCH_RETURN_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="purchDetailId" column="PURCH_DETAIL_ID" jdbcType="INTEGER"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
         <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
         <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
         <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
@@ -18,7 +19,7 @@
     </resultMap>
 
     <sql id="PurchaseReturnDetailCol">
-        PURCH_RETURN_DETAIL_ID, PURCH_RETURN_ID, PURCH_RETURN_DOCUNUM, PURCH_DETAIL_ID, PRODUCT_NAME, PRODUCT_PICTURE, SPEC_MODEL, PRODUCT_UNIT, PURCHASE_PRICE, PURCHASE_QUANTITY, PURCHASE_SUBTOTAL, RETURNED    </sql>
+        PURCH_RETURN_DETAIL_ID, PURCH_RETURN_ID, PURCH_RETURN_DOCUNUM, PURCH_DETAIL_ID, PRODUCT_ID, PRODUCT_NAME, PRODUCT_PICTURE, SPEC_MODEL, PRODUCT_UNIT, PURCHASE_PRICE, PURCHASE_QUANTITY, PURCHASE_SUBTOTAL, RETURNED    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="PurchaseReturnDetailMap">
@@ -32,9 +33,7 @@
     <select id="queryAll" resultMap="PurchaseReturnDetailMap">
         select
         <include refid="PurchaseReturnDetailCol"></include>
-        from (select <include refid="PurchaseReturnDetailCol"></include> from EIMS.PURCHASE_RETURN_DETAIL
-        <where>
-        </where>)
+        from (select * from EIMS.PURCHASE_RETURN_DETAIL where work_point_id = #{workPointId})
     </select>
 
     <!--通过实体作为或者条件查询-->
@@ -43,8 +42,8 @@
         <include refid="PurchaseReturnDetailCol"></include>
         from (select <include refid="PurchaseReturnDetailCol"></include> from EIMS.PURCHASE_RETURN_DETAIL
         <where>
-        </where>)
-
+        </where>
+        )
         <where>
             <if test="purchReturnDetailId != null">
                 or PURCH_RETURN_DETAIL_ID like '%'||#{purchReturnDetailId}||'%'
@@ -57,6 +56,9 @@
             </if>
             <if test="purchDetailId != null">
                 or PURCH_DETAIL_ID like '%'||#{purchDetailId}||'%'
+            </if>
+            <if test="productId != null">
+                or PRODUCT_ID like '%'||#{productId}||'%'
             </if>
             <if test="productName != null and productName != ''">
                 or PRODUCT_NAME like '%'||#{productName}||'%'
@@ -89,10 +91,7 @@
     <select id="queryAndByPojo" resultMap="PurchaseReturnDetailMap">
         select
         <include refid="PurchaseReturnDetailCol"></include>
-        from (select <include refid="PurchaseReturnDetailCol"></include> from EIMS.PURCHASE_RETURN_DETAIL
-        <where>
-        </where>)
-
+        from EIMS.PURCHASE_RETURN_DETAIL
         <where>
             <if test="purchReturnDetailId != null">
                 and PURCH_RETURN_DETAIL_ID = #{purchReturnDetailId}
@@ -105,6 +104,9 @@
             </if>
             <if test="purchDetailId != null">
                 and PURCH_DETAIL_ID = #{purchDetailId}
+            </if>
+            <if test="productId != null">
+                and PRODUCT_ID = #{productId}
             </if>
             <if test="productName != null and productName != ''">
                 and PRODUCT_NAME = #{productName}
@@ -147,6 +149,9 @@
             <if test="purchDetailId != null">
                 PURCH_DETAIL_ID,
             </if>
+            <if test="productId != null">
+                PRODUCT_ID,
+            </if>
             <if test="productName != null">
                 PRODUCT_NAME,
             </if>
@@ -183,6 +188,9 @@
             </if>
             <if test="purchDetailId != null">
                 #{purchDetailId},
+            </if>
+            <if test="productId != null">
+                #{productId},
             </if>
             <if test="productName != null">
                 #{productName},
@@ -229,6 +237,9 @@
                 <if test="entity.purchDetailId != null">
                     PURCH_DETAIL_ID,
                 </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID,
+                </if>
                 <if test="entity.productName != null">
                     PRODUCT_NAME,
                 </if>
@@ -265,6 +276,9 @@
                 </if>
                 <if test="entity.purchDetailId != null">
                     #{entity.purchDetailId},
+                </if>
+                <if test="entity.productId != null">
+                    #{entity.productId},
                 </if>
                 <if test="entity.productName != null">
                     #{entity.productName},
@@ -307,6 +321,9 @@
             <if test="purchDetailId != null">
                 PURCH_DETAIL_ID = #{purchDetailId},
             </if>
+            <if test="productId != null">
+                PRODUCT_ID = #{productId},
+            </if>
             <if test="productName != null">
                 PRODUCT_NAME = #{productName},
             </if>
@@ -348,6 +365,9 @@
                 </if>
                 <if test="entity.purchDetailId != null">
                     PURCH_DETAIL_ID = #{entity.purchDetailId},
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID = #{entity.productId},
                 </if>
                 <if test="entity.productName != null">
                     PRODUCT_NAME = #{entity.productName},

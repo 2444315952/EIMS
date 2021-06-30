@@ -68,5 +68,4 @@ public class SellReturn implements Serializable {
 
     private List<ReturnBillsProduct> returnBillsProductList;
 
-    private String sellDocunum;
 }

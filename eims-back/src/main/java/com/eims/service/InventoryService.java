@@ -25,6 +25,8 @@ public interface InventoryService {
     Inventory queryById(Integer inventoryId);
 
 
+    Inventory queryProduct(Integer inventoryId);
+
     /**
      * 查询所有数据
      *

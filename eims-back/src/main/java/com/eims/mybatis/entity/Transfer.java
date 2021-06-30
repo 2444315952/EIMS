@@ -29,6 +29,10 @@ public class Transfer implements Serializable {
 
     private Date documentDate;
 
+    private Date outboundDate;
+
+    private Date warehousingDate;
+
     private Integer companyId;
 
     private Integer workPointId;
@@ -48,6 +52,8 @@ public class Transfer implements Serializable {
     private Integer audited;
 
     private Integer transferState;
+
+    private String reason;
 
     private String documentsNote;
 

@@ -35,6 +35,8 @@ public class BlitemQueryForm implements Serializable {
 
     private Integer audited;
 
+    private String reason;
+
     private String documentsNote;
 
     private Integer pageNum;    //当前页

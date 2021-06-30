@@ -136,17 +136,16 @@ public class WarehouseWarrantController {
         return this.warehouseWarrantService.update(warehouseWarrant);
     }
 
-
     /**
      * 审核入库单改变库存
-     * @param inventoryQuantity
-     * @param warehouseId
-     * @param productId
+     * @param warehouseWarrantId
      * @return
      */
-    @PutMapping("/inventory/update")
-    public Inventory updateInventory(Integer inventoryQuantity, Integer warehouseId, Integer productId){
-        return this.warehouseWarrantService.auditStorage(inventoryQuantity,warehouseId,productId);
+    @PutMapping("/inventory/updateStorage")
+    public boolean updateInventory(Integer warehouseWarrantId){
+        System.out.println("入库单id：------------");
+        System.out.println(warehouseWarrantId);
+        return this.warehouseWarrantService.auditStorage(warehouseWarrantId);
     }
 
     /**

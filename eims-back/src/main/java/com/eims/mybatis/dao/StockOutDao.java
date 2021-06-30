@@ -50,6 +50,15 @@ public interface StockOutDao {
     List<PurchaseReturn> queryByPurReturn(PurchaseReturnQueryForm purchaseReturnQueryForm);
 
     /**
+     * 根据出库单改变库存
+     * @param deliveryQuantity
+     * @param warehouseId
+     * @param productId
+     * @return
+     */
+    int auditStorage(@Param("deliveryQuantity") Integer deliveryQuantity, @Param("warehouseId") Integer warehouseId,@Param("productId") Integer productId);
+
+    /**
      * 通过实体作为并且条件查询
      *
      * @param stockOutQueryForm 实例对象

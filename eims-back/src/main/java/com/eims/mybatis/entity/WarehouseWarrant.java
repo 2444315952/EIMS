@@ -49,13 +49,47 @@ public class WarehouseWarrant implements Serializable {
 
     private Integer saleReturnId;
 
-    private Integer transferOrderId;
+    private Integer transferId;
 
     private Integer blitemId;
 
     private Integer inventoryQuantity;
 
+    private String reason;
+
     private String documentsNote;
 
     private List<WarehousingDetail> warehousingDetailList;
+
+
+    public WarehouseWarrant(String warehouseDocunum, Date documentDate, Integer companyId, Integer workPointId, Integer employeeId, String employeeName, Integer audited, Integer warehouseId, String warehouseName, String storageType, Integer transferId) {
+        this.warehouseDocunum = warehouseDocunum;
+        this.documentDate = documentDate;
+        this.companyId = companyId;
+        this.workPointId = workPointId;
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.audited = audited;
+        this.warehouseId = warehouseId;
+        this.warehouseName = warehouseName;
+        this.storageType = storageType;
+        this.transferId = transferId;
+//        this.inventoryQuantity = inventoryQuantity;
+    }
+
+//    public WarehouseWarrant(String warehouseDocunum, Date documentDate, Integer companyId, Integer workPointId, Integer employeeId, String employeeName, Integer audited, Integer warehouseId, String warehouseName, String storageType, Integer blitemId) {
+//        this.warehouseDocunum = warehouseDocunum;
+//        this.documentDate = documentDate;
+//        this.companyId = companyId;
+//        this.workPointId = workPointId;
+//        this.employeeId = employeeId;
+//        this.employeeName = employeeName;
+//        this.audited = audited;
+//        this.warehouseId = warehouseId;
+//        this.warehouseName = warehouseName;
+//        this.storageType = storageType;
+//        this.blitemId = blitemId;
+//    }
+
+
 }

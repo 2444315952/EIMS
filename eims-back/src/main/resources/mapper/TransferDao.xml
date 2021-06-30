@@ -6,6 +6,8 @@
         <result property="transferId" column="TRANSFER_ID" jdbcType="INTEGER"/>
         <result property="transferDocunum" column="TRANSFER_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="outboundDate" column="OUTBOUND_DATE" jdbcType="TIMESTAMP"/>
+        <result property="warehousingDate" column="WAREHOUSING_DATE" jdbcType="TIMESTAMP"/>
         <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
         <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
         <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
@@ -16,6 +18,7 @@
         <result property="exportWarehouseName" column="EXPORT_WAREHOUSE_NAME" jdbcType="VARCHAR"/>
         <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
         <result property="transferState" column="TRANSFER_STATE" jdbcType="INTEGER"/>
+        <result property="reason" column="REASON" jdbcType="VARCHAR"/>
         <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
     </resultMap>
 
@@ -23,6 +26,8 @@
         <result property="transferId" column="TRANSFER_ID" jdbcType="INTEGER"/>
         <result property="transferDocunum" column="TRANSFER_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="outboundDate" column="OUTBOUND_DATE" jdbcType="TIMESTAMP"/>
+        <result property="warehousingDate" column="WAREHOUSING_DATE" jdbcType="TIMESTAMP"/>
         <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
         <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
         <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
@@ -33,6 +38,7 @@
         <result property="exportWarehouseName" column="EXPORT_WAREHOUSE_NAME" jdbcType="VARCHAR"/>
         <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
         <result property="transferState" column="TRANSFER_STATE" jdbcType="INTEGER"/>
+        <result property="reason" column="REASON" jdbcType="VARCHAR"/>
         <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
 
         <collection property="transferDetailsList" javaType="list" ofType="com.eims.mybatis.entity.TransferDetails">
@@ -50,22 +56,34 @@
         </collection>
     </resultMap>
 
+    <sql id="InventoryCol">
+        INVENTORY_ID, COMPANY_ID, WAREHOUSE_ID, WAREHOUSE_NAME, PRODUCT_ID, PRODUCT_NAME, PURCHASE_PRICE, INVENTORY, MARKET_PRICE, TOTAL_COST ,MINIMUM_STOCK   </sql>
+
     <sql id="TransferDetailsCol">
         D.TRANSFER_DETAIL_ID, D.TRANSFER_ID, D.TRANSFER_DOCUNUM, D.PRODUCT_ID, D.PRODUCT_PICTURE, D.PRODUCT_NAME, D.SPEC_MODEL, D.PRODUCT_UNIT, D.INVENTORY, D.OUTBOUND_QUANTITY, D.COMMODITY_NOTE    </sql>
 
     <sql id="TransferCol">
-        TRANSFER_ID, TRANSFER_DOCUNUM, DOCUMENT_DATE, COMPANY_ID, WORK_POINT_ID, EMPLOYEE_ID, EMPLOYEE_NAME, FOLD_WAREHOUSE_ID, FOLD_WAREHOUSE_NAME, EXPORT_WAREHOUSE_ID, EXPORT_WAREHOUSE_NAME, AUDITED, TRANSFER_STATE, DOCUMENTS_NOTE    </sql>
+        TRANSFER_ID, TRANSFER_DOCUNUM, DOCUMENT_DATE,OUTBOUND_DATE,WAREHOUSING_DATE ,COMPANY_ID, WORK_POINT_ID, EMPLOYEE_ID, EMPLOYEE_NAME, FOLD_WAREHOUSE_ID, FOLD_WAREHOUSE_NAME, EXPORT_WAREHOUSE_ID, EXPORT_WAREHOUSE_NAME, AUDITED, TRANSFER_STATE,REASON,DOCUMENTS_NOTE    </sql>
 
     <sql id="TransferJoinCol">
-        T.TRANSFER_ID, T.TRANSFER_DOCUNUM, T.DOCUMENT_DATE, T.COMPANY_ID, T.WORK_POINT_ID, T.EMPLOYEE_ID, T.EMPLOYEE_NAME, T.FOLD_WAREHOUSE_ID, T.FOLD_WAREHOUSE_NAME, T.EXPORT_WAREHOUSE_ID, T.EXPORT_WAREHOUSE_NAME, T.AUDITED, T.TRANSFER_STATE, T.DOCUMENTS_NOTE    </sql>
+        T.TRANSFER_ID, T.TRANSFER_DOCUNUM, T.DOCUMENT_DATE, T.OUTBOUND_DATE,T.WAREHOUSING_DATE,T.COMPANY_ID, T.WORK_POINT_ID, T.EMPLOYEE_ID, T.EMPLOYEE_NAME, T.FOLD_WAREHOUSE_ID, T.FOLD_WAREHOUSE_NAME, T.EXPORT_WAREHOUSE_ID, T.EXPORT_WAREHOUSE_NAME, T.AUDITED, T.TRANSFER_STATE,T.REASON,T.DOCUMENTS_NOTE    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="TransferListMap">
         select
         <include refid="TransferJoinCol"></include>,<include refid="TransferDetailsCol"></include>
         from EIMS.TRANSFER T LEFT  JOIN  EIMS.TRANSFER_DETAILS D ON T.TRANSFER_ID = D.TRANSFER_ID
-        where T.TRANSFER_ID = #{transferId}
+        where T.TRANSFER_ID = #{transferId ,jdbcType=INTEGER}
     </select>
+
+    <!--    &lt;!&ndash;审核调拨单改变库存&ndash;&gt;-->
+    <!--    <update id="auditStorage">-->
+    <!--        update EIMS.INVENTORY-->
+    <!--        <set>-->
+    <!--            INVENTORY=(inventory+#{outboundQuantity})-->
+    <!--        </set>-->
+    <!--        where WAREHOUSE_ID = #{warehouseId,jdbcType=INTEGER} and  PRODUCT_ID = #{productId,jdbcType=INTEGER}-->
+    <!--    </update>-->
 
     <!--查询所有-->
     <select id="queryAll" resultMap="TransferMap">
@@ -89,7 +107,6 @@
             <if test="workPointId != null">and work_point_id = #{workPointId}</if>
         </where>
         )
-
         <where>
             <if test="transferId != null">
                 or TRANSFER_ID like '%'||#{transferId}||'%'
@@ -100,8 +117,11 @@
             <if test="documentDate != null">
                 or DOCUMENT_DATE like '%'||#{documentDate}||'%'
             </if>
-            <if test="companyId != null">
-                or COMPANY_ID like '%'||#{companyId}||'%'
+            <if test="outboundDate != null">
+                or OUTBOUND_DATE like '%'||#{outboundDate}||'%'
+            </if>
+            <if test="warehousingDate != null">
+                or WAREHOUSING_DATE like '%'||#{warehousingDate}||'%'
             </if>
             <if test="employeeId != null">
                 or EMPLOYEE_ID like '%'||#{employeeId}||'%'
@@ -126,6 +146,9 @@
             </if>
             <if test="transferState != null">
                 or TRANSFER_STATE like '%'||#{transferState}||'%'
+            </if>
+            <if test="reason != null and reason != ''">
+                or REASON like '%'||#{reason}||'%'
             </if>
             <if test="documentsNote != null and documentsNote != ''">
                 or DOCUMENTS_NOTE like '%'||#{documentsNote}||'%'
@@ -152,6 +175,12 @@
             </if>
             <if test="documentDate != null">
                 and DOCUMENT_DATE = #{documentDate}
+            </if>
+            <if test="outboundDate != null">
+                and OUTBOUND_DATE = #{outboundDate}
+            </if>
+            <if test="warehousingDate != null">
+                and WAREHOUSING_DATE = #{warehousingDate}
             </if>
             <if test="companyId != null">
                 and COMPANY_ID = #{companyId}
@@ -183,6 +212,9 @@
             <if test="transferState != null">
                 and TRANSFER_STATE = #{transferState}
             </if>
+            <if test="reason != null and reason != ''">
+                and REASON = #{reason}
+            </if>
             <if test="documentsNote != null and documentsNote != ''">
                 and DOCUMENTS_NOTE = #{documentsNote}
             </if>
@@ -199,6 +231,12 @@
             </if>
             <if test="documentDate != null">
                 DOCUMENT_DATE,
+            </if>
+            <if test="outboundDate != null">
+                OUTBOUND_DATE,
+            </if>
+            <if test="warehousingDate != null">
+                WAREHOUSING_DATE,
             </if>
             <if test="companyId != null">
                 COMPANY_ID,
@@ -230,6 +268,9 @@
             <if test="transferState != null">
                 TRANSFER_STATE,
             </if>
+            <if test="reason != null">
+                REASON,
+            </if>
             <if test="documentsNote != null">
                 DOCUMENTS_NOTE,
             </if>
@@ -242,6 +283,12 @@
             </if>
             <if test="documentDate != null">
                 #{documentDate},
+            </if>
+            <if test="outboundDate != null">
+                #{outboundDate},
+            </if>
+            <if test="warehousingDate != null">
+                #{warehousingDate},
             </if>
             <if test="companyId != null">
                 #{companyId},
@@ -273,6 +320,9 @@
             <if test="transferState != null">
                 #{transferState},
             </if>
+            <if test="reason != null">
+                #{reason},
+            </if>
             <if test="documentsNote != null">
                 #{documentsNote},
             </if>
@@ -293,6 +343,12 @@
                 </if>
                 <if test="entity.documentDate != null">
                     DOCUMENT_DATE,
+                </if>
+                <if test="entity.outboundDate != null">
+                    OUTBOUND_DATE,
+                </if>
+                <if test="entity.warehousingDate != null">
+                    WAREHOUSING_DATE,
                 </if>
                 <if test="entity.companyId != null">
                     COMPANY_ID,
@@ -324,6 +380,9 @@
                 <if test="entity.transferState != null">
                     TRANSFER_STATE,
                 </if>
+                <if test="entity.reason != null">
+                    REASON,
+                </if>
                 <if test="entity.documentsNote != null">
                     DOCUMENTS_NOTE,
                 </if>
@@ -336,6 +395,12 @@
                 </if>
                 <if test="entity.documentDate != null">
                     #{entity.documentDate},
+                </if>
+                <if test="entity.outboundDate != null">
+                    #{entity.outboundDate},
+                </if>
+                <if test="entity.warehousingDate != null">
+                    #{entity.warehousingDate},
                 </if>
                 <if test="entity.companyId != null">
                     #{entity.companyId},
@@ -367,12 +432,16 @@
                 <if test="entity.transferState != null">
                     #{entity.transferState},
                 </if>
+                <if test="entity.reason != null">
+                    #{entity.reason},
+                </if>
                 <if test="entity.documentsNote != null">
                     #{entity.documentsNote},
                 </if>
             </trim>
         </foreach>
     </insert>
+
 
     <!--通过主键修改数据-->
     <update id="update">
@@ -383,6 +452,12 @@
             </if>
             <if test="documentDate != null">
                 DOCUMENT_DATE = #{documentDate},
+            </if>
+            <if test="outboundDate != null">
+                OUTBOUND_DATE = #{outboundDate},
+            </if>
+            <if test="warehousingDate != null">
+                WAREHOUSING_DATE = #{warehousingDate},
             </if>
             <if test="companyId != null">
                 COMPANY_ID = #{companyId},
@@ -414,11 +489,14 @@
             <if test="transferState != null">
                 TRANSFER_STATE = #{transferState},
             </if>
+            <if test="reason != null">
+                REASON = #{reason},
+            </if>
             <if test="documentsNote != null">
                 DOCUMENTS_NOTE = #{documentsNote},
             </if>
         </set>
-        where TRANSFER_ID = #{transferId}
+        where TRANSFER_ID = #{transferId,javaType=INTEGER}
     </update>
 
     <!--批量修改数据-->
@@ -431,6 +509,12 @@
                 </if>
                 <if test="entity.documentDate != null">
                     DOCUMENT_DATE = #{entity.documentDate},
+                </if>
+                <if test="entity.outboundDate != null">
+                    OUTBOUND_DATE = #{entity.outboundDate},
+                </if>
+                <if test="entity.warehousingDate != null">
+                    WAREHOUSING_DATE = #{entity.warehousingDate},
                 </if>
                 <if test="entity.companyId != null">
                     COMPANY_ID = #{entity.companyId},
@@ -461,6 +545,9 @@
                 </if>
                 <if test="entity.transferState != null">
                     TRANSFER_STATE = #{entity.transferState},
+                </if>
+                <if test="entity.reason != null">
+                    REASON = #{entity.reason},
                 </if>
                 <if test="entity.documentsNote != null">
                     DOCUMENTS_NOTE = #{entity.documentsNote},

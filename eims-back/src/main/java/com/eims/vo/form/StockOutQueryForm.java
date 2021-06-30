@@ -39,13 +39,15 @@ public class StockOutQueryForm implements Serializable {
 
     private Integer purchReturnId;
 
-    private Integer saleId;
+    private Integer sellId;
 
-    private Integer transferOrderId;
+    private Integer transferId;
 
     private Integer blitemId;
 
     private Integer deliveryQuantity;
+
+    private String reason;
 
     private String documentsNote;
 

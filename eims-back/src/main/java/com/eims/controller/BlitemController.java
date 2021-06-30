@@ -44,7 +44,7 @@ public class BlitemController {
      */
     @GetMapping("/blitem")
     public PageInfo<Blitem> queryAll(BlitemQueryForm blitemQueryForm) {
-        blitemQueryForm.setWorkPointId(1);
+        blitemQueryForm.setCompanyId(1);
         return this.blitemService.queryAll(blitemQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class BlitemController {
      */
     @GetMapping("/blitem/search")
     public PageInfo<Blitem> queryBySearch(BlitemQueryForm blitemQueryForm) {
-        blitemQueryForm.setWorkPointId(1);
+        blitemQueryForm.setCompanyId(1);
         return this.blitemService.queryBySearch(blitemQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class BlitemController {
      */
     @GetMapping("/blitem/screen")
     public PageInfo<Blitem> queryByScreen(BlitemQueryForm blitemQueryForm) {
-        blitemQueryForm.setWorkPointId(1);
+        blitemQueryForm.setCompanyId(1);
         return this.blitemService.queryByScreen(blitemQueryForm);
     }
 
@@ -80,6 +80,7 @@ public class BlitemController {
      */
     @PostMapping("/blitem")
     public Blitem insert(@RequestBody Blitem blitem) {
+        blitem.setCompanyId(1);
         blitem.setWorkPointId(1);
         //blitem.setWorkPointName("示例工作点");
         return this.blitemService.insert(blitem);
@@ -106,6 +107,22 @@ public class BlitemController {
     public Blitem update(@RequestBody Blitem blitem) {
         return this.blitemService.update(blitem);
     }
+
+
+    @PutMapping("/blitem/audited")
+    public Blitem checkStorage(Integer blitemId){
+        return this.blitemService.checkStorage(blitemId);
+    }
+    /**
+     * 审核盘点单改库存
+     * @param blitemId
+     * @return
+     */
+    @PutMapping("/blitem/check")
+    public boolean auditStorage(Integer blitemId){
+       return this.blitemService.auditStorage(blitemId);
+    }
+
 
     /**
      * 批量修改数据

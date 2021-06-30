@@ -20,7 +20,7 @@
 			</el-row>
 
 			<el-container style="background-color: white;padding-top: 15px;">
-
+				
 				<el-main style="background-color: white;">
 
 					<el-row>
@@ -200,8 +200,10 @@
 						</el-col>
 					</el-row>
 				</el-footer>
+
 			</el-container>
 		</el-form>
+
 	</div>
 </template>
 

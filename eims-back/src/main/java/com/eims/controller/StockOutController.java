@@ -63,6 +63,16 @@ public class StockOutController {
     }
 
     /**
+     * 审核出库单改变库存
+     * @param stockOutId
+     * @return
+     */
+    @PutMapping("/stockOut/check")
+    public Boolean auditStorage(Integer stockOutId){
+        return this.stockOutService.auditStorage(stockOutId);
+    }
+
+    /**
      * 根据查询条件搜索数据
      *
      * @param stockOutQueryForm

@@ -132,6 +132,16 @@ public class BaldetailServiceImpl implements BaldetailService {
     }
 
     /**
+     * 通过盘点单主键Id删除明细数据
+     * @param blitemId
+     * @return
+     */
+    @Override
+    public boolean deleteByFk(Integer blitemId){
+        return this.baldetailDao.deleteByFk(blitemId)>0;
+    }
+
+    /**
      * 批量删除数据
      *
      * @param ids 主键列表

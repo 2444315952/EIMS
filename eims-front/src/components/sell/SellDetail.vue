@@ -100,7 +100,6 @@
 								</span>
 							</template>
 						</el-dialog>
-
 						<el-col :span="8">
 							<el-form-item label="出库仓库" style="float: left;" prop="warehouseName">
 								<el-input v-model="ruleForm.warehouseName" size="medium" disabled>
@@ -111,7 +110,6 @@
 								</el-input>
 							</el-form-item>
 						</el-col>
-
 						<el-dialog title="仓库" v-model="warehouse.dialogVisible">
 							<el-row type="flex" justify="end" style="padding-bottom: 12px;">
 								<el-col :span="7.5">
@@ -122,9 +120,7 @@
 										</template>
 									</el-input>
 								</el-col>
-
 							</el-row>
-
 							<el-table :data="warehouse.tableData" max-height="286" style="height: 286px;"
 								highlight-current-row @current-change="warehouseSelectionChange">
 								<el-table-column property="warehouseName" label="仓库名称"></el-table-column>

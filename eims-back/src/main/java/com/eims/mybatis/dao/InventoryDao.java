@@ -35,6 +35,15 @@ public interface InventoryDao {
     List<Inventory> queryAll(InventoryQueryForm inventoryQueryForm);
 
     /**
+     * 根据公司id，仓库id，产品id查询库存表
+     * @param companyId
+     * @param warehouseId
+     * @param productId
+     * @return
+     */
+    Inventory queryProduct(@Param("companyId") Integer companyId, @Param("warehouseId") Integer warehouseId,@Param("productId") Integer productId);
+
+    /**
      * 查询完整库存信息
      * @param inventoryQueryForm
      * @return

@@ -51,6 +51,17 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     /**
+     * 根据仓库id，产品id,公司id查询库存表
+     * @param inventoryId
+     * @return
+     */
+    @Override
+     public Inventory queryProduct(Integer inventoryId){
+        Inventory inventory=this.inventoryDao.queryById(inventoryId);
+        return this.inventoryDao.queryProduct(inventory.getCompanyId(),inventory.getWarehouseId(),inventory.getProductId());
+    }
+
+    /**
      * 查询所有数据
      *
      * @param inventoryQueryForm 实例对象

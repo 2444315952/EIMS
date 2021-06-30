@@ -79,12 +79,10 @@ public interface WarehouseWarrantService {
 
     /**
      * 审核入库单改变库存
-     * @param inventoryQuantity
-     * @param warehouseId
-     * @param productId
+     * @param warehouseWarrantId
      * @return
      */
-    Inventory auditStorage(Integer inventoryQuantity, Integer warehouseId, Integer productId);
+    boolean auditStorage(Integer warehouseWarrantId);
 
     /**
      * 通过实体作为或者条件查询已入库的数据
@@ -99,6 +97,7 @@ public interface WarehouseWarrantService {
      * @return
      */
     PageInfo<SellReturn> querySellInStorage(SellReturnQueryForm sellReturnQueryForm);
+
 
     /**
      * 批量修改数据

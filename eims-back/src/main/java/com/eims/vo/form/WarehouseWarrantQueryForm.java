@@ -41,11 +41,13 @@ public class WarehouseWarrantQueryForm implements Serializable {
 
     private Integer saleReturnId;
 
-    private Integer transferOrderId;
+    private Integer transferId;
 
     private Integer blitemId;
 
     private Integer inventoryQuantity;
+
+    private String reason;
 
     private String documentsNote;
 

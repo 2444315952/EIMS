@@ -205,6 +205,9 @@
 					url: "http://localhost:8089/eims/purchase",
 					method: 'get',
 					params: this.pageParam
+					// headers:{
+					// 	"Access-Control-Allow-Origin":"*"
+					// }
 				}).then((response) => {
 					this.tableData = response.data.list
 					this.tableTotal = response.data.total

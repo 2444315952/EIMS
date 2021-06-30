@@ -47,15 +47,32 @@ public class StockOut implements Serializable {
 
     private Integer purchReturnId;
 
-    private Integer saleId;
+    private Integer sellId;
 
-    private Integer transferOrderId;
+    private Integer transferId;
 
     private Integer blitemId;
 
     private Integer deliveryQuantity;
 
+    private String reason;
+
     private String documentsNote;
 
     private List<OutboundDetail> outboundDetailList;
+
+
+    public StockOut(String stockOutDocunum, Date documentDate, Integer companyId, Integer workPointId, Integer employeeId, String employeeName, Integer audited, Integer warehouseId, String warehouseName, String outboundType, Integer transferId) {
+        this.stockOutDocunum = stockOutDocunum;
+        this.documentDate = documentDate;
+        this.companyId = companyId;
+        this.workPointId = workPointId;
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.audited = audited;
+        this.warehouseId = warehouseId;
+        this.warehouseName = warehouseName;
+        this.outboundType = outboundType;
+        this.transferId = transferId;
+    }
 }

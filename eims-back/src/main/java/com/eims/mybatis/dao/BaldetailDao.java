@@ -89,6 +89,13 @@ public interface BaldetailDao {
     int deleteById(Integer baldetailId);
 
     /**
+     * 通过盘点单主键id删除明细数据
+     * @param blitemId
+     * @return
+     */
+    int deleteByFk(Integer blitemId);
+
+    /**
      * 通过主键列表删除数据
      *
      * @param ids 主键列表

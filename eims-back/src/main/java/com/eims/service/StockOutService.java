@@ -82,6 +82,14 @@ public interface StockOutService {
     StockOut update(StockOut stockOut);
 
     /**
+     * 审核出库单改变库存
+     * @param stockOutId
+     * @return
+     */
+    Boolean auditStorage(Integer stockOutId);
+
+
+    /**
      * 批量修改数据
      *
      * @param stockOutList 实例对象列表

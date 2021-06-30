@@ -37,6 +37,7 @@
         <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
         <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
         <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+        <result property="sellDocunum" column="SELL_DOCUNUM" jdbcType="VARCHAR"/>
         <result property="customerId" column="CUSTOMER_ID" jdbcType="INTEGER"/>
         <result property="customerName" column="CUSTOMER_NAME" jdbcType="VARCHAR"/>
         <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="INTEGER"/>
@@ -68,8 +69,6 @@
 
     <sql id="SellReturnCol">
         SELL_RETURN_ID, COMPANY_ID, WORK_POINT_ID, SELL_RETURN_DOCUNUM, DOCUMENT_DATE, AUTITED, RETURN_PAYMENT_TERM, EMPLOYEE_ID, EMPLOYEE_NAME, SELL_ID,SELL_DOCUNUM , CUSTOMER_ID, CUSTOMER_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, RET_PAY_AMOUNT, RET_PAID_AMOUNT, RET_SELL_REMARK, REFUNDED, IN_STORAGE, SELL_RETURN_HIRTHDAY   </sql>
-
-
 
     <sql id="ReturnBillsProductCol">
         R.RET_BP_ID, R.SELL_RETURN_ID, R.PRODUCT_ID, R.PRODUCT_PICTURE, R.PRODUCT_NAME, R.PRODUCT_MODEL, R.PRODUCT_UNIT, R.SELL_PRICE, R.SELL_QUANTITY, R.RET_BILL_PAY_AMOUNT, R.RET_BILL_PAID_AMOUNT    </sql>

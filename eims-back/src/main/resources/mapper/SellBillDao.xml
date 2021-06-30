@@ -109,7 +109,7 @@
         select
         <include refid="SellBillJoinCol"></include>,<include refid="SellDetailCol"></include>
         from EIMS.SELL_BILL B LEFT JOIN  EIMS.SELL_DETAIL D ON B.SELL_ID = D.SELL_ID
-        where B.SELL_ID = #{sellId}
+        where B.SELL_ID = #{sellId,jdbcType=INTEGER}
     </select>
 
     <!--查询所有-->
@@ -672,7 +672,7 @@
                 RECEIVED_MONEY = #{receivedMoney},
             </if>
         </set>
-        where SELL_ID = #{sellId}
+        where SELL_ID = #{sellId,jdbcType=INTEGER}
     </update>
 
     <!--批量修改数据-->

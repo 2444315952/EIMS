@@ -8,38 +8,38 @@
 					<el-breadcrumb-item>入库单列表</el-breadcrumb-item>
 				</el-breadcrumb>
 			</el-row>
-			<el-container>
-				<el-main>
+			<el-container style="background-color#F9FAFC;padding-top: 15px;">
+				<el-main style="background-color:#F9FAFC">
 					<el-row>
 						<el-col :span="5">
-							<el-input style="width: 260px; float: left" class="inline-input"
-								placeholder="请输入单据编号/仓库/入库类型" v-model="searchInput" @keyup.enter.native="search"
-								size="medium">
+							<el-input style="width: 240px; float: left" class="inline-input" placeholder="请输入单据编号/入库类型"
+								v-model="searchInput" @keyup.enter.native="search" size="medium">
 								<template #append>
 									<el-button icon="el-icon-search" size="small" @click="search"></el-button>
 								</template>
 							</el-input>
 						</el-col>
-						<el-col :span="4">
-							<el-form-item label="入库仓:" prop="foldWarehouseName" label-width="60px">
-								<el-select v-model="ruleForm.foldWarehouseName" @change="selectFoldWarehouse"
-									@click="queryFoldWarehouse()" :disabled="isdisabled" placeholder="请选择"
-									style="width: 150px;float: left;">
-									<el-option v-for="item in SelecFoltList" :label="item.warehouseName"
-										:key="item.value" :value="item.warehouseId"></el-option>
+						<el-col :span="5">
+							<el-form-item label="入库仓库:" prop="warehouseId" label-width="80px">
+								<el-select v-model="ruleForm.warehouseId" @change="show()" @click="queryWarehouse()"
+									:disabled="isdisabled" placeholder="请选择" style="width: 150px;float: left;">
+									<el-option label="全部仓库" value=""></el-option>
+									<el-option v-for="item in SelectList" :label="item.warehouseName"
+										:value="item.warehouseId"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
-						<el-col :span="4">
-							<el-form-item label="业务员:" prop="exportWarehouseName" label-width="60px">
-								<el-select v-model="exportWarehouseNameSel" @change="selectExportWarehouse"
-									@click="queryExportWarehouse()" :disabled="isdisabled" placeholder="请选择"
-									style="width: 150px;float: left;">
-									<el-option v-for="item in SelectExporList" :label="item.warehouseName" :value="item.warehouseId"></el-option>
+						<el-col :span="5">
+							<el-form-item label="业务员:" prop="employeeId" label-width="60px">
+								<el-select v-model="ruleForm.employeeId" @change="show()" :disabled="isdisabled"
+									placeholder="请选择" @click="queryEmployee()" style="float:left; width: 150px;">
+									<el-option label="所有业务员" value=""></el-option>
+									<el-option v-for="item in employeeList" :label="item.employeeName"
+										:value="item.employeeId"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
-						<el-col :span="5"></el-col>
+						<el-col :span="4"></el-col>
 						<el-col :span="3">
 							<el-button size="medium" type="danger" v-show="delbut" @click="Pldelete(changeFun)">批量删除
 							</el-button>
@@ -50,28 +50,30 @@
 							</el-button>
 						</el-col>
 					</el-row>
-			
+
 					<el-table ref="multipleTable" :data="tableData" :height="tableHeight" tooltip-effect="dark"
-					max-height="480" size="medium" style="width: 100%; height: 490px;" @selection-change="changeFun">
+						max-height="435" size="medium" style="width: 100%; height: 435px;"
+						@selection-change="changeFun">
 						<el-table-column type="selection" width="55">
 						</el-table-column>
-						<el-table-column prop="warehouseDocunum" label="单据编号" width="180">
+						<el-table-column prop="warehouseDocunum" label="单据编号" width="165">
 						</el-table-column>
-						<el-table-column :formatter="dateFormat" label="单据日期" width="150" prop="documentDate">
+						<el-table-column :formatter="dateFormat" label="单据日期" width="160" prop="documentDate">
 						</el-table-column>
-						<el-table-column prop="warehouseName" label="所属仓库" width="130" widthshow-overflow-tooltip>
+						<el-table-column prop="warehouseName" label="所属仓库" width="110" widthshow-overflow-tooltip>
 						</el-table-column>
-						<el-table-column prop="storageType" label="入库类型" width="120" show-overflow-tooltip>
+						<el-table-column prop="storageType" label="入库类型" width="110" show-overflow-tooltip>
 						</el-table-column>
-						<el-table-column label="审核状态" prop="audited" width="120" show-overflow-tooltip>
+						<el-table-column label="审核状态" prop="audited" width="110" show-overflow-tooltip>
 							<template #default="scope">
 								<p v-if="tableData[scope.$index].audited==0">未审核</p>
 								<p v-if="tableData[scope.$index].audited==1">已审核</p>
+								<p v-if="tableData[scope.$index].audited==2">被驳回</p>
 							</template>
 						</el-table-column>
-						<el-table-column prop="workPointName" label="工作点" width="120" show-overflow-tooltip>
-						</el-table-column>
-						<el-table-column prop="employeeName" label="业务员" width="120">
+						<!-- <el-table-column prop="workPointName" label="工作点" width="110" show-overflow-tooltip>
+						</el-table-column> -->
+						<el-table-column prop="employeeName" label="业务员" width="110">
 						</el-table-column>
 						<el-table-column prop="documentsNote" label="备注" width="160" show-overflow-tooltip>
 						</el-table-column>
@@ -82,24 +84,24 @@
 										@click="$router.push({name:'AddStorage',params:{warehouseWarrantId:scope.row.warehouseWarrantId}})">
 									</el-button>
 								</el-tooltip>
-								<el-tooltip class="item" v-if="scope.row.audited==0" effect="dark" content="编辑"
-									placement="top">
+								<el-tooltip class="item" v-if="scope.row.audited==0 || scope.row.audited==2"
+									effect="dark" content="编辑" placement="top">
 									<el-button size="mini" circle type="primary" icon="el-icon-edit-outline"
 										@click="$router.push({name:'AddStorage',params:{warehouseWarrantId:scope.row.warehouseWarrantId}})">
 									</el-button>
 								</el-tooltip>
-								<el-tooltip v-if="scope.row.audited==0" class="item" effect="dark" content="审核"
-									placement="top">
+								<el-tooltip v-if="scope.row.audited==0 || scope.row.audited==2" class="item"
+									effect="dark" content="审核" placement="top">
 									<el-button size="mini" type="info" circle icon="el-icon-s-check"
 										@click="check(scope.row.warehouseWarrantId)">
 									</el-button>
 								</el-tooltip>
-								<!-- <el-tooltip v-if="scope.row.audited==1" class="item" effect="dark" content="反审核"
+								<el-tooltip v-if="scope.row.audited==0" class="item" effect="dark" content="驳回"
 									placement="top">
-									<el-button size="mini" type="info" circle icon="el-icon-coordinate"
+									<el-button size="mini" type="info" circle icon="el-icon-s-release"
 										@click="backCheck(scope.row.warehouseWarrantId)">
 									</el-button>
-								</el-tooltip> -->
+								</el-tooltip>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -120,8 +122,14 @@
 	export default {
 		data() {
 			return {
-				ruleForm:{},
-				screenCondition:{},
+				SelectList: [],
+				ruleForm: {
+					warehouseId: '',
+					reason: '',
+					employeeId: '',
+				},
+				employeeList: [],
+				screenCondition: {},
 				queryForm: {
 					pageNum: 1,
 					pageSize: 10,
@@ -172,6 +180,7 @@
 				valuetype: 'all',
 				valuetype1: 'all',
 				tableData: [],
+				
 				multipleSelection: [],
 				dialogTableVisible: false,
 				dialogFormVisible: false,
@@ -189,16 +198,7 @@
 				formLabelWidth: '120px'
 			}
 		},
-		// computed: {
-		// 	message() {
-		// 		return {
-		// 			"documentNumber":this.searchInput,
-		// 			"warehouseName":this.searchInput,
-		// 			"workPointName":this.searchInput,
-		// 			"employeeName": this.searchInput
-		// 		}
-		// 	}
-		// },
+
 		methods: {
 			dateFormat(row, column) {
 				var date = row[column.property];
@@ -212,10 +212,38 @@
 
 			},
 
+			//下拉查询业务员的值
+			queryEmployee() {
+				if (this.employeeList.length > 0)
+					return false
+				this.axios({
+					method: 'get',
+					url: 'http://localhost:8089/eims/employee',
+				}).then(res => {
+					console.log(res)
+					this.employeeList = res.data.list
+					this.queryForm.employeeName = this.employeeList[0].employeeId
+				}).catch(err => {
+
+				})
+			},
+
+			//下拉框查询所有仓库
+			queryWarehouse() {
+				this.axios({
+					method: 'get',
+					url: 'http://localhost:8089/eims/warehouse'
+				}).then(res => {
+					this.SelectList = res.data.list
+					this.queryForm.warehouseName = this.SelectList[0].warehouseId
+				}).catch(err => {
+					console.log(err)
+				})
+			},
 			search() {
 				this.queryType = 'search'
 				this.queryForm.warehouseDocunum = this.searchInput
-				this.queryForm.warehouseName = this.searchInput
+				// this.queryForm.warehouseName = this.searchInput
 				this.queryForm.storageType = this.searchInput
 				//var searchForm = Object.assign(this.message,this.queryForm)
 				//console.log(searchForm)
@@ -233,17 +261,18 @@
 			},
 			//审核入库单
 			check(val) {
+				console.log("入库单id:")
+				console.log(val)
 				this.$confirm('将要进行审核入库单操作，是否继续?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
 					this.axios({
-						url: "http://localhost:8089/eims/warehouseWarrant",
+						url: "http://localhost:8089/eims/inventory/updateStorage",
 						method: "put",
-						data: {
-							"warehouseWarrantId": val,
-							"audited": 1
+						params: {
+							"warehouseWarrantId": val
 						}
 					}).then(res => {
 						this.show()
@@ -255,6 +284,7 @@
 						message: '审核成功!'
 					});
 					this.show()
+
 				}).catch(() => {
 					this.$message({
 						type: 'info',
@@ -262,37 +292,47 @@
 					});
 				});
 			},
-			//反审核入库单
-			// backCheck(val) {
-			// 	this.$confirm('是否要对该入库单进行反审核操作?', '提示', {
-			// 		confirmButtonText: '确定',
-			// 		cancelButtonText: '取消',
-			// 		type: 'warning'
-			// 	}).then(() => {
-			// 		this.axios({
-			// 			url: "http://localhost:8089/eims/warehouseWarrant",
-			// 			method: "put",
-			// 			data: {
-			// 				"warehouseWarrantId": val,
-			// 				"audited": 0
-			// 			}
-			// 		}).then(res => {
-			// 			this.show()
-			// 		}).catch(err => {
+			//驳回
+			backCheck(val) {
+				//this.dialogFormVisible = true
+				this.$prompt('请输入驳回原因', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					inputPattern:/\S+/,
+					inputErrorMessage:'请输入驳回原因！'
+				}).then((value) => {
+					// if(value.Trim()==""){
+					// 	alert('输入您的姓名'); 
+					// }
+					this.axios({
+						url: "http://localhost:8089/eims/warehouseWarrant",
+						method: "put",
+						data: {
+							"warehouseWarrantId": val,
+							"audited": 2,
+							"reason":value.value
+						}
+					}).then(res => {
+						console.log("审核状态信息是：")
+						console.log(res)
+						//this.ruleForm.reason = res.data.list
+						this.show()
+					}).catch(err => {
 
-			// 		})
-			// 		this.$message({
-			// 			type: 'success',
-			// 			message: '成功反审核!'
-			// 		});
-			// 		this.show()
-			// 	}).catch(() => {
-			// 		this.$message({
-			// 			type: 'info',
-			// 			message: '已取消反审核操作'
-			// 		});
-			// 	});
-			// },
+					})
+					this.$message({
+						type: 'success',
+						message: '驳回成功!'
+					});
+					this.show()
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消驳回操作'
+					});
+				});
+			},
+
 			changeFun(val) {
 				this.multipleSelection = val
 				if (val.length > 0) {
@@ -302,14 +342,14 @@
 				}
 			},
 			Pldelete() {
-				for (var i = 0; i<this.multipleSelection.length; i++)
+				for (var i = 0; i < this.multipleSelection.length; i++)
 					if (this.multipleSelection[i].audited == 1) {
 						this.$message({
 							type: 'info',
 							message: '已审核的入库单不能进行删除操作!'
 						});
 						return false
-					} 
+					}
 
 				/* var a = false/true
 				//选中的入库单有已审核的数据，不能删除，false
@@ -317,7 +357,7 @@
 				if(选中的入库单没有已审核的数据){
 					删除代码
 				} */
-				
+
 				this.$confirm('此操作将永久删除【' + this.multipleSelection.length + '】张入库单, 是否继续?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
@@ -327,7 +367,7 @@
 					//var ids = []
 					// for (let i = 0; i < this.multipleSelection.length; i++)
 					// 	ids.push(this.multipleSelection[i].warehouseWarrantId)
-				
+
 					this.multipleSelection.forEach(item => {
 						ids.push(item.warehouseWarrantId);
 					})
@@ -339,7 +379,7 @@
 						console.log(res)
 						this.show()
 					}).catch(err => {
-				
+
 					})
 					this.$message({
 						type: 'success',
@@ -352,7 +392,6 @@
 						message: '已取消删除'
 					});
 				});
-
 			},
 			handleEdit(index, row) {
 				console.log(index, row);
@@ -364,8 +403,6 @@
 					this.show()
 				else if (this.queryType == 'search')
 					this.search()
-				else if (this.queryType == 'screen')
-					this.screen()
 			},
 			handleCurrentChange(val) {
 				this.loading = true
@@ -374,21 +411,19 @@
 					this.show()
 				else if (this.queryType == 'search')
 					this.search()
-				else if (this.queryType == 'screen')
-					this.screen()
 			},
 			show() {
 				this.axios({
 					method: 'get',
-					url: 'http://localhost:8089/eims/warehouseWarrant',
+					url: 'http://localhost:8089/eims/warehouseWarrant/screen',
 					params: {
 						"pageNum": this.queryForm.pageNum,
-						"pageSize": this.queryForm.pageSize
+						"pageSize": this.queryForm.pageSize,
+						"employeeId": this.ruleForm.employeeId,
+						"warehouseId": this.ruleForm.warehouseId
 						//"workPointId": this.queryForm.workPointId
 					}
 				}).then(res => {
-					//this.pageInfo.pageSize=res.data.pageSize
-					//this.pageInfo.currentPage=res.data.currentPage
 					this.queryForm.total = res.data.total
 					this.tableData = res.data.list
 					//console.log(res)
@@ -410,7 +445,7 @@
 
 	#Storage .el-header,
 	#Storage .el-footer {
-		background-color: #B3C0D1;
+		/* background-color: #B3C0D1; */
 		color: #333;
 		text-align: center;
 		line-height: 60px;
@@ -423,10 +458,10 @@
 	}
 
 	#Storage .el-main {
-		background-color: #E9EEF3;
+		/* background-color: #E9EEF3; */
 		color: #333;
 		text-align: center;
-		height: 600px;
+		height: 100%;
 
 	}
 

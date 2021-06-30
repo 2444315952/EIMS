@@ -71,6 +71,7 @@ public interface TransferService {
      */
     Transfer update(Transfer transfer);
 
+    Transfer checkStorage(Integer transferId);
     /**
      * 批量修改数据
      *

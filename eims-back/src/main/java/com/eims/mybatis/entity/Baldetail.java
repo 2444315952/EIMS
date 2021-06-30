@@ -42,7 +42,7 @@ public class Baldetail implements Serializable {
 
     private BigDecimal totalCost;
 
-    private Integer inventoryQuantity;
+    private Integer inventory;
 
     private Integer physicalInventory;
 

@@ -13,7 +13,7 @@
         <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
         <result property="purchasePrice" column="PURCHASE_PRICE" jdbcType="VARCHAR"/>
         <result property="totalCost" column="TOTAL_COST" jdbcType="VARCHAR"/>
-        <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="inventory" column="INVENTORY" jdbcType="INTEGER"/>
         <result property="physicalInventory" column="PHYSICAL_INVENTORY" jdbcType="INTEGER"/>
         <result property="physicalAmount" column="PHYSICAL_AMOUNT" jdbcType="VARCHAR"/>
         <result property="quantityVariance" column="QUANTITY_VARIANCE" jdbcType="INTEGER"/>
@@ -22,7 +22,7 @@
     </resultMap>
 
     <sql id="BaldetailCol">
-        BALDETAIL_ID, BLITEM_ID, BLITEM_DOCUNUM, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, SPEC_MODEL, PRODUCT_UNIT, PURCHASE_PRICE, TOTAL_COST, INVENTORY_QUANTITY, PHYSICAL_INVENTORY, PHYSICAL_AMOUNT, QUANTITY_VARIANCE, DIFFERENCE_AMOUNT, COMMODITY_NOTE    </sql>
+        BALDETAIL_ID, BLITEM_ID, BLITEM_DOCUNUM, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, SPEC_MODEL, PRODUCT_UNIT, PURCHASE_PRICE, TOTAL_COST, INVENTORY, PHYSICAL_INVENTORY, PHYSICAL_AMOUNT, QUANTITY_VARIANCE, DIFFERENCE_AMOUNT, COMMODITY_NOTE    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="BaldetailMap">
@@ -75,8 +75,8 @@
             <if test="totalCost != null">
                 or TOTAL_COST like '%'||#{totalCost}||'%'
             </if>
-            <if test="inventoryQuantity != null">
-                or INVENTORY_QUANTITY like '%'||#{inventoryQuantity}||'%'
+            <if test="inventory != null">
+                or INVENTORY like '%'||#{inventory}||'%'
             </if>
             <if test="physicalInventory != null">
                 or PHYSICAL_INVENTORY like '%'||#{physicalInventory}||'%'
@@ -132,8 +132,8 @@
             <if test="totalCost != null">
                 and TOTAL_COST = #{totalCost}
             </if>
-            <if test="inventoryQuantity != null">
-                and INVENTORY_QUANTITY = #{inventoryQuantity}
+            <if test="inventory != null">
+                and INVENTORY = #{inventory}
             </if>
             <if test="physicalInventory != null">
                 and PHYSICAL_INVENTORY = #{physicalInventory}
@@ -185,8 +185,8 @@
             <if test="totalCost != null">
                 TOTAL_COST,
             </if>
-            <if test="inventoryQuantity != null">
-                INVENTORY_QUANTITY,
+            <if test="inventory != null">
+                INVENTORY,
             </if>
             <if test="physicalInventory != null">
                 PHYSICAL_INVENTORY,
@@ -234,8 +234,8 @@
             <if test="totalCost != null">
                 #{totalCost},
             </if>
-            <if test="inventoryQuantity != null">
-                #{inventoryQuantity},
+            <if test="inventory != null">
+                #{inventory},
             </if>
             <if test="physicalInventory != null">
                 #{physicalInventory},
@@ -291,8 +291,8 @@
                 <if test="entity.totalCost != null">
                     TOTAL_COST,
                 </if>
-                <if test="entity.inventoryQuantity != null">
-                    INVENTORY_QUANTITY,
+                <if test="entity.inventory != null">
+                    INVENTORY,
                 </if>
                 <if test="entity.physicalInventory != null">
                     PHYSICAL_INVENTORY,
@@ -340,8 +340,8 @@
                 <if test="entity.totalCost != null">
                     #{entity.totalCost},
                 </if>
-                <if test="entity.inventoryQuantity != null">
-                    #{entity.inventoryQuantity},
+                <if test="entity.inventory != null">
+                    #{entity.inventory},
                 </if>
                 <if test="entity.physicalInventory != null">
                     #{entity.physicalInventory},
@@ -393,8 +393,8 @@
             <if test="totalCost != null">
                 TOTAL_COST = #{totalCost},
             </if>
-            <if test="inventoryQuantity != null">
-                INVENTORY_QUANTITY = #{inventoryQuantity},
+            <if test="inventory != null">
+                INVENTORY = #{inventory},
             </if>
             <if test="physicalInventory != null">
                 PHYSICAL_INVENTORY = #{physicalInventory},
@@ -447,8 +447,8 @@
                 <if test="entity.totalCost != null">
                     TOTAL_COST = #{entity.totalCost},
                 </if>
-                <if test="entity.inventoryQuantity != null">
-                    INVENTORY_QUANTITY = #{entity.inventoryQuantity},
+                <if test="entity.inventory != null">
+                    INVENTORY = #{entity.inventory},
                 </if>
                 <if test="entity.physicalInventory != null">
                     PHYSICAL_INVENTORY = #{entity.physicalInventory},
@@ -473,6 +473,11 @@
     <!--通过主键删除数据-->
     <delete id="deleteById">
         delete from EIMS.BALDETAIL where BALDETAIL_ID = #{baldetailId}
+    </delete>
+
+    <!--通过盘点单主键id删除明细数据-->
+    <delete id="deleteByFk">
+        delete from EIMS.BALDETAIL where BLITEM_ID = #{blitemId}
     </delete>
 
     <!--通过主键列表批量删除数据-->

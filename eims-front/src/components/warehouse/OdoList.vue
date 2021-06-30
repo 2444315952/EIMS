@@ -8,34 +8,36 @@
 					<el-breadcrumb-item>出库单列表</el-breadcrumb-item>
 				</el-breadcrumb>
 			</el-row>
-			<el-container>
-				<el-main>
+			<el-container style="background-color#F9FAFC;padding-top: 15px;">
+				<el-main style="background-color:#F9FAFC">
 					<el-row>
-						<el-col :span="6">
-							<el-input style="width: 320px; float: left" class="inline-input"
-								placeholder="请输入单据编号/仓库/工作点/出库类型" v-model="SearInput" @keyup.enter.native="SearachFor"
+						<el-col :span="5">
+							<el-input style="width: 240px; float: left" class="inline-input"
+								placeholder="请输入单据编号/出库类型" v-model="SearInput" @keyup.enter.native="SearachFor"
 								size="medium">
 								<template #append>
 									<el-button icon="el-icon-search" size="small" @click="SearachFor"></el-button>
 								</template>
 							</el-input>
 						</el-col>
-						<el-col :span="4">
-							<el-form-item label="入库仓:" prop="foldWarehouseName" label-width="60px">
-								<el-select v-model="ruleForm.foldWarehouseName" @change="selectFoldWarehouse"
-									@click="queryFoldWarehouse()" :disabled="isdisabled" placeholder="请选择"
+						<el-col :span="5">
+							<el-form-item label="出库仓库:" prop="warehouseId" label-width="80px">
+								<el-select v-model="ruleForm.warehouseId" @change="show()"
+									@click="queryWarehouse()" :disabled="isdisabled" placeholder="请选择"
 									style="width: 150px;float: left;">
-									<el-option v-for="item in SelecFoltList" :label="item.warehouseName"
-										:key="item.value" :value="item.warehouseId"></el-option>
+									<el-option label="全部仓库" value=""></el-option>
+									<el-option v-for="item in SelectList" :label="item.warehouseName"
+										:value="item.warehouseId"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
-						<el-col :span="4">
-							<el-form-item label="业务员:" prop="exportWarehouseName" label-width="60px">
-								<el-select v-model="exportWarehouseNameSel" @change="selectExportWarehouse"
-									@click="queryExportWarehouse()" :disabled="isdisabled" placeholder="请选择"
-									style="width: 150px;float: left;">
-									<el-option v-for="item in SelectExporList" :label="item.warehouseName" :value="item.warehouseId"></el-option>
+						<el-col :span="5">
+							<el-form-item label="业务员:" prop="employeeId" label-width="60px">
+								<el-select v-model="ruleForm.employeeId" @change="show()" :disabled="isdisabled"
+									placeholder="请选择" @click="queryEmployee()" style="float:left; width: 150px;">
+									<el-option label="所有业务员" value=""></el-option>
+									<el-option v-for="item in employeeList" :label="item.employeeName"
+										:value="item.employeeId"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
@@ -51,30 +53,30 @@
 						</el-col>
 					</el-row>
 			
-					<el-table ref="multipleTable" :data="tableData" :height="tableHeight" tooltip-effect="dark"
-						style="width: 100%; height: 490px;" @selection-change="SelectFun">
+					<el-table ref="multipleTable" :data="tableData" :height="tableHeight" tooltip-effect="dark" max-height="435"
+						style="width: 100%; height: 435px;" @selection-change="SelectFun">
 						<el-table-column type="selection" width="55">
 						</el-table-column>
-						<el-table-column prop="stockOutDocunum" label="单据编号" width="180">
+						<el-table-column prop="stockOutDocunum" label="单据编号" width="165">
 						</el-table-column>
-						<el-table-column :formatter="dateFormat" label="出库日期" width="150" prop="documentDate">
+						<el-table-column :formatter="dateFormat" label="出库日期" width="160" prop="documentDate">
 						</el-table-column>
 						<el-table-column prop="warehouseName" label="所属仓库" width="110" show-overflow-tooltip>
 						</el-table-column>
 						<el-table-column prop="outboundType" label="出库类型" width="110" show-overflow-tooltip>
 						</el-table-column>
-						<el-table-column label="审核状态" width="100" show-overflow-tooltip>
+						<el-table-column label="审核状态" width="110" show-overflow-tooltip>
 							<template #default="scope">
 								<p v-if="tableData[scope.$index].audited==0">未审核</p>
 								<p v-if="tableData[scope.$index].audited==1">已审核</p>
-								<p v-if="tableData[scope.$index].audited==2">审核失败</p>
+								<p v-if="tableData[scope.$index].audited==2">被驳回</p>
 							</template>
 						</el-table-column>
-						<el-table-column prop="workPointName" label="工作点" width="100" show-overflow-tooltip>
-						</el-table-column>
+						<!-- <el-table-column prop="workPointName" label="工作点" width="60" show-overflow-tooltip>
+						</el-table-column> -->
 						<el-table-column prop="employeeName" label="业务员" width="100">
 						</el-table-column>
-						<el-table-column prop="documentsNote" label="备注" width="160" show-overflow-tooltip>
+						<el-table-column prop="documentsNote" label="备注" width="180" show-overflow-tooltip>
 						</el-table-column>
 			
 						<el-table-column prop="operate" label="操作" show-overflow-tooltip>
@@ -84,24 +86,24 @@
 										@click="$router.push({name:'AddOdo',params:{stockOutId:scope.row.stockOutId}})">
 									</el-button>
 								</el-tooltip>
-								<el-tooltip class="item" v-if="scope.row.audited==0" effect="dark" content="编辑"
+								<el-tooltip class="item" v-if="scope.row.audited==0 || scope.row.audited==2" effect="dark" content="编辑"
 									placement="top">
 									<el-button size="mini" circle type="primary" icon="el-icon-edit-outline"
 										@click="$router.push({name:'AddOdo',params:{stockOutId:scope.row.stockOutId}})">
 									</el-button>
 								</el-tooltip>
-								<el-tooltip class="item" effect="dark" v-if="scope.row.audited==0" content="审核"
+								<el-tooltip class="item" effect="dark" v-if="scope.row.audited==0 || scope.row.audited==2" content="审核"
 									placement="top">
 									<el-button size="mini" type="info" circle icon="el-icon-s-check"
-										@click="check(scope.row.stockOutId)">
+										@click="check(scope.row)">
 									</el-button>
 								</el-tooltip>
-								<!-- <el-tooltip v-if="scope.row.audited==1" class="item" effect="dark" content="反审核"
+								<el-tooltip class="item" effect="dark" v-if="scope.row.audited==0" content="驳回"
 									placement="top">
-									<el-button size="mini" type="info" circle icon="el-icon-coordinate"
+									<el-button size="mini" type="info" circle icon="el-icon-s-check"
 										@click="backCheck(scope.row.stockOutId)">
 									</el-button>
-								</el-tooltip> -->
+								</el-tooltip>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -121,7 +123,11 @@
 	export default {
 		data() {
 			return {
-				ruleForm:{},
+				employeeList:[],
+				ruleForm:{
+					warehouseId:'',
+					employeeId:'',
+				},
 				queryForm: {
 					pageNum: 1,
 					pageSize: 10,
@@ -129,6 +135,7 @@
 					//workPointId: 1,
 					//currentPage,pagesize:对应后端的
 				},
+				SelectList:[],
 				delbut: false,
 				SearInput: '', //用户输入的值
 				tableHeight: window.innerHeight,
@@ -206,6 +213,77 @@
 				};
 				return moment(date).format("YYYY-MM-DD HH:mm")
 			},
+			
+			//下拉查询业务员的值
+			queryEmployee() {
+				if (this.employeeList.length > 0)
+					return false
+				this.axios({
+					method: 'get',
+					url: 'http://localhost:8089/eims/employee',
+				}).then(res => {
+					console.log(res)
+					this.employeeList = res.data.list
+					this.queryForm.employeeName = this.employeeList[0].employeeId
+				}).catch(err => {
+			
+				})
+			},
+			
+			//下拉框查询所有仓库
+			queryWarehouse() {
+				this.axios({
+					method: 'get',
+					url: 'http://localhost:8089/eims/warehouse'
+				}).then(res => {
+					this.SelectList = res.data.list
+					this.queryForm.warehouseName=this.SelectList[0].warehouseId
+				}).catch(err => {
+					console.log(err)
+				})
+			},
+			
+			//驳回
+			backCheck(val) {
+				//this.dialogFormVisible = true
+				this.$prompt('请输入驳回原因', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					inputPattern:/\S+/,
+					inputErrorMessage:'请输入驳回原因！'
+				}).then((value) => {
+					// if(value.Trim()==""){
+					// 	alert('输入您的姓名'); 
+					// }
+					this.axios({
+						url: "http://localhost:8089/eims/stockOut",
+						method: "put",
+						data: {
+							"stockOutId": val,
+							"audited": 2,
+							"reason":value.value
+						}
+					}).then(res => {
+						console.log("审核状态信息是：")
+						console.log(res)
+						//this.ruleForm.reason = res.data.list
+						this.show()
+					}).catch(err => {
+			
+					})
+					this.$message({
+						type: 'success',
+						message: '驳回成功!'
+					});
+					this.show()
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消驳回操作'
+					});
+				});
+			},
+			
 			check(val) {
 				this.$confirm('将要对该出库单进行审核操作, 是否继续?', '提示', {
 					confirmButtonText: '确定',
@@ -213,11 +291,10 @@
 					type: 'warning'
 				}).then(() => {
 					this.axios({
-						url: "http://localhost:8089/eims/stockOut",
+						url: "http://localhost:8089/eims/stockOut/check",
 						method: "put",
-						data: {
-							"stockOutId": val,
-							"audited": 1
+						params: {
+							"stockOutId": val.stockOutId
 						}
 					}).then(res => {
 						this.show()
@@ -229,6 +306,19 @@
 						message: '审核成功!'
 					});
 					this.show()
+					this.axios({
+					url:"http://localhost:8089/eims/sellBill",
+					method:'put',
+					data:{
+						"sellId":val.sellId,
+						"outStorage":1
+					}
+					}).then(res=>{
+						console.log("出库信息：")
+						console.log(res)
+					}).catch(err=>{
+						
+					})
 				}).catch(() => {
 					this.$message({
 						type: 'info',
@@ -236,6 +326,10 @@
 					});
 				});
 			},
+			
+			//驳回操作
+			
+			
 			SelectFun(val) {
 				this.multipleSelection = val
 				if (this.multipleSelection.length <= 0) {
@@ -299,7 +393,7 @@
 					this.ScreenFor()
 			},
 			handleCurrentChange(val) {
-				this.loding = true
+				//this.loding = true
 				this.queryForm.pageNum = val
 				if (this.queryType == 'all')
 					this.show()
@@ -316,7 +410,6 @@
 				this.queryType = 'search'
 				this.queryForm.stockOutDocunum = this.SearInput
 				this.queryForm.warehouseName = this.SearInput
-				this.queryForm.workPointName = this.SearInput
 				this.queryForm.outboundType = this.SearInput
 
 				this.axios({
@@ -334,10 +427,12 @@
 			show() {
 				this.axios({
 					method: 'get',
-					url: 'http://localhost:8089/eims/stockOut',
+					url: 'http://localhost:8089/eims/stockOut/screen',
 					params: {
 						"pageNum": this.queryForm.pageNum,
 						"pageSize": this.queryForm.pageSize,
+						"warehouseId":this.ruleForm.warehouseId,
+						"employeeId":this.ruleForm.employeeId
 						//"workPointId": this.queryForm.workPointId
 					}
 				}).then(res => {
@@ -373,16 +468,14 @@
 	}
 
 	#Odo .el-aside {
-		background-color: #D3DCE6;
 		color: #333;
 		text-align: center;
 	}
 
 	#Odo .el-main {
-		background-color: #E9EEF3;
-		color: #333;
-		text-align: center;
-		height: 600px;
+/* 		color: #333;
+ */		text-align: center;
+		height: 100%;
 
 	}
 

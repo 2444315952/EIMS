@@ -68,13 +68,16 @@ public class SellBill implements Serializable {
 
     private String sellAddress;
 
-    private Date sellHirthday;
-
     private Integer outStorage;
 
-    private Integer sellOrderId;
+    private List<SellDetail> sellDetailList;
+
+    private Date sellHirthday;
 
     private List<SellDetail> sellDetails;
 
+    private Integer sellOrderId;
+
     private BigDecimal receivedMoney;
+
 }

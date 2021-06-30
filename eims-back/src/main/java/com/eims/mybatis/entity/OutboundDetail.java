@@ -40,4 +40,15 @@ public class OutboundDetail implements Serializable {
     private Integer deliveryQuantity;
 
     private String commodityNote;
+
+    public OutboundDetail(Integer stockOutId, String stockOutDocunum, Integer productId, String productPicture, String productName, String specModel, String productUnit, Integer deliveryQuantity) {
+        this.stockOutId = stockOutId;
+        this.stockOutDocunum = stockOutDocunum;
+        this.productId = productId;
+        this.productPicture = productPicture;
+        this.productName = productName;
+        this.specModel = specModel;
+        this.productUnit = productUnit;
+        this.deliveryQuantity = deliveryQuantity;
+    }
 }

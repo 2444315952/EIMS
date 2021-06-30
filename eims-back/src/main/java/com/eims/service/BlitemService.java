@@ -64,6 +64,15 @@ public interface BlitemService {
     boolean insertBatch(List<Blitem> BlitemList);
 
     /**
+     * 审核盘点单改库存
+     * @param blitemId
+     * @return
+     */
+    boolean auditStorage(Integer blitemId);
+
+    Blitem checkStorage(Integer blitemId);
+
+    /**
      * 修改数据
      *
      * @param blitem 实例对象

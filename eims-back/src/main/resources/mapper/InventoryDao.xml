@@ -96,6 +96,15 @@
         where INVENTORY_ID = #{inventoryId}
     </select>
 
+    <select id="queryProduct" resultMap="InventoryMap">
+        select
+        <include refid="InventoryCol"></include>
+        from (select <include refid="InventoryCol"></include> from EIMS.INVENTORY
+        <where>
+            COMPANY_ID = #{companyId,jdbcType=INTEGER} and WAREHOUSE_ID = #{warehouseId,jdbcType=INTEGER} and  PRODUCT_ID = #{productId,jdbcType=INTEGER}
+        </where>
+    </select>
+
     <!--查询所有-->
     <select id="queryAll" resultMap="InventoryMap">
         select

@@ -1,6 +1,8 @@
 package com.eims.controller;
 
 import com.eims.mybatis.entity.Transfer;
+import com.eims.service.StockOutService;
+import com.eims.service.WarehouseWarrantService;
 import com.eims.vo.form.TransferQueryForm;
 import com.eims.service.TransferService;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,12 @@ public class TransferController {
      */
     @Resource
     private TransferService transferService;
+
+//    @Resource
+//    private WarehouseWarrantService warehouseWarrantService;
+//
+//    @Resource
+//    private StockOutService stockOutService;
 
     /**
      * 通过主键查询单条数据
@@ -57,6 +65,7 @@ public class TransferController {
     @GetMapping("/transfer/search")
     public PageInfo<Transfer> queryBySearch(TransferQueryForm transferQueryForm) {
         transferQueryForm.setCompanyId(1);
+        System.out.println(transferQueryForm);
         return this.transferService.queryBySearch(transferQueryForm);
     }
 
@@ -117,6 +126,17 @@ public class TransferController {
     @PutMapping("/transfer/batch")
     public boolean updateBatch(@RequestBody List<Transfer> transferList) {
         return this.transferService.updateBatch(transferList);
+    }
+
+    /**
+     * 审核调拨单新增出入库记录
+     * @param transferId
+     * @return
+     */
+    @PutMapping("/transfer/check")
+    public Transfer checkStorage(Integer transferId){
+
+        return this.transferService.checkStorage(transferId);
     }
 
     /**

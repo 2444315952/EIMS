@@ -3,6 +3,7 @@ package com.eims.mybatis.entity;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -42,5 +43,9 @@ public class Blitem implements Serializable {
 
     private Integer audited;
 
+    private String reason;
+
     private String documentsNote;
+
+    private List<Baldetail> baldetailList;
 }

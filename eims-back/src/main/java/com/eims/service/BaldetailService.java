@@ -88,6 +88,13 @@ public interface BaldetailService {
     boolean deleteById(Integer baldetailId);
 
     /**
+     * 通过盘点单主键id删除明细数据
+     * @param blitemId
+     * @return
+     */
+    boolean deleteByFk(Integer blitemId);
+
+    /**
      * 批量删除数据
      *
      * @param ids 主键列表

@@ -16,9 +16,10 @@
         <result property="storageType" column="STORAGE_TYPE" jdbcType="VARCHAR"/>
         <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
         <result property="saleReturnId" column="SALE_RETURN_ID" jdbcType="INTEGER"/>
-        <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
+        <result property="transferId" column="TRANSFER_ID" jdbcType="INTEGER"/>
         <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
         <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="reason" column="REASON" jdbcType="VARCHAR"/>
         <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
     </resultMap>
 
@@ -56,9 +57,10 @@
         <result property="storageType" column="STORAGE_TYPE" jdbcType="VARCHAR"/>
         <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
         <result property="saleReturnId" column="SALE_RETURN_ID" jdbcType="INTEGER"/>
-        <result property="transferOrderId" column="TRANSFER_ORDER_ID" jdbcType="INTEGER"/>
+        <result property="transferId" column="TRANSFER_ID" jdbcType="INTEGER"/>
         <result property="blitemId" column="BLITEM_ID" jdbcType="INTEGER"/>
         <result property="inventoryQuantity" column="INVENTORY_QUANTITY" jdbcType="INTEGER"/>
+        <result property="reason" column="REASON" jdbcType="VARCHAR"/>
         <result property="documentsNote" column="DOCUMENTS_NOTE" jdbcType="VARCHAR"/>
 
         <collection property="warehousingDetailList" javaType="list" ofType="com.eims.mybatis.entity.WarehousingDetail">
@@ -128,15 +130,15 @@
 
 
     <sql id="WarehouseWarrantCol">
-        WAREHOUSE_WARRANT_ID, WAREHOUSE_DOCUNUM, DOCUMENT_DATE, COMPANY_ID, WORK_POINT_ID, EMPLOYEE_ID, EMPLOYEE_NAME, AUDITED, WAREHOUSE_ID, WAREHOUSE_NAME, STORAGE_TYPE, PURCH_ID, SALE_RETURN_ID, TRANSFER_ORDER_ID, BLITEM_ID, INVENTORY_QUANTITY, DOCUMENTS_NOTE    </sql>
+        WAREHOUSE_WARRANT_ID, WAREHOUSE_DOCUNUM, DOCUMENT_DATE, COMPANY_ID, WORK_POINT_ID, EMPLOYEE_ID, EMPLOYEE_NAME, AUDITED, WAREHOUSE_ID, WAREHOUSE_NAME, STORAGE_TYPE, PURCH_ID, SALE_RETURN_ID, TRANSFER_ID, BLITEM_ID, INVENTORY_QUANTITY,REASON,DOCUMENTS_NOTE    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="WarehouseWarrantListMap" >
         select
-          W.WAREHOUSE_WARRANT_ID, W.WAREHOUSE_DOCUNUM, W.DOCUMENT_DATE,W.COMPANY_ID, W.WORK_POINT_ID, W.EMPLOYEE_ID, W.EMPLOYEE_NAME, W.AUDITED, W.WAREHOUSE_ID, W.WAREHOUSE_NAME, W.STORAGE_TYPE, W.PURCH_ID, W.SALE_RETURN_ID, W.TRANSFER_ORDER_ID, W.BLITEM_ID, W.INVENTORY_QUANTITY, W.DOCUMENTS_NOTE,
+          W.WAREHOUSE_WARRANT_ID, W.WAREHOUSE_DOCUNUM, W.DOCUMENT_DATE,W.COMPANY_ID, W.WORK_POINT_ID, W.EMPLOYEE_ID, W.EMPLOYEE_NAME, W.AUDITED, W.WAREHOUSE_ID, W.WAREHOUSE_NAME, W.STORAGE_TYPE, W.PURCH_ID, W.SALE_RETURN_ID, W.TRANSFER_ID, W.BLITEM_ID, W.INVENTORY_QUANTITY, W.REASON,W.DOCUMENTS_NOTE,
           D.WAREHOUSE_WARRANT_ID AS LIST_WAREHOUSE_WARRANT_ID,D.WAREHOUSE_DOCUNUM AS LIST_WAREHOUSE_DOCUNUM , D.PRODUCT_ID, D.PRODUCT_PICTURE, D.PRODUCT_NAME, D.SPEC_MODEL, D.PRODUCT_UNIT, D.INVENTORY_QUANTITY AS LIST_INVENTORY_QUANTITY, D.COMMODITY_NOTE
         from EIMS.WAREHOUSE_WARRANT W left join EIMS.WAREHOUSING_DETAIL D on W.WAREHOUSE_WARRANT_ID=D.WAREHOUSE_WARRANT_ID
-        where W.WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+        where W.WAREHOUSE_WARRANT_ID = #{warehouseWarrantId,jdbcType=INTEGER}
     </select>
 
 
@@ -144,11 +146,9 @@
     <update id="auditStorage">
         update EIMS.INVENTORY
         <set>
-            <if test="inventory != null">
-                INVENTORY = (inventory + #{inventoryQuantity})
-            </if>
+            INVENTORY = (inventory + #{inventoryQuantity,jdbcType=INTEGER})
         </set>
-        where WAREHOUSE_ID = #{warehouseId} and  PRODUCT_ID = #{productId}
+        where WAREHOUSE_ID = #{warehouseId,jdbcType=INTEGER} and  PRODUCT_ID = #{productId,jdbcType=INTEGER}
     </update>
 
     <!--晒选未入库的销售退货单-->
@@ -337,14 +337,17 @@
             <if test="saleReturnId != null">
                 or SALE_RETURN_ID like '%'||#{saleReturnId}||'%'
             </if>
-            <if test="transferOrderId != null">
-                or TRANSFER_ORDER_ID like '%'||#{transferOrderId}||'%'
+            <if test="transferId != null">
+                or TRANSFER_ID like '%'||#{transferId}||'%'
             </if>
             <if test="blitemId != null">
                 or BLITEM_ID like '%'||#{blitemId}||'%'
             </if>
             <if test="inventoryQuantity != null">
                 or INVENTORY_QUANTITY like '%'||#{inventoryQuantity}||'%'
+            </if>
+            <if test="reason != null and reason != ''">
+                or REASON like '%'||#{reason}||'%'
             </if>
             <if test="documentsNote != null and documentsNote != ''">
                 or DOCUMENTS_NOTE like '%'||#{documentsNote}||'%'
@@ -397,14 +400,17 @@
             <if test="saleReturnId != null">
                 and SALE_RETURN_ID = #{saleReturnId}
             </if>
-            <if test="transferOrderId != null">
-                and TRANSFER_ORDER_ID = #{transferOrderId}
+            <if test="transferId != null">
+                and TRANSFER_ID = #{transferId}
             </if>
             <if test="blitemId != null">
                 and BLITEM_ID = #{blitemId}
             </if>
             <if test="inventoryQuantity != null">
                 and INVENTORY_QUANTITY = #{inventoryQuantity}
+            </if>
+            <if test="reason != null and reason != ''">
+                and REASON = #{reason}
             </if>
             <if test="documentsNote != null and documentsNote != ''">
                 and DOCUMENTS_NOTE = #{documentsNote}
@@ -453,14 +459,17 @@
             <if test="saleReturnId != null">
                 SALE_RETURN_ID,
             </if>
-            <if test="transferOrderId != null">
-                TRANSFER_ORDER_ID,
+            <if test="transferId != null">
+                TRANSFER_ID,
             </if>
             <if test="blitemId != null">
                 BLITEM_ID,
             </if>
             <if test="inventoryQuantity != null">
                 INVENTORY_QUANTITY,
+            </if>
+            <if test="reason != null">
+                REASON,
             </if>
             <if test="documentsNote != null">
                 DOCUMENTS_NOTE,
@@ -505,14 +514,17 @@
             <if test="saleReturnId != null">
                 #{saleReturnId},
             </if>
-            <if test="transferOrderId != null">
-                #{transferOrderId},
+            <if test="transferId != null">
+                #{transferId},
             </if>
             <if test="blitemId != null">
                 #{blitemId},
             </if>
             <if test="inventoryQuantity != null">
                 #{inventoryQuantity},
+            </if>
+            <if test="reason != null">
+                #{reason},
             </if>
             <if test="documentsNote != null">
                 #{documentsNote},
@@ -565,14 +577,17 @@
                 <if test="entity.saleReturnId != null">
                     SALE_RETURN_ID,
                 </if>
-                <if test="entity.transferOrderId != null">
-                    TRANSFER_ORDER_ID,
+                <if test="entity.transferId != null">
+                    TRANSFER_ID,
                 </if>
                 <if test="entity.blitemId != null">
                     BLITEM_ID,
                 </if>
                 <if test="entity.inventoryQuantity != null">
                     INVENTORY_QUANTITY,
+                </if>
+                <if test="entity.reason != null">
+                    REASON,
                 </if>
                 <if test="entity.documentsNote != null">
                     DOCUMENTS_NOTE,
@@ -617,14 +632,17 @@
                 <if test="entity.saleReturnId != null">
                     #{entity.saleReturnId},
                 </if>
-                <if test="entity.transferOrderId != null">
-                    #{entity.transferOrderId},
+                <if test="entity.transferId != null">
+                    #{entity.transferId},
                 </if>
                 <if test="entity.blitemId != null">
                     #{entity.blitemId},
                 </if>
                 <if test="entity.inventoryQuantity != null">
                     #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.reason != null">
+                    #{entity.reason},
                 </if>
                 <if test="entity.documentsNote != null">
                     #{entity.documentsNote},
@@ -673,8 +691,8 @@
             <if test="saleReturnId != null">
                 SALE_RETURN_ID = #{saleReturnId},
             </if>
-            <if test="transferOrderId != null">
-                TRANSFER_ORDER_ID = #{transferOrderId},
+            <if test="transferId != null">
+                TRANSFER_ID = #{transferId},
             </if>
             <if test="blitemId != null">
                 BLITEM_ID = #{blitemId},
@@ -682,11 +700,14 @@
             <if test="inventoryQuantity != null">
                 INVENTORY_QUANTITY = #{inventoryQuantity},
             </if>
+            <if test="reason != null">
+                REASON = #{reason,jdbcType=VARCHAR},
+            </if>
             <if test="documentsNote != null">
                 DOCUMENTS_NOTE = #{documentsNote},
             </if>
         </set>
-        where WAREHOUSE_WARRANT_ID = #{warehouseWarrantId}
+        where WAREHOUSE_WARRANT_ID = #{warehouseWarrantId,jdbcType=INTEGER}
     </update>
 
     <!--批量修改数据-->
@@ -730,14 +751,17 @@
                 <if test="entity.saleReturnId != null">
                     SALE_RETURN_ID = #{entity.saleReturnId},
                 </if>
-                <if test="entity.transferOrderId != null">
-                    TRANSFER_ORDER_ID = #{entity.transferOrderId},
+                <if test="entity.transferId != null">
+                    TRANSFER_ID = #{entity.transferId},
                 </if>
                 <if test="entity.blitemId != null">
                     BLITEM_ID = #{entity.blitemId},
                 </if>
                 <if test="entity.inventoryQuantity != null">
                     INVENTORY_QUANTITY = #{entity.inventoryQuantity},
+                </if>
+                <if test="entity.reason != null">
+                    REASON = #{entity.reason},
                 </if>
                 <if test="entity.documentsNote != null">
                     DOCUMENTS_NOTE = #{entity.documentsNote},

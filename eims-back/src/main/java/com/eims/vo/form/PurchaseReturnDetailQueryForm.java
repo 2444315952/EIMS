@@ -29,6 +29,8 @@ public class PurchaseReturnDetailQueryForm implements Serializable {
 
     private String specModel;
 
+    private Integer productId;
+
     private String productUnit;
 
     private BigDecimal purchasePrice;

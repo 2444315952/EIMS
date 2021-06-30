@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.GatherRefundDao">
+
+    <resultMap type="com.eims.mybatis.entity.GatherRefund" id="GatherRefundMap">
+        <result property="gatherRefundId" column="GATHER_REFUND_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="gatherRefundDocunum" column="GATHER_REFUND_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="gatherAmount" column="GATHER_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="clearingForm" column="CLEARING_FORM" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="GatherRefundCol">
+        GATHER_REFUND_ID, COMPANY_ID, WORK_POINT_ID, GATHER_REFUND_DOCUNUM, DOCUMENT_DATE, PURCH_ID, PURCH_DOCUNUM, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, GATHER_AMOUNT, REMARK, AUDITED, CLEARING_FORM    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="GatherRefundMap">
+        select
+        <include refid="GatherRefundCol"></include>
+        from EIMS.GATHER_REFUND
+        where GATHER_REFUND_ID = #{gatherRefundId,jdbcType=INTEGER}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="GatherRefundMap">
+        select
+        <include refid="GatherRefundCol"></include>
+        from (select <include refid="GatherRefundCol"></include> from EIMS.GATHER_REFUND
+        <where>
+            company_id = #{companyId,jdbcType=INTEGER}
+            <if test="workPointId != null">and work_point_id = #{workPointId,jdbcType=INTEGER}</if>
+        </where>
+        )
+        order by GATHER_REFUND_ID desc
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="GatherRefundMap">
+        select
+        <include refid="GatherRefundCol"></include>
+        from (select <include refid="GatherRefundCol"></include> from EIMS.GATHER_REFUND
+        <where>
+            company_id = #{companyId,jdbcType=INTEGER}
+            <if test="workPointId != null">and work_point_id = #{workPointId,jdbcType=INTEGER}</if>
+        </where>
+        )
+        <where>
+            <if test="gatherRefundId != null">
+                or GATHER_REFUND_ID like '%'||#{gatherRefundId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="gatherRefundDocunum != null">
+                or GATHER_REFUND_DOCUNUM like '%'||#{gatherRefundDocunum,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate,jdbcType=TIMESTAMP}||'%'
+            </if>
+            <if test="purchId != null">
+                or PURCH_ID like '%'||#{purchId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="purchDocunum != null">
+                or PURCH_DOCUNUM like '%'||#{purchDocunum,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="supplierId != null">
+                or SUPPLIER_ID like '%'||#{supplierId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="supplierName != null">
+                or SUPPLIER_NAME like '%'||#{supplierName,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="employeeName != null">
+                or EMPLOYEE_NAME like '%'||#{employeeName,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="gatherAmount != null">
+                or GATHER_AMOUNT like '%'||#{gatherAmount,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="remark != null">
+                or REMARK like '%'||#{remark,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="clearingForm != null">
+                or CLEARING_FORM like '%'||#{clearingForm,jdbcType=VARCHAR}||'%'
+            </if>
+        </where>
+        order by GATHER_REFUND_ID desc
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="GatherRefundMap">
+        select
+        <include refid="GatherRefundCol"></include>
+        from (select <include refid="GatherRefundCol"></include> from EIMS.GATHER_REFUND
+        <where>
+            company_id = #{companyId,jdbcType=INTEGER}
+            <if test="workPointId != null">and work_point_id = #{workPointId,jdbcType=INTEGER}</if>
+        </where>
+        )
+
+        <where>
+            <if test="gatherRefundId != null">
+                or GATHER_REFUND_ID like '%'||#{gatherRefundId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="gatherRefundDocunum != null and gatherRefundDocunum != ''">
+                or GATHER_REFUND_DOCUNUM like '%'||#{gatherRefundDocunum,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate,jdbcType=TIMESTAMP}||'%'
+            </if>
+            <if test="purchId != null">
+                or PURCH_ID like '%'||#{purchId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="purchDocunum != null and purchDocunum != ''">
+                or PURCH_DOCUNUM like '%'||#{purchDocunum,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="supplierId != null">
+                or SUPPLIER_ID like '%'||#{supplierId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="supplierName != null and supplierName != ''">
+                or SUPPLIER_NAME like '%'||#{supplierName,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="gatherAmount != null">
+                or GATHER_AMOUNT like '%'||#{gatherAmount,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="remark != null and remark != ''">
+                or REMARK like '%'||#{remark,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="clearingForm != null and clearingForm != ''">
+                or CLEARING_FORM like '%'||#{clearingForm,jdbcType=VARCHAR}||'%'
+            </if>
+        </where>
+        order by GATHER_REFUND_ID desc
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.GATHER_REFUND
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            GATHER_REFUND_ID,
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="gatherRefundDocunum != null">
+                GATHER_REFUND_DOCUNUM,
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE,
+            </if>
+            <if test="purchId != null">
+                PURCH_ID,
+            </if>
+            <if test="purchDocunum != null">
+                PURCH_DOCUNUM,
+            </if>
+            <if test="supplierId != null">
+                SUPPLIER_ID,
+            </if>
+            <if test="supplierName != null">
+                SUPPLIER_NAME,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="gatherAmount != null">
+                GATHER_AMOUNT,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="audited != null">
+                AUDITED,
+            </if>
+            <if test="clearingForm != null">
+                CLEARING_FORM,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{gatherRefundId},
+            <if test="companyId != null">
+                #{companyId,jdbcType=INTEGER},
+            </if>
+            <if test="workPointId != null">
+                #{workPointId,jdbcType=INTEGER},
+            </if>
+            <if test="gatherRefundDocunum != null">
+                #{gatherRefundDocunum,jdbcType=VARCHAR},
+            </if>
+            <if test="documentDate != null">
+                #{documentDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="purchId != null">
+                #{purchId,jdbcType=INTEGER},
+            </if>
+            <if test="purchDocunum != null">
+                #{purchDocunum,jdbcType=VARCHAR},
+            </if>
+            <if test="supplierId != null">
+                #{supplierId,jdbcType=INTEGER},
+            </if>
+            <if test="supplierName != null">
+                #{supplierName,jdbcType=VARCHAR},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId,jdbcType=INTEGER},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName,jdbcType=VARCHAR},
+            </if>
+            <if test="gatherAmount != null">
+                #{gatherAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="audited != null">
+                #{audited,jdbcType=INTEGER},
+            </if>
+            <if test="clearingForm != null">
+                #{clearingForm,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        <selectKey keyProperty="gatherRefundId" resultType="INTEGER" order="BEFORE">
+            select SEQ_GATHER_REFUND.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.GATHER_REFUND
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                GATHER_REFUND_ID,
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.gatherRefundDocunum != null">
+                    GATHER_REFUND_DOCUNUM,
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE,
+                </if>
+                <if test="entity.purchId != null">
+                    PURCH_ID,
+                </if>
+                <if test="entity.purchDocunum != null">
+                    PURCH_DOCUNUM,
+                </if>
+                <if test="entity.supplierId != null">
+                    SUPPLIER_ID,
+                </if>
+                <if test="entity.supplierName != null">
+                    SUPPLIER_NAME,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.gatherAmount != null">
+                    GATHER_AMOUNT,
+                </if>
+                <if test="entity.remark != null">
+                    REMARK,
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED,
+                </if>
+                <if test="entity.clearingForm != null">
+                    CLEARING_FORM,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_GATHER_REFUND.NEXTVAL,
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.gatherRefundDocunum != null">
+                    #{entity.gatherRefundDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    #{entity.documentDate},
+                </if>
+                <if test="entity.purchId != null">
+                    #{entity.purchId},
+                </if>
+                <if test="entity.purchDocunum != null">
+                    #{entity.purchDocunum},
+                </if>
+                <if test="entity.supplierId != null">
+                    #{entity.supplierId},
+                </if>
+                <if test="entity.supplierName != null">
+                    #{entity.supplierName},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.gatherAmount != null">
+                    #{entity.gatherAmount},
+                </if>
+                <if test="entity.remark != null">
+                    #{entity.remark},
+                </if>
+                <if test="entity.audited != null">
+                    #{entity.audited},
+                </if>
+                <if test="entity.clearingForm != null">
+                    #{entity.clearingForm},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.GATHER_REFUND
+        <set>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId,jdbcType=INTEGER},
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId,jdbcType=INTEGER},
+            </if>
+            <if test="gatherRefundDocunum != null">
+                GATHER_REFUND_DOCUNUM = #{gatherRefundDocunum,jdbcType=VARCHAR},
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE = #{documentDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="purchId != null">
+                PURCH_ID = #{purchId,jdbcType=INTEGER},
+            </if>
+            <if test="purchDocunum != null">
+                PURCH_DOCUNUM = #{purchDocunum,jdbcType=VARCHAR},
+            </if>
+            <if test="supplierId != null">
+                SUPPLIER_ID = #{supplierId,jdbcType=INTEGER},
+            </if>
+            <if test="supplierName != null">
+                SUPPLIER_NAME = #{supplierName,jdbcType=VARCHAR},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId,jdbcType=INTEGER},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName,jdbcType=VARCHAR},
+            </if>
+            <if test="gatherAmount != null">
+                GATHER_AMOUNT = #{gatherAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="audited != null">
+                AUDITED = #{audited,jdbcType=INTEGER},
+            </if>
+            <if test="clearingForm != null">
+                CLEARING_FORM = #{clearingForm,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where GATHER_REFUND_ID = #{gatherRefundId,jdbcType=INTEGER}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.GATHER_REFUND
+            <set>
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.gatherRefundDocunum != null">
+                    GATHER_REFUND_DOCUNUM = #{entity.gatherRefundDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE = #{entity.documentDate},
+                </if>
+                <if test="entity.purchId != null">
+                    PURCH_ID = #{entity.purchId},
+                </if>
+                <if test="entity.purchDocunum != null">
+                    PURCH_DOCUNUM = #{entity.purchDocunum},
+                </if>
+                <if test="entity.supplierId != null">
+                    SUPPLIER_ID = #{entity.supplierId},
+                </if>
+                <if test="entity.supplierName != null">
+                    SUPPLIER_NAME = #{entity.supplierName},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.gatherAmount != null">
+                    GATHER_AMOUNT = #{entity.gatherAmount},
+                </if>
+                <if test="entity.remark != null">
+                    REMARK = #{entity.remark},
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED = #{entity.audited},
+                </if>
+                <if test="entity.clearingForm != null">
+                    CLEARING_FORM = #{entity.clearingForm},
+                </if>
+            </set>
+            where GATHER_REFUND_ID = #{entity.gatherRefundId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.GATHER_REFUND where GATHER_REFUND_ID = #{gatherRefundId,jdbcType=INTEGER}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.GATHER_REFUND where GATHER_REFUND_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.GATHER_REFUND where GATHER_REFUND_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.gatherRefundId}
+        </foreach>
+    </delete>
+</mapper>
+

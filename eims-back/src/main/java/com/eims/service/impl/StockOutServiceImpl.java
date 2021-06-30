@@ -107,11 +107,13 @@ public class StockOutServiceImpl implements StockOutService {
         this.stockOutDao.insert(stockOut);
 
         //设置出库单id
-        for (OutboundDetail detail:stockOut.getOutboundDetailList())
-            detail.setStockOutId(stockOut.getStockOutId());
+        if(stockOut.getOutboundDetailList() != null){
+            for (OutboundDetail detail:stockOut.getOutboundDetailList())
+                detail.setStockOutId(stockOut.getStockOutId());
+            //新增明细数据
+            this.outboundDetailDao.insertBatch(stockOut.getOutboundDetailList());
+        }
 
-        //新增明细数据
-        this.outboundDetailDao.insertBatch(stockOut.getOutboundDetailList());
         return this.queryById(stockOut.getStockOutId());
     }
 
@@ -136,7 +138,6 @@ public class StockOutServiceImpl implements StockOutService {
     public StockOut update(StockOut stockOut) {
         this.stockOutDao.update(stockOut);
         //先删除已有的明细数据
-
         if(stockOut.getOutboundDetailList() !=null){
             this.outboundDetailDao.deleteFk(stockOut.getStockOutId());
             //再新增新的明细数据
@@ -146,6 +147,21 @@ public class StockOutServiceImpl implements StockOutService {
         }
 
         return this.queryById(stockOut.getStockOutId());
+    }
+
+    /**
+     * 审核出库单改变库存
+     * @param stockOutId
+     * @return
+     */
+    @Override
+    public Boolean auditStorage(Integer stockOutId){
+        StockOut stockOut=this.stockOutDao.queryById(stockOutId);
+        stockOut.setAudited(1);
+        this.stockOutDao.update(stockOut);
+        for (OutboundDetail outboundDetail:stockOut.getOutboundDetailList())
+            this.stockOutDao.auditStorage(outboundDetail.getDeliveryQuantity(),stockOut.getWarehouseId(),outboundDetail.getProductId());
+        return true;
     }
 
     /**

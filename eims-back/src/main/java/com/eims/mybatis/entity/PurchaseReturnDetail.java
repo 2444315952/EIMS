@@ -30,6 +30,8 @@ public class PurchaseReturnDetail implements Serializable {
 
     private Integer purchDetailId;
 
+    private Integer productId;
+
     private String productName;
 
     private String productPicture;

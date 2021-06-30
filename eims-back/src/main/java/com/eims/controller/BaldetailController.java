@@ -37,6 +37,16 @@ public class BaldetailController {
     }
 
     /**
+     * 通过盘点单主键id删除明细数据
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/baldetail/deleteByFk")
+    public Boolean deleteByFk(Integer id){
+        return this.baldetailService.deleteByFk(id);
+    }
+
+    /**
      * 查询所有数据
      *
      * @param baldetailQueryForm 实例对象

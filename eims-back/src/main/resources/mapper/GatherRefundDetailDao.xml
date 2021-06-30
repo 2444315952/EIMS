@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.GatherRefundDetailDao">
+
+    <resultMap type="com.eims.mybatis.entity.GatherRefundDetail" id="GatherRefundDetailMap">
+        <result property="gatherRefundDetailId" column="GATHER_REFUND_DETAIL_ID" jdbcType="INTEGER"/>
+        <result property="gatherRefundId" column="GATHER_REFUND_ID" jdbcType="INTEGER"/>
+        <result property="gatherRefundDocunum" column="GATHER_REFUND_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+        <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+        <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+        <result property="gatherPrice" column="GATHER_PRICE" jdbcType="VARCHAR"/>
+        <result property="gatherQuantity" column="GATHER_QUANTITY" jdbcType="INTEGER"/>
+        <result property="gatherSubtotal" column="GATHER_SUBTOTAL" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="GatherRefundDetailCol">
+        GATHER_REFUND_DETAIL_ID, GATHER_REFUND_ID, GATHER_REFUND_DOCUNUM, PRODUCT_NAME, PRODUCT_PICTURE, SPEC_MODEL, PRODUCT_UNIT, GATHER_PRICE, GATHER_QUANTITY, GATHER_SUBTOTAL    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="GatherRefundDetailMap">
+        select
+        <include refid="GatherRefundDetailCol"></include>
+        from EIMS.GATHER_REFUND_DETAIL
+        where GATHER_REFUND_DETAIL_ID = #{gatherRefundDetailId,jdbcType=INTEGER}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="GatherRefundDetailMap">
+        select
+        <include refid="GatherRefundDetailCol"></include>
+        from (select <include refid="GatherRefundDetailCol"></include> from EIMS.GATHER_REFUND_DETAIL
+        <where>
+        </where>)
+        order by GATHER_REFUND_DETAIL_ID desc
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="GatherRefundDetailMap">
+        select
+        <include refid="GatherRefundDetailCol"></include>
+        from (select <include refid="GatherRefundDetailCol"></include> from EIMS.GATHER_REFUND_DETAIL
+        <where>
+        </where>)
+        <where>
+            <if test="gatherRefundDetailId != null">
+                or GATHER_REFUND_DETAIL_ID like '%'||#{gatherRefundDetailId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="gatherRefundId != null">
+                or GATHER_REFUND_ID like '%'||#{gatherRefundId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="gatherRefundDocunum != null">
+                or GATHER_REFUND_DOCUNUM like '%'||#{gatherRefundDocunum,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="productName != null">
+                or PRODUCT_NAME like '%'||#{productName,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="productPicture != null">
+                or PRODUCT_PICTURE like '%'||#{productPicture,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="specModel != null">
+                or SPEC_MODEL like '%'||#{specModel,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="productUnit != null">
+                or PRODUCT_UNIT like '%'||#{productUnit,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="gatherPrice != null">
+                or GATHER_PRICE like '%'||#{gatherPrice,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="gatherQuantity != null">
+                or GATHER_QUANTITY like '%'||#{gatherQuantity,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="gatherSubtotal != null">
+                or GATHER_SUBTOTAL like '%'||#{gatherSubtotal,jdbcType=VARCHAR}||'%'
+            </if>
+        </where>
+        order by GATHER_REFUND_DETAIL_ID desc
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="GatherRefundDetailMap">
+        select
+        <include refid="GatherRefundDetailCol"></include>
+        from (select <include refid="GatherRefundDetailCol"></include> from EIMS.GATHER_REFUND_DETAIL
+        <where>
+        </where>)
+
+        <where>
+            <if test="gatherRefundDetailId != null">
+                or GATHER_REFUND_DETAIL_ID like '%'||#{gatherRefundDetailId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="gatherRefundId != null">
+                or GATHER_REFUND_ID like '%'||#{gatherRefundId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="gatherRefundDocunum != null and gatherRefundDocunum != ''">
+                or GATHER_REFUND_DOCUNUM like '%'||#{gatherRefundDocunum,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="productName != null and productName != ''">
+                or PRODUCT_NAME like '%'||#{productName,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                or PRODUCT_PICTURE like '%'||#{productPicture,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="specModel != null and specModel != ''">
+                or SPEC_MODEL like '%'||#{specModel,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="productUnit != null and productUnit != ''">
+                or PRODUCT_UNIT like '%'||#{productUnit,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="gatherPrice != null">
+                or GATHER_PRICE like '%'||#{gatherPrice,jdbcType=VARCHAR}||'%'
+            </if>
+            <if test="gatherQuantity != null">
+                or GATHER_QUANTITY like '%'||#{gatherQuantity,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="gatherSubtotal != null">
+                or GATHER_SUBTOTAL like '%'||#{gatherSubtotal,jdbcType=VARCHAR}||'%'
+            </if>
+        </where>
+        order by GATHER_REFUND_DETAIL_ID desc
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.GATHER_REFUND_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            GATHER_REFUND_DETAIL_ID,
+            <if test="gatherRefundId != null">
+                GATHER_REFUND_ID,
+            </if>
+            <if test="gatherRefundDocunum != null">
+                GATHER_REFUND_DOCUNUM,
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME,
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE,
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL,
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT,
+            </if>
+            <if test="gatherPrice != null">
+                GATHER_PRICE,
+            </if>
+            <if test="gatherQuantity != null">
+                GATHER_QUANTITY,
+            </if>
+            <if test="gatherSubtotal != null">
+                GATHER_SUBTOTAL,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{gatherRefundDetailId},
+            <if test="gatherRefundId != null">
+                #{gatherRefundId,jdbcType=INTEGER},
+            </if>
+            <if test="gatherRefundDocunum != null">
+                #{gatherRefundDocunum,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null">
+                #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="productPicture != null">
+                #{productPicture,jdbcType=VARCHAR},
+            </if>
+            <if test="specModel != null">
+                #{specModel,jdbcType=VARCHAR},
+            </if>
+            <if test="productUnit != null">
+                #{productUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="gatherPrice != null">
+                #{gatherPrice,jdbcType=VARCHAR},
+            </if>
+            <if test="gatherQuantity != null">
+                #{gatherQuantity,jdbcType=INTEGER},
+            </if>
+            <if test="gatherSubtotal != null">
+                #{gatherSubtotal,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        <selectKey keyProperty="gatherRefundDetailId" resultType="INTEGER" order="BEFORE">
+            select SEQ_GATHER_REFUND_DETAIL.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.GATHER_REFUND_DETAIL
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                GATHER_REFUND_DETAIL_ID,
+                <if test="entity.gatherRefundId != null">
+                    GATHER_REFUND_ID,
+                </if>
+                <if test="entity.gatherRefundDocunum != null">
+                    GATHER_REFUND_DOCUNUM,
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME,
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE,
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL,
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT,
+                </if>
+                <if test="entity.gatherPrice != null">
+                    GATHER_PRICE,
+                </if>
+                <if test="entity.gatherQuantity != null">
+                    GATHER_QUANTITY,
+                </if>
+                <if test="entity.gatherSubtotal != null">
+                    GATHER_SUBTOTAL,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_GATHER_REFUND_DETAIL.NEXTVAL,
+                <if test="entity.gatherRefundId != null">
+                    #{entity.gatherRefundId},
+                </if>
+                <if test="entity.gatherRefundDocunum != null">
+                    #{entity.gatherRefundDocunum},
+                </if>
+                <if test="entity.productName != null">
+                    #{entity.productName},
+                </if>
+                <if test="entity.productPicture != null">
+                    #{entity.productPicture},
+                </if>
+                <if test="entity.specModel != null">
+                    #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    #{entity.productUnit},
+                </if>
+                <if test="entity.gatherPrice != null">
+                    #{entity.gatherPrice},
+                </if>
+                <if test="entity.gatherQuantity != null">
+                    #{entity.gatherQuantity},
+                </if>
+                <if test="entity.gatherSubtotal != null">
+                    #{entity.gatherSubtotal},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.GATHER_REFUND_DETAIL
+        <set>
+            <if test="gatherRefundId != null">
+                GATHER_REFUND_ID = #{gatherRefundId,jdbcType=INTEGER},
+            </if>
+            <if test="gatherRefundDocunum != null">
+                GATHER_REFUND_DOCUNUM = #{gatherRefundDocunum,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null">
+                PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="productPicture != null">
+                PRODUCT_PICTURE = #{productPicture,jdbcType=VARCHAR},
+            </if>
+            <if test="specModel != null">
+                SPEC_MODEL = #{specModel,jdbcType=VARCHAR},
+            </if>
+            <if test="productUnit != null">
+                PRODUCT_UNIT = #{productUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="gatherPrice != null">
+                GATHER_PRICE = #{gatherPrice,jdbcType=VARCHAR},
+            </if>
+            <if test="gatherQuantity != null">
+                GATHER_QUANTITY = #{gatherQuantity,jdbcType=INTEGER},
+            </if>
+            <if test="gatherSubtotal != null">
+                GATHER_SUBTOTAL = #{gatherSubtotal,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where GATHER_REFUND_DETAIL_ID = #{gatherRefundDetailId,jdbcType=INTEGER}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.GATHER_REFUND_DETAIL
+            <set>
+                <if test="entity.gatherRefundId != null">
+                    GATHER_REFUND_ID = #{entity.gatherRefundId},
+                </if>
+                <if test="entity.gatherRefundDocunum != null">
+                    GATHER_REFUND_DOCUNUM = #{entity.gatherRefundDocunum},
+                </if>
+                <if test="entity.productName != null">
+                    PRODUCT_NAME = #{entity.productName},
+                </if>
+                <if test="entity.productPicture != null">
+                    PRODUCT_PICTURE = #{entity.productPicture},
+                </if>
+                <if test="entity.specModel != null">
+                    SPEC_MODEL = #{entity.specModel},
+                </if>
+                <if test="entity.productUnit != null">
+                    PRODUCT_UNIT = #{entity.productUnit},
+                </if>
+                <if test="entity.gatherPrice != null">
+                    GATHER_PRICE = #{entity.gatherPrice},
+                </if>
+                <if test="entity.gatherQuantity != null">
+                    GATHER_QUANTITY = #{entity.gatherQuantity},
+                </if>
+                <if test="entity.gatherSubtotal != null">
+                    GATHER_SUBTOTAL = #{entity.gatherSubtotal},
+                </if>
+            </set>
+            where GATHER_REFUND_DETAIL_ID = #{entity.gatherRefundDetailId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.GATHER_REFUND_DETAIL where GATHER_REFUND_DETAIL_ID = #{gatherRefundDetailId,jdbcType=INTEGER}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.GATHER_REFUND_DETAIL where GATHER_REFUND_DETAIL_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.GATHER_REFUND_DETAIL where GATHER_REFUND_DETAIL_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.gatherRefundDetailId}
+        </foreach>
+    </delete>
+</mapper>
+

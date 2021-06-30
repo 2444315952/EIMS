@@ -22,7 +22,7 @@ public interface BlitemDao {
      * @param blitemId 主键
      * @return 实例对象
      */
-    Blitem queryById(Integer blitemId);
+    Blitem queryById (Integer blitemId);
 
     /**
      * 查询所有数据
@@ -31,6 +31,15 @@ public interface BlitemDao {
      * @return 实例对象
      */
     List<Blitem> queryAll(BlitemQueryForm blitemQueryForm);
+
+    /**
+     * 审核盘点单改库存
+     * @param physicalInventory
+     * @param warehouseId
+     * @param productId
+     * @return
+     */
+    int auditStorage(@Param("physicalInventory") Integer physicalInventory, @Param("warehouseId") Integer warehouseId,@Param("productId") Integer productId);
 
     /**
      * 通过实体作为或者条件查询

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.SupplierProductDao">
+
+    <resultMap type="com.eims.mybatis.entity.SupplierProduct" id="SupplierProductMap">
+        <result property="supplierProductId" column="SUPPLIER_PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productPrice" column="PRODUCT_PRICE" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="SupplierProductCol">
+        SUPPLIER_PRODUCT_ID, SUPPLIER_ID, PRODUCT_ID, PRODUCT_PRICE    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SupplierProductMap">
+        select
+        <include refid="SupplierProductCol"></include>
+        from EIMS.SUPPLIER_PRODUCT
+        where SUPPLIER_PRODUCT_ID = #{supplierProductId,jdbcType=INTEGER}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="SupplierProductMap">
+        select
+        <include refid="SupplierProductCol"></include>
+        from (select <include refid="SupplierProductCol"></include> from EIMS.SUPPLIER_PRODUCT
+        <where>
+        </where>)
+        order by SUPPLIER_PRODUCT_ID desc
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="SupplierProductMap">
+        select
+        <include refid="SupplierProductCol"></include>
+        from (select <include refid="SupplierProductCol"></include> from EIMS.SUPPLIER_PRODUCT
+        <where>
+        </where>)
+        <where>
+            <if test="supplierProductId != null">
+                or SUPPLIER_PRODUCT_ID like '%'||#{supplierProductId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="supplierId != null">
+                or SUPPLIER_ID like '%'||#{supplierId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="productId != null">
+                or PRODUCT_ID like '%'||#{productId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="productPrice != null">
+                or PRODUCT_PRICE like '%'||#{productPrice,jdbcType=VARCHAR}||'%'
+            </if>
+        </where>
+        order by SUPPLIER_PRODUCT_ID desc
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="SupplierProductMap">
+        select
+        <include refid="SupplierProductCol"></include>
+        from (select <include refid="SupplierProductCol"></include> from EIMS.SUPPLIER_PRODUCT
+        <where>
+        </where>)
+
+        <where>
+            <if test="supplierProductId != null">
+                or SUPPLIER_PRODUCT_ID like '%'||#{supplierProductId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="supplierId != null">
+                or SUPPLIER_ID like '%'||#{supplierId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="productId != null">
+                or PRODUCT_ID like '%'||#{productId,jdbcType=INTEGER}||'%'
+            </if>
+            <if test="productPrice != null">
+                or PRODUCT_PRICE like '%'||#{productPrice,jdbcType=VARCHAR}||'%'
+            </if>
+        </where>
+        order by SUPPLIER_PRODUCT_ID desc
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.SUPPLIER_PRODUCT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            SUPPLIER_PRODUCT_ID,
+            <if test="supplierId != null">
+                SUPPLIER_ID,
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID,
+            </if>
+            <if test="productPrice != null">
+                PRODUCT_PRICE,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{supplierProductId},
+            <if test="supplierId != null">
+                #{supplierId,jdbcType=INTEGER},
+            </if>
+            <if test="productId != null">
+                #{productId,jdbcType=INTEGER},
+            </if>
+            <if test="productPrice != null">
+                #{productPrice,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        <selectKey keyProperty="supplierProductId" resultType="INTEGER" order="BEFORE">
+            select SEQ_SUPPLIER_PRODUCT.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.SUPPLIER_PRODUCT
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SUPPLIER_PRODUCT_ID,
+                <if test="entity.supplierId != null">
+                    SUPPLIER_ID,
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID,
+                </if>
+                <if test="entity.productPrice != null">
+                    PRODUCT_PRICE,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_SUPPLIER_PRODUCT.NEXTVAL,
+                <if test="entity.supplierId != null">
+                    #{entity.supplierId},
+                </if>
+                <if test="entity.productId != null">
+                    #{entity.productId},
+                </if>
+                <if test="entity.productPrice != null">
+                    #{entity.productPrice},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.SUPPLIER_PRODUCT
+        <set>
+            <if test="supplierId != null">
+                SUPPLIER_ID = #{supplierId,jdbcType=INTEGER},
+            </if>
+            <if test="productId != null">
+                PRODUCT_ID = #{productId,jdbcType=INTEGER},
+            </if>
+            <if test="productPrice != null">
+                PRODUCT_PRICE = #{productPrice,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SUPPLIER_PRODUCT_ID = #{supplierProductId,jdbcType=INTEGER}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.SUPPLIER_PRODUCT
+            <set>
+                <if test="entity.supplierId != null">
+                    SUPPLIER_ID = #{entity.supplierId},
+                </if>
+                <if test="entity.productId != null">
+                    PRODUCT_ID = #{entity.productId},
+                </if>
+                <if test="entity.productPrice != null">
+                    PRODUCT_PRICE = #{entity.productPrice},
+                </if>
+            </set>
+            where SUPPLIER_PRODUCT_ID = #{entity.supplierProductId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.SUPPLIER_PRODUCT where SUPPLIER_PRODUCT_ID = #{supplierProductId,jdbcType=INTEGER}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.SUPPLIER_PRODUCT where SUPPLIER_PRODUCT_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.SUPPLIER_PRODUCT where SUPPLIER_PRODUCT_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.supplierProductId}
+        </foreach>
+    </delete>
+</mapper>
+

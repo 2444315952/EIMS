@@ -174,7 +174,7 @@
 		<template #footer>
 			<span class="dialog-footer">
 				<el-button @click="setshop = false;productallsel()">取 消</el-button>
-				<el-button type="primary" @click="setshop = false,update()">确 定</el-button>
+				<el-button type="primary" @click="update()">确 定</el-button>
 			</span>
 		</template>
 	</el-dialog>
@@ -259,7 +259,7 @@
 		<template #footer>
 			<span class="dialog-footer">
 				<el-button @click="addshop = false">取 消</el-button>
-				<el-button type="primary" @click="addoneone();addshop = false">确 定</el-button>
+				<el-button type="primary" @click="addoneone()">确 定</el-button>
 			</span>
 		</template>
 	</el-dialog>
@@ -499,6 +499,22 @@
 		},
 
 		methods: {
+			qingkong() {
+				this.Product= {
+					productNumber: "",
+					productName: "",
+					productPicture: "",
+					specModel: "",
+					productUnit: "",
+					referCost: "",
+					marketPrice: "",
+					commId: "",
+					isEnabled: 0,
+					remake: "",
+					workPointId: "1",
+					workPointName: "总店"
+				}
+			},
 			bianhao() {
 				var num = ""; //定义用户编号
 				for (var i = 0; i < 4; i++) //4位随机数，用以加在时间戳后面。
@@ -667,12 +683,14 @@
 
 				} else {
 					var _this = this
-					this.axios.post("http://127.0.0.1:8089/eims/product", this.Product)
+					this.axios.post("http://127.0.0.1:8089/eims/product", _this.Product)
 						.then(function(response) {
 							
 							console.log(response.data)
+							_this.addshop = false
 
 							_this.productallsel()
+							_this.qingkong()
 						}).catch(function(error) {
 							console.log(error)
 						})
@@ -688,7 +706,7 @@
 				if (this.Product1.productNumber == "" || this.Product1.productName == "" || this.Product1.commId == "" || this.Product1
 					.is_enabled == "" || this.Product1.workPointId == "") {
 					alert("必填未填完!")
-
+					
 				} else {
 					var _this = this
 					this.axios.put("http://127.0.0.1:8089/eims/product", this.Product1)
@@ -696,7 +714,7 @@
 						
 							console.log(response.data)
 
-							
+							setshop = false
 						}).catch(function(error) {
 							console.log(error)
 						})

@@ -828,6 +828,9 @@
 						
 
 						if (this.isAdd) {
+							this.ruleForm.sellDetails.forEach(detail=>{
+								detail.returned=0
+							})
 							this.axios({
 								url: 'http://localhost:8089/eims/sellBill',
 								method: 'post',

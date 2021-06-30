@@ -61,20 +61,20 @@
 		<el-table-column prop="productName" label="商品名称" width="120">
 		</el-table-column>
 
-		<el-table-column prop="commodityType.commTypeName" label="类别" show-overflow-tooltip>
-		</el-table-column>
+	<!-- 	<el-table-column prop="commodityType.commTypeName" label="类别" show-overflow-tooltip>
+		</el-table-column> -->
 		<el-table-column prop="productUnit" label="单位" show-overflow-tooltip>
 		</el-table-column>
 		<el-table-column prop="specModel" label="规格型号" show-overflow-tooltip>
 		</el-table-column>
-		<el-table-column prop="minstock" label="最低库存" show-overflow-tooltip>
+		<el-table-column prop="minimumStock" label="最低库存" show-overflow-tooltip>
 		</el-table-column>
 		<el-table-column prop="marketPrice" label="预设售价" show-overflow-tooltip>
 		</el-table-column>
 
 		<el-table-column prop="referCost" label="进价" show-overflow-tooltip>
 		</el-table-column>
-		<el-table-column prop="color" label="商品图片" show-overflow-tooltip>
+		<el-table-column prop="remake" label="备注" show-overflow-tooltip>
 		</el-table-column>
 
 
@@ -114,7 +114,7 @@
 					</el-form-item>
 					
 					<el-form-item label="参考成本价(必填)" :label-width="formLabelWidth">
-						<el-input v-model="Product1.referCost" size="small" clearable></el-input>
+						<el-input-number v-model="Product1.referCost" size="small" clearable></el-input-number>
 					</el-form-item>
 				</el-col>
 				<el-col :span="5">
@@ -126,10 +126,10 @@
 						<el-input size="small" v-model="Product1.productUnit"></el-input>
 					</el-form-item>
 					<el-form-item label="最低库存" :label-width="formLabelWidth">
-						<el-input size="small"></el-input>
+						<el-input-number size="small"></el-input-number>
 					</el-form-item>
 					<el-form-item label="市场价(必填)" :label-width="formLabelWidth">
-						<el-input v-model="Product1.marketPrice" size="small" clearable></el-input>
+						<el-input-number v-model="Product1.marketPrice" size="small" clearable></el-input-number>
 					</el-form-item>
 
 				</el-col>
@@ -199,7 +199,7 @@
 					</el-form-item>
 					
 					<el-form-item label="参考成本价(必填)" :label-width="formLabelWidth">
-						<el-input v-model="Product.referCost" size="small" clearable></el-input>
+						<el-input-number v-model="Product.referCost" size="small" clearable></el-input-number>
 					</el-form-item>
 				</el-col>
 				<el-col :span="5">
@@ -211,10 +211,10 @@
 						<el-input size="small" v-model="Product.productUnit"></el-input>
 					</el-form-item>
 					<el-form-item label="最低库存" :label-width="formLabelWidth">
-						<el-input size="small" v-model="Product.minimumStock"></el-input>
+						<el-input-number size="small" v-model="Product.minimumStock"></el-input-number>
 					</el-form-item>
 					<el-form-item label="市场价(必填)" :label-width="formLabelWidth">
-						<el-input v-model="Product.marketPrice" size="small" clearable></el-input>
+						<el-input-number v-model="Product.marketPrice" size="small" clearable></el-input-number>
 					</el-form-item>
 
 				</el-col>
@@ -243,8 +243,8 @@
 					
 				</el-col>
 			</el-row>
-			<el-col :span="5">
-				<!-- 	${{Product.productPicture}} -->
+			<!-- <el-col :span="5">
+				
 				<el-form-item label="商品图片" :label-width="formLabelWidth">
 
 					<el-upload class="upload-demo" ref="upload" action="" :on-preview="handlePreview" :on-remove="handleRemove"
@@ -254,7 +254,7 @@
 
 					</el-upload>
 				</el-form-item>
-			</el-col>
+			</el-col> -->
 		</el-form>
 		<template #footer>
 			<span class="dialog-footer">
@@ -418,7 +418,7 @@
 
 					name: "",
 					region: ""
-				},
+				}, 
 				Product: {
 					productNumber: "",
 					productName: "",
@@ -674,11 +674,10 @@
 
 
 			addoneone() {
-
-
+		
 
 				if (this.Product.productNumber == "" || this.Product.productName == "" || this.Product.commId == "" || this.Product
-					.is_enabled == "" || this.Product.workPointId == "") {
+					.is_enabled == "" || this.Product.workPointId == ""|| this.Product.referCost == ""|| this.Product.minimumStock == ""|| this.Product.marketPrice == "") {
 					alert("必填未填完!")
 
 				} else {
@@ -704,7 +703,7 @@
 
 			update() {
 				if (this.Product1.productNumber == "" || this.Product1.productName == "" || this.Product1.commId == "" || this.Product1
-					.is_enabled == "" || this.Product1.workPointId == "") {
+					.is_enabled == "" || this.Product1.workPointId == ""|| this.Product.referCost == ""|| this.Product.minimumStock == ""|| this.Product.marketPrice == "") {
 					alert("必填未填完!")
 					
 				} else {
@@ -755,6 +754,10 @@
 				_this.axios.get("http://127.0.0.1:8089/eims/commodityType").then(function(response) {
 					console.log("商品类型：", response.data)
 					_this.jinyon = response.data.list
+					_this.jinyon.push({
+						commTypeName:'所有',
+						
+						})
 				
 				
 					console.log("-----"+_this.jinyon)

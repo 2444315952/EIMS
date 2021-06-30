@@ -130,7 +130,7 @@
 						<el-dialog title="客户" v-model="supplier.dialogVisible">
 							<el-row type="flex" justify="end" style="padding-bottom: 12px;">
 								<el-col :span="7.5">
-									<el-input v-model="supplier.searchInput" placeholder="请搜索供应商名称" size="small">
+									<el-input v-model="supplier.searchInput" placeholder="请搜客户名称" size="small">
 										<template #append>
 											<el-button @click="supplierLoadData()" icon="el-icon-search" size="mini">
 											</el-button>
@@ -605,12 +605,13 @@
 				})
 			},
 			supplierLoadData() {
-			
+			console.log(this.supplier.searchInput)
 				this.axios({
-					url: 'http://localhost:8089/eims/customer/search',
+					url: 'http://localhost:8089/eims/customer/screen',
 					method: 'get',
 					params: Object.assign({
-						'customerName': this.supplier.searchInput,
+						customerName: this.supplier.searchInput,
+						'isEnabled':0,
 						
 					}, this.supplier.pageParam)
 				}).then(response => {

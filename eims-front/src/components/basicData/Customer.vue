@@ -59,8 +59,7 @@
 
 		<el-table-column prop="customerType" label="类别" show-overflow-tooltip>
 		</el-table-column>
-		<el-table-column prop="" label="金额" show-overflow-tooltip>
-		</el-table-column>
+		
 		<el-table-column prop="workPointName" label="所属分店" show-overflow-tooltip>
 		</el-table-column>
 		<el-table-column prop="contactAddress" label="地址" show-overflow-tooltip>
@@ -465,13 +464,17 @@
 				}).then(() => {
 					var _this = this;
 					var aa = _this.multipleSelection
-
+					var jinyongha=[];
+					aa.forEach(detail=>{
+						jinyongha.push({customerId:detail,isEnabled:1})
+					})
+					console.log("jingyong"+jinyongha)
 					var aanumber = 1
 
 					_this.axios({
-						method: 'delete',
-						url: 'http://127.0.0.1:8089/eims/stopcustomer',
-						data: aa
+					url: "http://localhost:8089/eims/customer/batch",
+					method: "put",
+					data: jinyongha
 
 
 					}).then(function(response) {
@@ -491,7 +494,7 @@
 				}).catch(() => {
 					this.$message({
 						type: 'info',
-						message: '已取消禁用'
+						message: '已禁用'
 					});
 				});
 
@@ -517,22 +520,22 @@
 
 					var aanumber = 1
 
-					_this.axios({
-						method: 'delete',
-						url: 'http://127.0.0.1:8089/eims/opendateallopen',
-						data: aa
+				
+						
+						this.axios({
+							url: "http://localhost:8089/eims/customer",
+							method: "put",
+							data: {customerId:index.customerId,isEnabled:0}
+						}).then(response => {
+							this.upview()
+							this.$message({
+								type: 'success',
+								message: '解禁成功'
+							})
+						}).catch(error => {
+						
+						})
 
-
-					}).then(function(response) {
-						// this.addshop = false
-						console.log(_this.multipleSelection)
-						console.log(response.data)
-						console.log(_this.multipleSelection)
-						_this.upview()
-
-					}).catch(function(error) {
-						console.log(error)
-					})
 
 
 

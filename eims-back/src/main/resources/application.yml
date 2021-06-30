@@ -5,7 +5,7 @@ server:
 spring:
   datasource:
     oracle:
-      url: jdbc:oracle:thin:@127.0.0.1:1521:ORCL
+      url: jdbc:oracle:thin:@127.0.0.1:1521:xe
       username: eims
       password: 123456
       driver-class-name: oracle.jdbc.driver.OracleDriver

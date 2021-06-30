@@ -41,7 +41,7 @@
 					<el-menu-item index="2-2"><router-link :to="{name:'dingdandetail'}">销售订单详情</router-link></el-menu-item>
 		  				<el-menu-item index="2-3"><router-link :to="{name:'sellbill'}">销售单</router-link></el-menu-item>
 		  				<el-menu-item index="2-4"><router-link :to="{name:'selldetail'}">销售单详情</router-link></el-menu-item>
-						<el-menu-item index="2-4"><router-link :to="{name:'selldetail'}">销售出库</router-link></el-menu-item>
+						<el-menu-item index="2-4"><router-link :to="{name:'sellaccounts'}">往来账务</router-link></el-menu-item>
 		  				<el-menu-item index="2-5"><router-link :to="{name:'sellreturn'}">销售退货</router-link></el-menu-item>
 		  			</el-menu-item-group>
 		  		  </el-submenu>
@@ -75,6 +75,7 @@
 		  				<el-menu-item index="5-1"><router-link :to="{name:'Product'}">产品</router-link></el-menu-item>
 		  				<el-menu-item index="5-2"><router-link :to="{name:'Customer'}">客户</router-link></el-menu-item>
 		  				<el-menu-item index="5-3">供应商</el-menu-item>
+						<el-menu-item index="5-2"><router-link :to="{name:'moneyaccount'}">资金账户</router-link></el-menu-item>
 		  			</el-menu-item-group>
 		  		  </el-submenu>
 		  		</el-menu>

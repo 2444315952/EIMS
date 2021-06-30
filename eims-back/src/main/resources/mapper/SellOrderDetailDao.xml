@@ -33,19 +33,14 @@
     <select id="queryAll" resultMap="SellOrderDetailMap">
         select
         <include refid="SellOrderDetailCol"></include>
-        from (select <include refid="SellOrderDetailCol"></include> from EIMS.SELL_ORDER_DETAIL
-        <where>
-        </where>)
+        from (select * from EIMS.SELL_ORDER_DETAIL where work_point_id = #{workPointId})
     </select>
 
     <!--通过实体作为或者条件查询-->
     <select id="queryOrByPojo" resultMap="SellOrderDetailMap">
         select
         <include refid="SellOrderDetailCol"></include>
-        from (select <include refid="SellOrderDetailCol"></include> from EIMS.SELL_ORDER_DETAIL
-        <where>
-        </where>)
-
+        from (select * from EIMS.SELL_ORDER_DETAIL where work_point_id = #{workPointId})
         <where>
             <if test="sellOrderDetailId != null">
                 or SELL_ORDER_DETAIL_ID like '%'||#{sellOrderDetailId}||'%'
@@ -93,10 +88,7 @@
     <select id="queryAndByPojo" resultMap="SellOrderDetailMap">
         select
         <include refid="SellOrderDetailCol"></include>
-        from (select <include refid="SellOrderDetailCol"></include> from EIMS.SELL_ORDER_DETAIL
-        <where>
-        </where>)
-
+        from EIMS.SELL_ORDER_DETAIL
         <where>
             <if test="sellOrderDetailId != null">
                 and SELL_ORDER_DETAIL_ID = #{sellOrderDetailId}
@@ -424,8 +416,8 @@
         </foreach>
     </delete>
 
-    <delete id="deleteByPurchIdAndNotInKeyIds">
-        delete from (select   <include refid="SellOrderDetailCol"></include> from EIMS.SELL_ORDER_DETAIL where SELL_ORDER_ID = #{sellOrderId})
+    <delete id="deleteSellOrderDetilIdAndNotInKeyIds">
+        delete from (select   <include refid="SellOrderDetailCol"></include> from EIMS.SELL_ORDER_DETAIL where SELL_Order_ID = #{sellOrderId})
         where SELL_ORDER_DETAIL_ID not in
         <foreach collection="keyIds" item="id" open="(" separator="," close=")">
             #{id}

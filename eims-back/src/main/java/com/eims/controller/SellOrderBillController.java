@@ -15,7 +15,7 @@ import java.util.List;
  * (SellOrderBill)表控制层
  *
  * @author makejava
- * @since 2021-06-11 21:26:50
+ * @since 2021-06-20 21:16:25
  */
 @RestController
 public class SellOrderBillController {
@@ -44,7 +44,7 @@ public class SellOrderBillController {
      */
     @GetMapping("/sellOrderBill")
     public PageInfo<SellOrderBill> queryAll(SellOrderBillQueryForm sellOrderBillQueryForm) {
-       
+        sellOrderBillQueryForm.setWorkPointId(1);
         return this.sellOrderBillService.queryAll(sellOrderBillQueryForm);
     }
 
@@ -56,7 +56,7 @@ public class SellOrderBillController {
      */
     @GetMapping("/sellOrderBill/search")
     public PageInfo<SellOrderBill> queryBySearch(SellOrderBillQueryForm sellOrderBillQueryForm) {
-        sellOrderBillQueryForm.setCompanyId(1);
+
         return this.sellOrderBillService.queryBySearch(sellOrderBillQueryForm);
     }
 
@@ -68,7 +68,7 @@ public class SellOrderBillController {
      */
     @GetMapping("/sellOrderBill/screen")
     public PageInfo<SellOrderBill> queryByScreen(SellOrderBillQueryForm sellOrderBillQueryForm) {
-        sellOrderBillQueryForm.setCompanyId(1);
+        sellOrderBillQueryForm.setWorkPointId(1);
         return this.sellOrderBillService.queryByScreen(sellOrderBillQueryForm);
     }
 
@@ -80,8 +80,6 @@ public class SellOrderBillController {
      */
     @PostMapping("/sellOrderBill")
     public SellOrderBill insert(@RequestBody SellOrderBill sellOrderBill) {
-        sellOrderBill.setCompanyId(1);
-        sellOrderBill.setWorkPointId(1);
         return this.sellOrderBillService.insert(sellOrderBill);
     }
 
@@ -105,6 +103,12 @@ public class SellOrderBillController {
     @PutMapping("/sellOrderBill")
     public SellOrderBill update(@RequestBody SellOrderBill sellOrderBill) {
         return this.sellOrderBillService.update(sellOrderBill);
+    }
+
+    @PutMapping("/sellOrderBill/detail")
+    public SellOrderBill updateSellAndDetail(@RequestBody SellOrderBill sellOrderBill) {
+        System.out.println("sellorderbill:"+sellOrderBill);
+        return this.sellOrderBillService.updateSellAndDetail(sellOrderBill);
     }
 
     /**

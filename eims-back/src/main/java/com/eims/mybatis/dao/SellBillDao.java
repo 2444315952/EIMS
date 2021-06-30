@@ -2,9 +2,11 @@ package com.eims.mybatis.dao;
 
 import com.eims.mybatis.entity.SellBill;
 import com.eims.vo.form.SellBillQueryForm;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,5 +105,7 @@ public interface SellBillDao {
      * @return 影响行数
      */
     int deleteBatchByEntities(List<SellBill> sellBillList);
+
+
 }
 

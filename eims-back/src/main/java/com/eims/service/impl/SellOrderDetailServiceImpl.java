@@ -17,7 +17,7 @@ import com.github.pagehelper.PageInfo;
  * (SellOrderDetail)表服务实现类
  *
  * @author makejava
- * @since 2021-06-11 21:26:51
+ * @since 2021-06-20 21:17:39
  */
 @Service("sellOrderDetailService")
 public class SellOrderDetailServiceImpl implements SellOrderDetailService {

@@ -15,22 +15,20 @@ import lombok.ToString;
  * (SellOrderBill)实体类
  *
  * @author makejava
- * @since 2021-06-11 21:26:50
+ * @since 2021-06-20 21:16:16
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString
 public class SellOrderBill implements Serializable {
-    private static final long serialVersionUID = -40512050382339573L;
+    private static final long serialVersionUID = -73577319084832813L;
 
     private Integer sellOrderId;
 
     private Integer companyId;
 
     private Integer workPointId;
-
-    private String WorkPointName;
 
     private String sellOrderDocunum;
 
@@ -62,5 +60,5 @@ public class SellOrderBill implements Serializable {
 
     private Date sellOrderHirthday;
 
-    private List<SellOrderDetail> sellOrderDetails;
+    private List<SellOrderDetail> sellOrderDetailList;
 }

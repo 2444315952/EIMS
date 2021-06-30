@@ -49,7 +49,9 @@
 									<el-radio>不限</el-radio>
 									<el-radio label="0">未审核</el-radio>
 									<el-radio label="1">已审核</el-radio>
+									<el-radio label="3">已驳回</el-radio>
 								</el-radio-group>
+							
 							</el-form-item>
 
 							<el-form-item label="付款状态：" label-width="120px">
@@ -58,6 +60,7 @@
 									<el-radio label="0">未付款</el-radio>
 									<el-radio label="1">部分付款</el-radio>
 									<el-radio label="2">全部付款</el-radio>
+									
 								</el-radio-group>
 							</el-form-item>
 
@@ -92,6 +95,7 @@
 					@selection-change="handleSelectionChange">
 					<el-table-column type="selection">
 					</el-table-column>
+					
 					<el-table-column label="单据编号" width="162">
 						<template #default="scope">
 							<router-link :to="{name:'selldetail',params:{sellId:scope.row.sellId}}">
@@ -117,6 +121,7 @@
 						<template #default="scope">
 							<p v-if="tableData[scope.$index].audited == 0">未审核</p>
 							<p v-if="tableData[scope.$index].audited == 1">已审核</p>
+							<p v-if="tableData[scope.$index].audited == 3">已驳回</p>
 						</template>
 					</el-table-column>
 					
@@ -125,6 +130,7 @@
 							<p v-if="tableData[scope.$index].received == 0">未付款</p>
 							<p v-if="tableData[scope.$index].received == 1">部分付款</p>
 							<p v-if="tableData[scope.$index].received == 2">全部付款</p>
+							<p v-if="tableData[scope.$index].received == 3">付款溢出</p>
 						</template>
 					</el-table-column>
 					<el-table-column label="退货状态" prop="returnState">
@@ -140,6 +146,8 @@
 						<template #default="scope">
 							<el-button v-if="tableData[scope.$index].audited == 0"
 								@click="handleAudit(scope.row.sellId)" type="text">审核</el-button>
+								<el-button v-if="tableData[scope.$index].audited == 0"
+									@click="handleAudit1(scope.row.sellId)" type="text">驳回</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -167,6 +175,7 @@
 		name: "PurchaseList",
 		data() {
 			return {
+				checked1:false,
 				tableData: [],
 				tableTotal: 0,
 				multipleSelection: [],
@@ -268,6 +277,34 @@
 					})
 				})
 
+			},
+			handleAudit1(val) {
+				console.log(val)
+				this.$confirm('此操作将通过审核，是否继续？', '提示', {
+					confirmButtonTest: '确定',
+					cancelButtonTest: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.axios({
+						url: "http://localhost:8089/eims/sellBill",
+						method: "put",
+						data: {sellId:val,audited:3}
+					}).then(response => {
+						this.loadData()
+						this.$message({
+							type: 'success',
+							message: '审核成功'
+						})
+					}).catch(error => {
+			
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消操作'
+					})
+				})
+			
 			},
 			handleDelete() {
 				var isHaveAudited = false
@@ -386,6 +423,7 @@
 			})
 		}
 	}
+	
 </script>
 
 <style>

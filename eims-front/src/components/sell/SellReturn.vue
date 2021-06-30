@@ -48,7 +48,9 @@
 							<el-radio-group v-model="screenCondition.inRefund">
 							  <el-radio>不限</el-radio>
 							  <el-radio label="0">未退款</el-radio>
-							  <el-radio label="1">已退款</el-radio>
+							  <el-radio label="1">部分退款</el-radio>
+							  <el-radio label="2">全退款</el-radio>
+							  <el-radio label="3">退款溢出</el-radio>
 							</el-radio-group>
 						</el-form-item>
 					  </el-form>
@@ -74,10 +76,16 @@
 					<el-table-column type="selection">
 					</el-table-column>
 					<el-table-column label="单据编号" prop="sellReturnDocunum">
+						
 					</el-table-column>
 					<el-table-column label="单据日期" prop="documentDate" width="135" :formatter="dateFormat">
 					</el-table-column>
 					<el-table-column label="销售单号" prop="sellDocunum">
+						<template #default="scope">
+							<router-link :to="{name:'selldetail',params:{sellId:scope.row.sellId}}">
+								{{scope.row.sellDocunum}}
+							</router-link>
+						</template>
 					</el-table-column>
 					<el-table-column label="客户" prop="customerName">
 					</el-table-column>
@@ -94,7 +102,9 @@
 					<el-table-column label="退款状态" prop="refunded">
 						<template #default="scope">
 							<p v-if="tableData[scope.$index].refunded == 0">未退款</p>
-							<p v-if="tableData[scope.$index].refunded == 1">已退款</p>
+							<p v-if="tableData[scope.$index].refunded == 1">部分退款</p>
+							<p v-if="tableData[scope.$index].refunded == 2">全退款</p>
+							<p v-if="tableData[scope.$index].refunded == 3">退款溢出</p>
 						</template>
 					</el-table-column>
 					<el-table-column label="交易金额" prop="retPayAmount">
@@ -218,7 +228,7 @@
 						method: "put",
 						data: {
 							"sellReturnId": val,
-							"aut ited": 1
+							"autited": 1
 						}
 					}).then(response => {
 						this.loadData()

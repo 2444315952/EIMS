@@ -22,7 +22,10 @@
 
     <sql id="SellDetailCol">
         SELL_DETAIL_ID, SELL_ID, PRODUCT_ID, PRODUCT_PICTURE, PRODUCT_NAME, PRODUCT_MODEL, PRODUCT_UNIT,MARKET_PRICE,SELL_PRICE, SELL_QUANTITY, DETAIL_PAY_AMOUNT, DETAIL_PAID_AMOUNT, DETAIL_DISCOUNTS, RETURNED    </sql>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7b81ea70d6eb70764eb4aed1de8dd7cc5ae744b2
 
     <!--查询单个-->
     <select id="queryById" resultMap="SellDetailMap">

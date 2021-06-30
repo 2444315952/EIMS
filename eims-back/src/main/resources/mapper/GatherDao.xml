@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eims.mybatis.dao.GatherDao">
+
+    <resultMap type="com.eims.mybatis.entity.Gather" id="GatherMap">
+        <result property="gatherId" column="GATHER_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="gatherDocunum" column="GATHER_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="sellId" column="SELL_ID" jdbcType="INTEGER"/>
+        <result property="sellDocunum" column="SELL_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="customerId" column="CUSTOMER_ID" jdbcType="INTEGER"/>
+        <result property="customerName" column="CUSTOMER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="gatherAmount" column="GATHER_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="moneyAccountId" column="MONEY_ACCOUNT_ID" jdbcType="INTEGER"/>
+        <result property="accountName" column="ACCOUNT_NAME" jdbcType="VARCHAR"/>
+        <result property="gatherBirthday" column="GATHER_BIRTHDAY" jdbcType="TIMESTAMP"/>
+        <result property="sellType" column="SELL_TYPE" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="GatherCol">
+        GATHER_ID, COMPANY_ID, WORK_POINT_ID, GATHER_DOCUNUM, DOCUMENT_DATE, SELL_ID, SELL_DOCUNUM, CUSTOMER_ID, CUSTOMER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, GATHER_AMOUNT, REMARK, AUDITED, MONEY_ACCOUNT_ID, ACCOUNT_NAME, GATHER_BIRTHDAY, SELL_TYPE    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="GatherMap">
+        select
+        <include refid="GatherCol"></include>
+        from EIMS.GATHER
+        where GATHER_ID = #{gatherId}
+    </select>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="GatherMap">
+        select
+        <include refid="GatherCol"></include>
+        from (select * from EIMS.GATHER where work_point_id = #{workPointId})
+    </select>
+
+    <!--通过实体作为或者条件查询-->
+    <select id="queryOrByPojo" resultMap="GatherMap">
+        select
+        <include refid="GatherCol"></include>
+        from (select * from EIMS.GATHER where work_point_id = #{workPointId})
+        <where>
+            <if test="gatherId != null">
+                or GATHER_ID like '%'||#{gatherId}||'%'
+            </if>
+            <if test="companyId != null">
+                or COMPANY_ID like '%'||#{companyId}||'%'
+            </if>
+            <if test="gatherDocunum != null and gatherDocunum != ''">
+                or GATHER_DOCUNUM like '%'||#{gatherDocunum}||'%'
+            </if>
+            <if test="documentDate != null">
+                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
+            </if>
+            <if test="sellId != null">
+                or SELL_ID like '%'||#{sellId}||'%'
+            </if>
+            <if test="sellDocunum != null and sellDocunum != ''">
+                or SELL_DOCUNUM like '%'||#{sellDocunum}||'%'
+            </if>
+            <if test="customerId != null">
+                or CUSTOMER_ID like '%'||#{customerId}||'%'
+            </if>
+            <if test="customerName != null and customerName != ''">
+                or CUSTOMER_NAME like '%'||#{customerName}||'%'
+            </if>
+            <if test="employeeId != null">
+                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            </if>
+            <if test="gatherAmount != null">
+                or GATHER_AMOUNT like '%'||#{gatherAmount}||'%'
+            </if>
+            <if test="remark != null and remark != ''">
+                or REMARK like '%'||#{remark}||'%'
+            </if>
+            <if test="audited != null">
+                or AUDITED like '%'||#{audited}||'%'
+            </if>
+            <if test="moneyAccountId != null">
+                or MONEY_ACCOUNT_ID like '%'||#{moneyAccountId}||'%'
+            </if>
+            <if test="accountName != null and accountName != ''">
+                or ACCOUNT_NAME like '%'||#{accountName}||'%'
+            </if>
+            <if test="gatherBirthday != null">
+                or GATHER_BIRTHDAY like '%'||#{gatherBirthday}||'%'
+            </if>
+            <if test="sellType != null">
+                or SELL_TYPE like '%'||#{sellType}||'%'
+            </if>
+            <!--前端传天数间隔,业务类传当前时间,计算得到时间的单据-->
+            <if test="dateNumber1 != null">
+                or (trunc(#{currentDate})-trunc(GATHER_BIRTHDAY)) BETWEEN #{dateNumber1} AND #{dateNumber2}
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为并且条件查询-->
+    <select id="queryAndByPojo" resultMap="GatherMap">
+        select
+        <include refid="GatherCol"></include>
+        from EIMS.GATHER
+        <where>
+            <if test="gatherId != null">
+                and GATHER_ID = #{gatherId}
+            </if>
+            <if test="companyId != null">
+                and COMPANY_ID = #{companyId}
+            </if>
+            <if test="workPointId != null">
+                and WORK_POINT_ID = #{workPointId}
+            </if>
+            <if test="gatherDocunum != null and gatherDocunum != ''">
+                and GATHER_DOCUNUM = #{gatherDocunum}
+            </if>
+            <if test="documentDate != null">
+                and DOCUMENT_DATE = #{documentDate}
+            </if>
+            <if test="sellId != null">
+                and SELL_ID = #{sellId}
+            </if>
+            <if test="sellDocunum != null and sellDocunum != ''">
+                and SELL_DOCUNUM = #{sellDocunum}
+            </if>
+            <if test="customerId != null">
+                and CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="customerName != null and customerName != ''">
+                and CUSTOMER_NAME = #{customerName}
+            </if>
+            <if test="employeeId != null">
+                and EMPLOYEE_ID = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                and EMPLOYEE_NAME = #{employeeName}
+            </if>
+            <if test="gatherAmount != null">
+                and GATHER_AMOUNT = #{gatherAmount}
+            </if>
+            <if test="remark != null and remark != ''">
+                and REMARK = #{remark}
+            </if>
+            <if test="audited != null">
+                and AUDITED = #{audited}
+            </if>
+            <if test="moneyAccountId != null">
+                and MONEY_ACCOUNT_ID = #{moneyAccountId}
+            </if>
+            <if test="accountName != null and accountName != ''">
+                and ACCOUNT_NAME = #{accountName}
+            </if>
+            <if test="gatherBirthday != null">
+                and GATHER_BIRTHDAY = #{gatherBirthday}
+            </if>
+            <if test="sellType != null">
+                and SELL_TYPE = #{sellType}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into EIMS.GATHER
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            GATHER_ID,
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID,
+            </if>
+            <if test="gatherDocunum != null">
+                GATHER_DOCUNUM,
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE,
+            </if>
+            <if test="sellId != null">
+                SELL_ID,
+            </if>
+            <if test="sellDocunum != null">
+                SELL_DOCUNUM,
+            </if>
+            <if test="customerId != null">
+                CUSTOMER_ID,
+            </if>
+            <if test="customerName != null">
+                CUSTOMER_NAME,
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID,
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME,
+            </if>
+            <if test="gatherAmount != null">
+                GATHER_AMOUNT,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="audited != null">
+                AUDITED,
+            </if>
+            <if test="moneyAccountId != null">
+                MONEY_ACCOUNT_ID,
+            </if>
+            <if test="accountName != null">
+                ACCOUNT_NAME,
+            </if>
+            <if test="gatherBirthday != null">
+                GATHER_BIRTHDAY,
+            </if>
+            <if test="sellType != null">
+                SELL_TYPE,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{gatherId},
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="workPointId != null">
+                #{workPointId},
+            </if>
+            <if test="gatherDocunum != null">
+                #{gatherDocunum},
+            </if>
+            <if test="documentDate != null">
+                #{documentDate},
+            </if>
+            <if test="sellId != null">
+                #{sellId},
+            </if>
+            <if test="sellDocunum != null">
+                #{sellDocunum},
+            </if>
+            <if test="customerId != null">
+                #{customerId},
+            </if>
+            <if test="customerName != null">
+                #{customerName},
+            </if>
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                #{employeeName},
+            </if>
+            <if test="gatherAmount != null">
+                #{gatherAmount},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="audited != null">
+                #{audited},
+            </if>
+            <if test="moneyAccountId != null">
+                #{moneyAccountId},
+            </if>
+            <if test="accountName != null">
+                #{accountName},
+            </if>
+            <if test="gatherBirthday != null">
+                #{gatherBirthday},
+            </if>
+            <if test="sellType != null">
+                #{sellType},
+            </if>
+        </trim>
+        <selectKey keyProperty="gatherId" resultType="INTEGER" order="BEFORE">
+            select SEQ_GATHER.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!--批量新增数据 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            insert into EIMS.GATHER
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                GATHER_ID,
+                <if test="entity.companyId != null">
+                    COMPANY_ID,
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID,
+                </if>
+                <if test="entity.gatherDocunum != null">
+                    GATHER_DOCUNUM,
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE,
+                </if>
+                <if test="entity.sellId != null">
+                    SELL_ID,
+                </if>
+                <if test="entity.sellDocunum != null">
+                    SELL_DOCUNUM,
+                </if>
+                <if test="entity.customerId != null">
+                    CUSTOMER_ID,
+                </if>
+                <if test="entity.customerName != null">
+                    CUSTOMER_NAME,
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID,
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME,
+                </if>
+                <if test="entity.gatherAmount != null">
+                    GATHER_AMOUNT,
+                </if>
+                <if test="entity.remark != null">
+                    REMARK,
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED,
+                </if>
+                <if test="entity.moneyAccountId != null">
+                    MONEY_ACCOUNT_ID,
+                </if>
+                <if test="entity.accountName != null">
+                    ACCOUNT_NAME,
+                </if>
+                <if test="entity.gatherBirthday != null">
+                    GATHER_BIRTHDAY,
+                </if>
+                <if test="entity.sellType != null">
+                    SELL_TYPE,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                SEQ_GATHER.NEXTVAL,
+                <if test="entity.companyId != null">
+                    #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    #{entity.workPointId},
+                </if>
+                <if test="entity.gatherDocunum != null">
+                    #{entity.gatherDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    #{entity.documentDate},
+                </if>
+                <if test="entity.sellId != null">
+                    #{entity.sellId},
+                </if>
+                <if test="entity.sellDocunum != null">
+                    #{entity.sellDocunum},
+                </if>
+                <if test="entity.customerId != null">
+                    #{entity.customerId},
+                </if>
+                <if test="entity.customerName != null">
+                    #{entity.customerName},
+                </if>
+                <if test="entity.employeeId != null">
+                    #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    #{entity.employeeName},
+                </if>
+                <if test="entity.gatherAmount != null">
+                    #{entity.gatherAmount},
+                </if>
+                <if test="entity.remark != null">
+                    #{entity.remark},
+                </if>
+                <if test="entity.audited != null">
+                    #{entity.audited},
+                </if>
+                <if test="entity.moneyAccountId != null">
+                    #{entity.moneyAccountId},
+                </if>
+                <if test="entity.accountName != null">
+                    #{entity.accountName},
+                </if>
+                <if test="entity.gatherBirthday != null">
+                    #{entity.gatherBirthday},
+                </if>
+                <if test="entity.sellType != null">
+                    #{entity.sellType},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update EIMS.GATHER
+        <set>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId},
+            </if>
+            <if test="workPointId != null">
+                WORK_POINT_ID = #{workPointId},
+            </if>
+            <if test="gatherDocunum != null">
+                GATHER_DOCUNUM = #{gatherDocunum},
+            </if>
+            <if test="documentDate != null">
+                DOCUMENT_DATE = #{documentDate},
+            </if>
+            <if test="sellId != null">
+                SELL_ID = #{sellId},
+            </if>
+            <if test="sellDocunum != null">
+                SELL_DOCUNUM = #{sellDocunum},
+            </if>
+            <if test="customerId != null">
+                CUSTOMER_ID = #{customerId},
+            </if>
+            <if test="customerName != null">
+                CUSTOMER_NAME = #{customerName},
+            </if>
+            <if test="employeeId != null">
+                EMPLOYEE_ID = #{employeeId},
+            </if>
+            <if test="employeeName != null">
+                EMPLOYEE_NAME = #{employeeName},
+            </if>
+            <if test="gatherAmount != null">
+                GATHER_AMOUNT = #{gatherAmount},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark},
+            </if>
+            <if test="audited != null">
+                AUDITED = #{audited},
+            </if>
+            <if test="moneyAccountId != null">
+                MONEY_ACCOUNT_ID = #{moneyAccountId},
+            </if>
+            <if test="accountName != null">
+                ACCOUNT_NAME = #{accountName},
+            </if>
+            <if test="gatherBirthday != null">
+                GATHER_BIRTHDAY = #{gatherBirthday},
+            </if>
+            <if test="sellType != null">
+                SELL_TYPE = #{sellType},
+            </if>
+        </set>
+        where GATHER_ID = #{gatherId}
+    </update>
+
+    <!--批量修改数据-->
+    <update id="updateBatch">
+        <foreach collection="list" item="entity" open="begin" separator=";" close=";end;">
+            update EIMS.GATHER
+            <set>
+                <if test="entity.companyId != null">
+                    COMPANY_ID = #{entity.companyId},
+                </if>
+                <if test="entity.workPointId != null">
+                    WORK_POINT_ID = #{entity.workPointId},
+                </if>
+                <if test="entity.gatherDocunum != null">
+                    GATHER_DOCUNUM = #{entity.gatherDocunum},
+                </if>
+                <if test="entity.documentDate != null">
+                    DOCUMENT_DATE = #{entity.documentDate},
+                </if>
+                <if test="entity.sellId != null">
+                    SELL_ID = #{entity.sellId},
+                </if>
+                <if test="entity.sellDocunum != null">
+                    SELL_DOCUNUM = #{entity.sellDocunum},
+                </if>
+                <if test="entity.customerId != null">
+                    CUSTOMER_ID = #{entity.customerId},
+                </if>
+                <if test="entity.customerName != null">
+                    CUSTOMER_NAME = #{entity.customerName},
+                </if>
+                <if test="entity.employeeId != null">
+                    EMPLOYEE_ID = #{entity.employeeId},
+                </if>
+                <if test="entity.employeeName != null">
+                    EMPLOYEE_NAME = #{entity.employeeName},
+                </if>
+                <if test="entity.gatherAmount != null">
+                    GATHER_AMOUNT = #{entity.gatherAmount},
+                </if>
+                <if test="entity.remark != null">
+                    REMARK = #{entity.remark},
+                </if>
+                <if test="entity.audited != null">
+                    AUDITED = #{entity.audited},
+                </if>
+                <if test="entity.moneyAccountId != null">
+                    MONEY_ACCOUNT_ID = #{entity.moneyAccountId},
+                </if>
+                <if test="entity.accountName != null">
+                    ACCOUNT_NAME = #{entity.accountName},
+                </if>
+                <if test="entity.gatherBirthday != null">
+                    GATHER_BIRTHDAY = #{entity.gatherBirthday},
+                </if>
+                <if test="entity.sellType != null">
+                    SELL_TYPE = #{entity.sellType},
+                </if>
+            </set>
+            where GATHER_ID = #{entity.gatherId}
+        </foreach>
+    </update>
+
+    <!--通过主键删除数据-->
+    <delete id="deleteById">
+        delete from EIMS.GATHER where GATHER_ID = #{gatherId}
+    </delete>
+
+    <!--通过主键列表批量删除数据-->
+    <delete id="deleteBatch">
+        delete from EIMS.GATHER where GATHER_ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--通过实体列表批量删除数据-->
+    <delete id="deleteBatchByEntities">
+        delete from EIMS.GATHER where GATHER_ID in
+        <foreach collection="list" item="entity" open="(" separator="," close=")">
+            #{entity.gatherId}
+        </foreach>
+    </delete>
+</mapper>
+

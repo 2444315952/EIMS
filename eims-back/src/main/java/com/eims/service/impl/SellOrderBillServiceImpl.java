@@ -1,6 +1,7 @@
 package com.eims.service.impl;
 
 import com.eims.mybatis.dao.SellOrderDetailDao;
+import com.eims.mybatis.entity.SellDetail;
 import com.eims.mybatis.entity.SellOrderBill;
 import com.eims.mybatis.entity.SellOrderDetail;
 import com.eims.vo.form.SellOrderBillQueryForm;
@@ -21,10 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
  * (SellOrderBill)表服务实现类
  *
  * @author makejava
- * @since 2021-06-08 12:50:55
+ * @since 2021-06-20 21:16:23
  */
-@Service("sellOrderBillService")
 @Log4j2
+@Service("sellOrderBillService")
 public class SellOrderBillServiceImpl implements SellOrderBillService {
     @Resource
     private SellOrderBillDao sellOrderBillDao;
@@ -52,8 +53,6 @@ public class SellOrderBillServiceImpl implements SellOrderBillService {
     public PageInfo<SellOrderBill> queryAll(SellOrderBillQueryForm sellOrderBillQueryForm) {
         Page<SellOrderBill> page = PageHelper.startPage(sellOrderBillQueryForm.getPageNum(), sellOrderBillQueryForm.getPageSize());
         List<SellOrderBill> sellOrderBillList = this.sellOrderBillDao.queryAll(sellOrderBillQueryForm);
-        System.out.println(sellOrderBillQueryForm);
-        System.out.println("差all:"+sellOrderBillList);
         return new PageInfo<>(sellOrderBillList);
     }
 
@@ -91,27 +90,31 @@ public class SellOrderBillServiceImpl implements SellOrderBillService {
      */
     @Override
     public SellOrderBill insert(SellOrderBill sellOrderBill) {
+
         sellOrderBill.setSellOrderHirthday(new Date());
         this.sellOrderBillDao.insert(sellOrderBill);
-        log.debug("主键id是:{}",sellOrderBill.getSellOrderId());
-        List<SellOrderDetail> sellOrderDetailList=sellOrderBill.getSellOrderDetails();
 
-        if(sellOrderDetailList!=null){
-            for(SellOrderDetail detail:sellOrderDetailList)
+
+
+        log.debug("主键id是:{}",sellOrderBill.getSellOrderId());
+        List<SellOrderDetail> sellDetailList=sellOrderBill.getSellOrderDetailList();
+
+        if(sellDetailList!=null){
+            for(SellOrderDetail detail:sellDetailList)
                 detail.setSellOrderId(sellOrderBill.getSellOrderId());
 
 
-            log.debug("详情是是:{}",sellOrderBill.getSellOrderDetails());
-            Iterator<SellOrderDetail> it= sellOrderDetailList.iterator();
+            log.debug("详情是是:{}",sellOrderBill.getSellOrderDetailList());
+            Iterator<SellOrderDetail> it= sellDetailList.iterator();
             while(it.hasNext()) {
                 SellOrderDetail x = it.next();
                 if (x.getProductId() == null) {
                     it.remove();
                 }
             }
-            log.debug("处理后的订单详情:{}",sellOrderDetailList);
+            log.debug("处理后的订单详情:{}",sellDetailList);
 
-            sellOrderDetailDao.insertBatch(sellOrderDetailList);
+            sellOrderDetailDao.insertBatch(sellDetailList);
 
 
         }
@@ -136,12 +139,22 @@ public class SellOrderBillServiceImpl implements SellOrderBillService {
      * @return 实例对象
      */
     @Override
-    @Transactional
     public SellOrderBill update(SellOrderBill sellOrderBill) {
+        this.sellOrderBillDao.update(sellOrderBill);
+        return this.queryById(sellOrderBill.getSellOrderId());
+    }
+
+    @Override
+    @Transactional
+    public SellOrderBill updateSellAndDetail(SellOrderBill sellOrderBill) {
         log.debug(sellOrderBill.toString());
 
         this.sellOrderBillDao.update(sellOrderBill);
-        List<SellOrderDetail> updateDetails=sellOrderBill.getSellOrderDetails();
+
+
+
+
+        List<SellOrderDetail> updateDetails=sellOrderBill.getSellOrderDetailList();
         List<SellOrderDetail> addDetails= new ArrayList<>();
         List<Integer> keyIds=new ArrayList();
         for(Iterator<SellOrderDetail> it=updateDetails.iterator();it.hasNext();){
@@ -161,20 +174,21 @@ public class SellOrderBillServiceImpl implements SellOrderBillService {
         }
         //删除不存在的明细
         if(keyIds.size()>0){
-            Map<String,Object> sellorderandkeyids=new HashMap<>();
-            sellorderandkeyids.put("sellOrderId",sellOrderBill.getSellOrderId());
-            sellorderandkeyids.put("keyIds",keyIds);
-            System.out.println(sellorderandkeyids);
-            sellOrderDetailDao.deleteByPurchIdAndNotInKeyIds(sellorderandkeyids);
+            Map<String,Object> sellandkeyids=new HashMap<>();
+            sellandkeyids.put("sellOrderId",sellOrderBill.getSellOrderId());
+            sellandkeyids.put("keyIds",keyIds);
+            System.out.println(sellandkeyids);
+            sellOrderDetailDao.deleteSellOrderDetilIdAndNotInKeyIds(sellandkeyids);
         }
-
+        System.out.println("-----------------");
+        System.out.println("addsize"+addDetails);
         if(addDetails.size()>0) {
-            for (SellOrderDetail detail:addDetails){
-                detail.setSellOrderId(sellOrderBill.getSellOrderId());
-                this.sellOrderDetailDao.insertBatch(addDetails);
-            }
-        }
+            for (SellOrderDetail detail:addDetails)
 
+                detail.setSellOrderId(sellOrderBill.getSellOrderId());
+            this.sellOrderDetailDao.insertBatch(addDetails);
+
+        }
 
         return this.queryById(sellOrderBill.getSellOrderId());
     }

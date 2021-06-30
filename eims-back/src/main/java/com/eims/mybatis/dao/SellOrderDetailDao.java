@@ -12,7 +12,7 @@ import java.util.Map;
  * (SellOrderDetail)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-11 21:26:51
+ * @since 2021-06-20 21:17:38
  */
 @Mapper
 public interface SellOrderDetailDao {
@@ -105,6 +105,6 @@ public interface SellOrderDetailDao {
      */
     int deleteBatchByEntities(List<SellOrderDetail> sellOrderDetailList);
 
-    int deleteByPurchIdAndNotInKeyIds( Map<String, Object> sellOrderDetailList);
+    int deleteSellOrderDetilIdAndNotInKeyIds( Map<String, Object> sellOrderDetailList);
 }
 

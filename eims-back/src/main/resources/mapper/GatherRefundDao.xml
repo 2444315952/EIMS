@@ -19,17 +19,59 @@
         <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
         <result property="clearingForm" column="CLEARING_FORM" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap type="com.eims.mybatis.entity.GatherRefund" id="GatherRefundAndDetailMap">
+        <result property="gatherRefundId" column="GATHER_REFUND_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="gatherRefundDocunum" column="GATHER_REFUND_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="gatherAmount" column="GATHER_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="clearingForm" column="CLEARING_FORM" jdbcType="VARCHAR"/>
+
+        <collection property="gatherRefundDetailList" javaType="list" ofType="com.eims.mybatis.entity.GatherRefundDetail">
+            <result property="gatherRefundDetailId" column="GATHER_REFUND_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="gatherRefundId" column="GATHER_REFUND_ID" jdbcType="INTEGER"/>
+            <result property="gatherRefundDocunum" column="GATHER_REFUND_DOCUNUM" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="gatherPrice" column="GATHER_PRICE" jdbcType="VARCHAR"/>
+            <result property="gatherQuantity" column="GATHER_QUANTITY" jdbcType="INTEGER"/>
+            <result property="gatherSubtotal" column="GATHER_SUBTOTAL" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
 
     <sql id="GatherRefundCol">
-        GATHER_REFUND_ID, COMPANY_ID, WORK_POINT_ID, GATHER_REFUND_DOCUNUM, DOCUMENT_DATE, PURCH_ID, PURCH_DOCUNUM, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, GATHER_AMOUNT, REMARK, AUDITED, CLEARING_FORM    </sql>
+        GATHER_REFUND_ID
+        , COMPANY_ID, WORK_POINT_ID, GATHER_REFUND_DOCUNUM, DOCUMENT_DATE, PURCH_ID, PURCH_DOCUNUM, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, GATHER_AMOUNT, REMARK, AUDITED, CLEARING_FORM    </sql>
+
+    <sql id="GatherRefundJoinCol">
+        P.GATHER_REFUND_ID
+        , P.COMPANY_ID, P.WORK_POINT_ID, P.GATHER_REFUND_DOCUNUM, P.DOCUMENT_DATE, P.PURCH_ID, P.PURCH_DOCUNUM, P.SUPPLIER_ID, P.SUPPLIER_NAME, P.EMPLOYEE_ID, P.EMPLOYEE_NAME, P.GATHER_AMOUNT, P.REMARK, P.AUDITED, P.CLEARING_FORM    </sql>
+
+    <sql id="GatherRefundDetailJoinCol">
+        D.GATHER_REFUND_DETAIL_ID
+        , D.GATHER_REFUND_ID, D.GATHER_REFUND_DOCUNUM, D.PRODUCT_NAME, D.PRODUCT_PICTURE, D.SPEC_MODEL, D.PRODUCT_UNIT, D.GATHER_PRICE, D.GATHER_QUANTITY, D.GATHER_SUBTOTAL    </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="GatherRefundMap">
         select
-        <include refid="GatherRefundCol"></include>
-        from EIMS.GATHER_REFUND
-        where GATHER_REFUND_ID = #{gatherRefundId,jdbcType=INTEGER}
+        <include refid="GatherRefundJoinCol"></include>,
+        <include refid="GatherRefundDetailJoinCol"></include>
+        from EIMS.GATHER_REFUND P left join EiMS.Gather_refund_detail D on P.GATHER_REFUND_ID = D.GATHER_REFUND_ID
+        where P.GATHER_REFUND_ID = #{gatherRefundId}
+
     </select>
+
 
     <!--查询所有-->
     <select id="queryAll" resultMap="GatherRefundMap">

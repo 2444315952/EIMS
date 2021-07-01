@@ -1,6 +1,8 @@
 package com.eims.service.impl;
 
+import com.eims.mybatis.dao.PaymentDetailDao;
 import com.eims.mybatis.entity.Payment;
+import com.eims.mybatis.entity.PaymentDetail;
 import com.eims.vo.form.PaymentQueryForm;
 import com.eims.mybatis.dao.PaymentDao;
 import com.eims.service.PaymentService;
@@ -23,6 +25,9 @@ import com.github.pagehelper.PageInfo;
 public class PaymentServiceImpl implements PaymentService {
     @Resource
     private PaymentDao paymentDao;
+
+    @Resource
+    private PaymentDetailDao paymentDetailDao;
 
     /**
      * 通过ID查询单条数据
@@ -83,6 +88,12 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment insert(Payment payment) {
         this.paymentDao.insert(payment);
+        List<PaymentDetail> paymentDetailList = payment.getPaymentDetailList();//获取payment实体类里面的PaymentDetailList()值,get是获取
+        if (paymentDetailList != null){                 //判断get过来的paymentDetailList里面是否有值
+            for (PaymentDetail detail:paymentDetailList)//类型  别名：循环集和变量名
+                detail.setPaymentId(payment.getPayId());//把循环自动新增的id放入 detail.setPaymentId
+            paymentDetailDao.insertBatch(paymentDetailList);//批量新增付款单明细集和数据
+        }
         return this.queryById(payment.getPayId());
     }
 
@@ -106,6 +117,10 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment update(Payment payment) {
         this.paymentDao.update(payment);
+        if (payment.getPaymentDetailList() !=  null){
+            this.paymentDetailDao.deleteBatchByEntities(payment.getPaymentDetailList());
+            this.paymentDetailDao.insertBatch(payment.getPaymentDetailList());
+        }
         return this.queryById(payment.getPayId());
     }
 

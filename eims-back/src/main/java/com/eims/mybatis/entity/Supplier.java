@@ -2,6 +2,7 @@ package com.eims.mybatis.entity;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -38,4 +39,6 @@ public class Supplier implements Serializable {
     private String remark;
 
     private Integer companyId;
+
+    private List<SupplierProduct> supplierProductList;
 }

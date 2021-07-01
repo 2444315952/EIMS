@@ -3,8 +3,9 @@ package com.eims.controller;
 import com.eims.mybatis.entity.Supplier;
 import com.eims.vo.form.SupplierQueryForm;
 import com.eims.service.SupplierService;
+import com.eims.vo.table.SupplierProductTable;
 import org.springframework.web.bind.annotation.*;
-
+import com.eims.mybatis.dao.*;
 import javax.annotation.Resource;
 
 import com.github.pagehelper.PageInfo;
@@ -35,6 +36,8 @@ public class SupplierController {
     public Supplier selectOne(Integer id) {
         return this.supplierService.queryById(id);
     }
+
+
 
     /**
      * 查询所有数据
@@ -81,6 +84,7 @@ public class SupplierController {
     @PostMapping("/supplier")
     public Supplier insert(@RequestBody Supplier supplier) {
         supplier.setCompanyId(1);
+
         return this.supplierService.insert(supplier);
     }
 

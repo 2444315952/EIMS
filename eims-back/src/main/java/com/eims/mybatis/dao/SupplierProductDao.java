@@ -2,6 +2,7 @@ package com.eims.mybatis.dao;
 
 import com.eims.mybatis.entity.SupplierProduct;
 import com.eims.vo.form.SupplierProductQueryForm;
+import com.eims.vo.table.SupplierProductTable;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -32,6 +33,7 @@ public interface SupplierProductDao {
      */
     List<SupplierProduct> queryAll(SupplierProductQueryForm supplierProductQueryForm);
 
+    List<SupplierProductTable> SupplierProductTableQuery(Integer supplierId);
     /**
      * 通过实体作为或者条件查询
      *
@@ -39,6 +41,7 @@ public interface SupplierProductDao {
      * @return 对象列表
      */
     List<SupplierProduct> queryOrByPojo(SupplierProductQueryForm supplierProductQueryForm);
+
 
     /**
      * 通过实体作为并且条件查询

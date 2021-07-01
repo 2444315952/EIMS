@@ -3,6 +3,7 @@ package com.eims.controller;
 import com.eims.mybatis.entity.SupplierProduct;
 import com.eims.vo.form.SupplierProductQueryForm;
 import com.eims.service.SupplierProductService;
+import com.eims.vo.table.SupplierProductTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -46,7 +47,10 @@ public class SupplierProductController {
     public PageInfo<SupplierProduct> queryAll(SupplierProductQueryForm supplierProductQueryForm) {
         return this.supplierProductService.queryAll(supplierProductQueryForm);
     }
-
+    @GetMapping("/supplier/table")
+    public List<SupplierProductTable> SupplierProductTableQuery(Integer supplierId){
+        return this.supplierProductService.SupplierProductTableQuery(supplierId);
+    }
     /**
      * 根据查询条件搜索数据
      *

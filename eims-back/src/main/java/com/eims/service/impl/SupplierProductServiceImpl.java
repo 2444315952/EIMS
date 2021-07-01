@@ -4,6 +4,7 @@ import com.eims.mybatis.entity.SupplierProduct;
 import com.eims.vo.form.SupplierProductQueryForm;
 import com.eims.mybatis.dao.SupplierProductDao;
 import com.eims.service.SupplierProductService;
+import com.eims.vo.table.SupplierProductTable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -46,6 +47,13 @@ public class SupplierProductServiceImpl implements SupplierProductService {
         Page<SupplierProduct> page = PageHelper.startPage(supplierProductQueryForm.getPageNum(), supplierProductQueryForm.getPageSize());
         List<SupplierProduct> supplierProductList = this.supplierProductDao.queryAll(supplierProductQueryForm);
         return new PageInfo<>(supplierProductList);
+    }
+
+
+
+    @Override
+    public List<SupplierProductTable> SupplierProductTableQuery(Integer supplierId) {
+        return this.supplierProductDao.SupplierProductTableQuery(supplierId);
     }
 
     /**

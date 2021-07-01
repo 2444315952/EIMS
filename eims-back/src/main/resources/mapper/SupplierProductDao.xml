@@ -8,10 +8,23 @@
         <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
         <result property="productPrice" column="PRODUCT_PRICE" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap type="com.eims.vo.table.SupplierProductTable" id="SupplierProductTable">
+        <result property="supplierProductId" column="SUPPLIER_PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="productId" column="PRODUCT_ID" jdbcType="INTEGER"/>
+        <result property="productPrice" column="PRODUCT_PRICE" jdbcType="VARCHAR"/>
+        <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+        <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+        <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+
+    </resultMap>
 
     <sql id="SupplierProductCol">
         SUPPLIER_PRODUCT_ID, SUPPLIER_ID, PRODUCT_ID, PRODUCT_PRICE    </sql>
-
+    <select id="SupplierProductTableQuery" resultType="com.eims.vo.table.SupplierProductTable">
+        select sp.SUPPLIER_PRODUCT_ID,sp.SUPPLIER_ID,sp.PRODUCT_ID,sp.PRODUCT_PRICE,p.PRODUCT_NAME,p.SPEC_MODEL,p.PRODUCT_UNIT from supplier_product sp inner join product p on sp.product_id = p.product_id
+        where sp.supplier_id = #{supplierId}
+    </select>
     <!--查询单个-->
     <select id="queryById" resultMap="SupplierProductMap">
         select

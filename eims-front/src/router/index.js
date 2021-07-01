@@ -3,7 +3,7 @@ import {
 	createWebHistory
 } from 'vue-router'
 
-import Login from '../components/Login.vue'
+
 import PurchaseList from '../components/purchase/PurchaseList.vue'
 import Purchase from '../components/purchase/Purchase.vue'
 import PurchaseReturnList from '../components/purchase/PurchaseReturnList.vue'
@@ -24,6 +24,12 @@ import BlitemList from '../components/warehouse/BlitemList.vue'
 import BlitemDetails from '../components/warehouse/BlitemDetails.vue'
 
 import PaymentList from '../components/capital/PaymentList.vue'
+import Payment from '../components/capital/fkd.vue'
+import GatherRefund from '../components/capital/GatherRefund.vue'
+import GatherRefundList from '../components/capital/GatherRefundList.vue'
+import SupplierList from '../components/capital/SupplierList.vue'
+import Supplier from '../components/capital/Supplier.vue'
+
 import Customer from '../components/basicData/Customer.vue'
 import Product from '../components/basicData/Product.vue'
 
@@ -39,12 +45,7 @@ import sellaccountreturn from '../components/sell/SellAccountsReturn.vue'
 import sellbillgather from '../components/sell/SellBillGather.vue'
 const routes = [{
 		path: '/',
-		redirect: '/Login'
-	},
-	{
-		path: '/Login',
-		name: "Login",
-		component: Login
+		redirect: '/PaymentList'
 	},
 
 	{
@@ -138,6 +139,31 @@ const routes = [{
 		path: '/PaymentList',
 		name: 'PaymentList',
 		component: PaymentList
+	},
+	{
+		path:'/Payment',
+		name:'Payment',
+		component:Payment
+	},
+	{
+		path:'/GatherRefund',
+		name:'GatherRefund',
+		component:GatherRefund
+	},
+	{
+		path:'/GatherRefundList',
+		name:'GatherRefundList',
+		component:GatherRefundList
+	},
+	{
+		path:'/SupplierList',
+		name:'SupplierList',
+		component:SupplierList
+	},
+	{
+		path:'/Supplier',
+		name:'Supplier',
+		component:Supplier
 	},
 	//基础资料
 	{

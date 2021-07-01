@@ -62,5 +62,5 @@ public class PurchaseReturn implements Serializable {
 
     private Integer isOnline;
 
-    private List<PurchaseDetail> purchaseDetailList;
+    private List<PurchaseReturnDetail> purchaseReturnDetailList;
 }

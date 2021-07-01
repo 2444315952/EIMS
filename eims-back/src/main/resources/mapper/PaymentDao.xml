@@ -19,17 +19,59 @@
         <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
         <result property="clearingForm" column="CLEARING_FORM" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap type="com.eims.mybatis.entity.Payment" id="PaymentAndDetailMap">
+        <result property="payId" column="PAY_ID" jdbcType="INTEGER"/>
+        <result property="companyId" column="COMPANY_ID" jdbcType="INTEGER"/>
+        <result property="workPointId" column="WORK_POINT_ID" jdbcType="INTEGER"/>
+        <result property="payDocunum" column="PAY_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="documentDate" column="DOCUMENT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="purchId" column="PURCH_ID" jdbcType="INTEGER"/>
+        <result property="purchDocunum" column="PURCH_DOCUNUM" jdbcType="VARCHAR"/>
+        <result property="supplierId" column="SUPPLIER_ID" jdbcType="INTEGER"/>
+        <result property="supplierName" column="SUPPLIER_NAME" jdbcType="VARCHAR"/>
+        <result property="employeeId" column="EMPLOYEE_ID" jdbcType="INTEGER"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" jdbcType="VARCHAR"/>
+        <result property="paymentAmount" column="PAYMENT_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+        <result property="audited" column="AUDITED" jdbcType="INTEGER"/>
+        <result property="clearingForm" column="CLEARING_FORM" jdbcType="VARCHAR"/>
+
+        <collection property="paymentDetailList" javaType="list" ofType="com.eims.mybatis.entity.PaymentDetail">
+            <result property="payDetailId" column="PAY_DETAIL_ID" jdbcType="INTEGER"/>
+            <result property="paymentId" column="PAYMENT_ID" jdbcType="INTEGER"/>
+            <result property="payDocunum" column="PAY_DOCUNUM" jdbcType="VARCHAR"/>
+            <result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+            <result property="productPicture" column="PRODUCT_PICTURE" jdbcType="VARCHAR"/>
+            <result property="specModel" column="SPEC_MODEL" jdbcType="VARCHAR"/>
+            <result property="productUnit" column="PRODUCT_UNIT" jdbcType="VARCHAR"/>
+            <result property="paymentPrice" column="PAYMENT_PRICE" jdbcType="VARCHAR"/>
+            <result property="paymentQuantity" column="PAYMENT_QUANTITY" jdbcType="INTEGER"/>
+            <result property="paymentSubtotal" column="PAYMENT_SUBTOTAL" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
 
     <sql id="PaymentCol">
-        PAY_ID, COMPANY_ID, WORK_POINT_ID, PAY_DOCUNUM, DOCUMENT_DATE, PURCH_ID, PURCH_DOCUNUM, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, PAYMENT_AMOUNT, REMARK, AUDITED, CLEARING_FORM    </sql>
+        PAY_ID
+        , COMPANY_ID, WORK_POINT_ID, PAY_DOCUNUM, DOCUMENT_DATE, PURCH_ID, PURCH_DOCUNUM, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, PAYMENT_AMOUNT, REMARK, AUDITED, CLEARING_FORM    </sql>
+
+    <sql id="PaymentJoinCol">
+        P.PAY_ID
+        , P.COMPANY_ID, P.WORK_POINT_ID, P.PAY_DOCUNUM, P.DOCUMENT_DATE, P.PURCH_ID, P.PURCH_DOCUNUM, P.SUPPLIER_ID, P.SUPPLIER_NAME, P.EMPLOYEE_ID, P.EMPLOYEE_NAME, P.PAYMENT_AMOUNT, P.REMARK, P.AUDITED, P.CLEARING_FORM    </sql>
+
+    <sql id="PaymentDetailJoinCol">
+        D.PAY_DETAIL_ID, D.PAYMENT_ID, D.PAY_DOCUNUM, D.PRODUCT_NAME, D.PRODUCT_PICTURE, D.SPEC_MODEL, D.PRODUCT_UNIT, D.PAYMENT_PRICE, D.PAYMENT_QUANTITY, D.PAYMENT_SUBTOTAL    </sql>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="PaymentMap">
+    <select id="queryById" resultMap="PaymentAndDetailMap">
         select
-        <include refid="PaymentCol"></include>
-        from EIMS.PAYMENT
-        where PAY_ID = #{payId}
+        <include refid="PaymentJoinCol"></include>,
+        <include refid="PaymentDetailJoinCol"></include>
+        <!-- left join左边的数据全部显示，右边只显示已连接的，哪怕是空也会显示 -->
+        <!-- on 把俩个数据表字段连接在一起的一个关键字 -->
+        from EIMS.PAYMENT P left join EIMS.PAYMENT_DETAIL D on P.PAY_ID = D.PAYMENT_ID
+        where P.PAY_ID = #{payId}
     </select>
+
 
     <!--查询所有-->
     <select id="queryAll" resultMap="PaymentMap">

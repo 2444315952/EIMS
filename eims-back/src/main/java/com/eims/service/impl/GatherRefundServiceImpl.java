@@ -1,6 +1,8 @@
 package com.eims.service.impl;
 
+import com.eims.mybatis.dao.GatherRefundDetailDao;
 import com.eims.mybatis.entity.GatherRefund;
+import com.eims.mybatis.entity.GatherRefundDetail;
 import com.eims.vo.form.GatherRefundQueryForm;
 import com.eims.mybatis.dao.GatherRefundDao;
 import com.eims.service.GatherRefundService;
@@ -24,6 +26,8 @@ public class GatherRefundServiceImpl implements GatherRefundService {
     @Resource
     private GatherRefundDao gatherRefundDao;
 
+    @Resource
+    private GatherRefundDetailDao gatherRefundDetailDao;
     /**
      * 通过ID查询单条数据
      *
@@ -83,6 +87,12 @@ public class GatherRefundServiceImpl implements GatherRefundService {
     @Override
     public GatherRefund insert(GatherRefund gatherRefund) {
         this.gatherRefundDao.insert(gatherRefund);
+        List<GatherRefundDetail> gatherRefundDetailList = gatherRefund.getGatherRefundDetailList();//获取GatherRefund实体类里面的getGatherRefundDetailList()值,get是获取
+        if (gatherRefundDetailList != null){                 //判断get过来的paymentDetailList里面是否有值
+            for (GatherRefundDetail detail:gatherRefundDetailList)//类型  别名：循环集和变量名
+                detail.setGatherRefundDetailId(gatherRefund.getGatherRefundId());//把循环自动新增的id放入 detail.setPaymentId
+            gatherRefundDetailDao.insertBatch(gatherRefundDetailList);//批量新增付款单明细集和数据
+        }
         return this.queryById(gatherRefund.getGatherRefundId());
     }
 
@@ -106,6 +116,10 @@ public class GatherRefundServiceImpl implements GatherRefundService {
     @Override
     public GatherRefund update(GatherRefund gatherRefund) {
         this.gatherRefundDao.update(gatherRefund);
+        if (gatherRefund.getGatherRefundDetailList() !=  null){
+            this.gatherRefundDetailDao.deleteBatchByEntities(gatherRefund.getGatherRefundDetailList());
+            this.gatherRefundDetailDao.insertBatch(gatherRefund.getGatherRefundDetailList());
+        }
         return this.queryById(gatherRefund.getGatherRefundId());
     }
 

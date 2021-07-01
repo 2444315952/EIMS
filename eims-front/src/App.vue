@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 	<el-container>
-		  <el-header v-if="$route.name!== 'Login'" style="height: 55px;background-color: #B3C0D1;color: #333;line-height: 60px;" >
+		  <el-header v-if="$route.name!== 'PaymentList'" style="height: 55px;background-color: #B3C0D1;color: #333;line-height: 60px;" >
 			<el-dropdown style="float: right;">
 				<el-button icon="el-icon-user-solid" circle id="content" style="float: right;margin-top: 6px;"></el-button> 
 			  <template #dropdown>
@@ -64,7 +64,7 @@
 		  				<el-menu-item index="4-1"><router-link :to="{name:'PaymentList'}">付款单</router-link></el-menu-item>
 		  				<el-menu-item index="4-2">收款单</el-menu-item>
 		  				<el-menu-item index="4-3">预付退款</el-menu-item>
-		  				<el-menu-item index="4-4">预收退款</el-menu-item>
+		  				<el-menu-item index="4-4"><router-link :to="{name:'GatherRefund'}">预收退款</router-link></el-menu-item>
 		  			</el-menu-item-group>
 		  		  </el-submenu>
 		  		  <el-submenu index="5">
@@ -74,7 +74,7 @@
 		  			<el-menu-item-group>	
 		  				<el-menu-item index="5-1"><router-link :to="{name:'Product'}">产品</router-link></el-menu-item>
 		  				<el-menu-item index="5-2"><router-link :to="{name:'Customer'}">客户</router-link></el-menu-item>
-		  				<el-menu-item index="5-3">供应商</el-menu-item>
+		  				<el-menu-item index="5-3"><router-link :to="{name:'SupplierList'}">供应商</router-link></el-menu-item>
 						<el-menu-item index="5-2"><router-link :to="{name:'moneyaccount'}">资金账户</router-link></el-menu-item>
 		  			</el-menu-item-group>
 		  		  </el-submenu>

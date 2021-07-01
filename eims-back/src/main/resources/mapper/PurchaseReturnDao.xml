@@ -45,7 +45,7 @@
         <result property="isOut" column="IS_OUT" jdbcType="INTEGER"/>
         <result property="isOnline" column="IS_ONLINE" jdbcType="INTEGER"/>
 
-        <collection property="purchaseDetailList"  javaType="list" ofType="com.eims.mybatis.entity.PurchaseReturnDetail">
+        <collection property="purchaseReturnDetailList"  javaType="list" ofType="com.eims.mybatis.entity.PurchaseReturnDetail">
             <result property="purchReturnDetailId" column="PURCH_RETURN_DETAIL_ID" jdbcType="INTEGER"/>
             <result property="purchReturnId" column="PURCH_RETURN_ID" jdbcType="INTEGER"/>
             <result property="purchReturnDocunum" column="PURCH_RETURN_DOCUNUM" jdbcType="VARCHAR"/>
@@ -63,7 +63,7 @@
     </resultMap>
 
     <sql id="PurchaseReturnDetailCol">
-        D.PURCH_RETURN_DETAIL_ID, D.PURCH_RETURN_ID, D.PURCH_RETURN_DOCUNUM, D.PURCH_DETAIL_ID, D.PRODUCT_ID,D.PRODUCT_NAME, D.PRODUCT_PICTURE, D.SPEC_MODEL, D.PRODUCT_UNIT, D.PURCHASE_PRICE, D.PURCHASE_QUANTITY, D.PURCHASE_SUBTOTAL, D.RETURNED    </sql>
+        D.PURCH_RETURN_DETAIL_ID, D.PURCH_RETURN_ID, D.PURCH_RETURN_DOCUNUM, D.PURCH_DETAIL_ID, D.PRODUCT_ID, D.PRODUCT_NAME, D.PRODUCT_PICTURE, D.SPEC_MODEL, D.PRODUCT_UNIT, D.PURCHASE_PRICE, D.PURCHASE_QUANTITY, D.PURCHASE_SUBTOTAL, D.RETURNED    </sql>
 
     <sql id="PurchaseReturnCol">
         PURCH_RETURN_ID, COMPANY_ID, WORK_POINT_ID, PURCH_RETURN_DOCUNUM, PURCH_ID, PURCH_DOCUNUM, DOCUMENT_DATE, SUPPLIER_ID, SUPPLIER_NAME, EMPLOYEE_ID, EMPLOYEE_NAME, WAREHOUSE_ID, WAREHOUSE_NAME, TRANSACTION_AMOUNT, REFUND_AMOUNT, AUDITED, IN_REFUND, IS_OUT, IS_ONLINE    </sql>
@@ -75,9 +75,10 @@
     <!--查询单个-->
     <select id="queryById" resultMap="PurchaseReturnListMap">
         select
-        <include refid="PurchaseReturJoinCol"></include>,<include refid="PurchaseReturnDetailCol"></include>
+        <include refid="PurchaseReturJoinCol"></include>,
+        <include refid="PurchaseReturnDetailCol"></include>
         from EIMS.PURCHASE_RETURN P LEFT JOIN EIMS.PURCHASE_RETURN_DETAIL D ON P.PURCH_RETURN_ID = D.PURCH_RETURN_ID
-        where P.PURCH_RETURN_ID = #{purchReturnId}
+        where P.PURCH_RETURN_ID = #{purchReturnId,jdbcType=INTEGER}
     </select>
 
     <!--查询所有-->

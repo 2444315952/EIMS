@@ -2,7 +2,7 @@ package com.eims.service.impl;
 
 import com.eims.mybatis.entity.Supplier;
 import com.eims.vo.form.SupplierQueryForm;
-import com.eims.mybatis.dao.SupplierDao;
+import com.eims.mybatis.dao.*;
 import com.eims.service.SupplierService;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +24,8 @@ public class SupplierServiceImpl implements SupplierService {
     @Resource
     private SupplierDao supplierDao;
 
+    @Resource
+    private SupplierProductDao supplierProductDao;
     /**
      * 通过ID查询单条数据
      *
@@ -83,6 +85,15 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public Supplier insert(Supplier supplier) {
         this.supplierDao.insert(supplier);
+        if (supplier.getSupplierProductList() != null){
+            for (int i=0;i<supplier.getSupplierProductList().size();i++){
+                supplier.getSupplierProductList().get(i).setSupplierId(supplier.getSupplierId());
+            }
+
+            this.supplierProductDao.insertBatch(supplier.getSupplierProductList());
+        }
+
+
         return this.queryById(supplier.getSupplierId());
     }
 

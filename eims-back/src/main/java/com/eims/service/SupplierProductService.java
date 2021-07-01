@@ -5,6 +5,7 @@ import com.eims.vo.form.SupplierProductQueryForm;
 
 import java.util.List;
 
+import com.eims.vo.table.SupplierProductTable;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -31,6 +32,7 @@ public interface SupplierProductService {
      */
     PageInfo<SupplierProduct> queryAll(SupplierProductQueryForm supplierProductQueryForm);
 
+    List<SupplierProductTable> SupplierProductTableQuery(Integer supplierId);
     /**
      * 根据查询条件搜索数据
      *

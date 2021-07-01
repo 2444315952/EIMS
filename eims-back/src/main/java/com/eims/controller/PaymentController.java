@@ -31,7 +31,7 @@ public class PaymentController {
      * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("/payment/one")
+        @GetMapping("/payment/one")
     public Payment selectOne(Integer id) {
         return this.paymentService.queryById(id);
     }

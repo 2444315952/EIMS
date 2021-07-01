@@ -25,7 +25,7 @@ public interface PaymentDetailService {
 
     /**
      * 查询所有数据
-     *
+   、、  *
      * @param paymentDetailQueryForm 实例对象
      * @return 实例对象
      */

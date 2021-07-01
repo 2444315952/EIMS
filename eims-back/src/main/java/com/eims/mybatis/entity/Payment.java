@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -52,4 +53,6 @@ public class Payment implements Serializable {
     private Integer audited;
 
     private String clearingForm;
+
+    private List<PaymentDetail> paymentDetailList;
 }

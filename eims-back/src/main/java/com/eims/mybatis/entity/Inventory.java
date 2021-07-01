@@ -18,8 +18,8 @@ import lombok.ToString;
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @ToString
+@Data
 public class Inventory implements Serializable {
     private static final long serialVersionUID = 993760056117052908L;
 

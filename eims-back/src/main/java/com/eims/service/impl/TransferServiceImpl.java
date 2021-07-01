@@ -177,7 +177,7 @@ public class TransferServiceImpl implements TransferService {
 
         for(TransferDetails details:transfer.getTransferDetailsList()) {
 
-            OutboundDetail outboundDetail = new OutboundDetail(stockOut.getStockOutId(),stockOut.getStockOutDocunum(),details.getProductId(),details.getProductPicture(),details.getProductName(),details.getSpecModel(),details.getProductUnit(),details.getOutboundQuantity());
+            OutboundDetail outboundDetail = new OutboundDetail(stockOut.getStockOutId(),stockOut.getStockOutDocunum(),details.getProductId(),details.getProductName(),details.getSpecModel(),details.getProductUnit(),details.getOutboundQuantity());
             System.out.println("详情信息是：");
             System.out.println(outboundDetail.toString());
             log.debug("----------------{}",outboundDetail);
@@ -201,7 +201,7 @@ public class TransferServiceImpl implements TransferService {
         Integer WarequantityTotal=0;
         for (TransferDetails details:transfer.getTransferDetailsList()){
 
-            WarehousingDetail warehousingDetail=new WarehousingDetail(warehouseWarrant.getWarehouseWarrantId(),warehouseWarrant.getWarehouseDocunum(),details.getProductId(),details.getProductPicture(),details.getProductName(),details.getSpecModel(),details.getProductUnit(),details.getOutboundQuantity());
+            WarehousingDetail warehousingDetail=new WarehousingDetail(warehouseWarrant.getWarehouseWarrantId(),warehouseWarrant.getWarehouseDocunum(),details.getProductId(),details.getProductName(),details.getSpecModel(),details.getProductUnit(),details.getOutboundQuantity());
             System.out.println("入库单详情信息是：");
             System.out.println(warehousingDetail);
 

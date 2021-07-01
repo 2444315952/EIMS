@@ -104,15 +104,15 @@
 										</el-button>
 									</template>
 								</el-table-column>
-								<el-table-column label="产品名称" prop="productName" width="200">
+								<el-table-column label="产品名称" prop="productName" width="210">
 								</el-table-column>
-								<el-table-column label="产品图片" width="160">
+								<!-- <el-table-column label="产品图片" width="160">
 									<template #default="scope">
 										<img v-if="typeof(this.ruleForm.warehousingDetailList[0].productId) != 'undefined'"
 											:src="scope.row.productPicture" style="width: 40px; height: 40px;"
 											class="productPicture" />
 									</template>
-								</el-table-column>
+								</el-table-column> -->
 								<el-table-column prop="specModel" label="产品规格" width="160">
 								</el-table-column>
 								<el-table-column prop="productUnit" label="单位" width="160">

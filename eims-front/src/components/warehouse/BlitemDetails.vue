@@ -101,13 +101,6 @@
 										</el-input>
 									</template>
 								</el-table-column>
-								<el-table-column label="产品图片" width="140">
-									<template #default="scope">
-										<img v-if="typeof(this.ruleForm.baldetailList[0].productId) != 'undefined'"
-											:src="ruleForm.baldetailList[scope.$index].productPicture"
-											style="width: 40px; height: 40px;" />
-									</template>
-								</el-table-column>
 								<el-table-column prop="specModel" label="规格" width="125">
 								</el-table-column>
 								<el-table-column prop="productUnit" label="单位" width="125">
@@ -491,8 +484,13 @@
 				this.queryForm.productName = this.searchInput
 				this.axios({
 					method: 'get',
-					url: 'http://localhost:8089/eims/inventory/search',
-					params: this.queryForm
+					url: 'http://localhost:8089/eims/inventory/screen',
+					params: {
+						"pageNum": this.queryForm.pageNum,
+						"pageSize": this.queryForm.pageSize,
+						"warehouseId":this.ruleForm.warehouseId,
+						"productName":this.searchInput
+					}
 				}).then(res => {
 					console.log(res)
 					this.queryForm.total = res.data.total

@@ -203,6 +203,7 @@
             <if test="workPointId != null">and work_point_id = #{workPointId}</if>
         </where>
         )
+        order by STOCK_OUT_ID desc
     </select>
 
     <!--通过实体作为或者条件查询-->
@@ -266,6 +267,7 @@
                 or DOCUMENTS_NOTE like '%'||#{documentsNote}||'%'
             </if>
         </where>
+        order by STOCK_OUT_ID desc
     </select>
 
     <!--通过实体作为并且条件查询-->
@@ -329,6 +331,7 @@
                 and DOCUMENTS_NOTE = #{documentsNote}
             </if>
         </where>
+        order by STOCK_OUT_ID desc
     </select>
 
     <!--新增所有列-->

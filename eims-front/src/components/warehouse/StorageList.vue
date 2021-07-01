@@ -180,7 +180,6 @@
 				valuetype: 'all',
 				valuetype1: 'all',
 				tableData: [],
-				
 				multipleSelection: [],
 				dialogTableVisible: false,
 				dialogFormVisible: false,

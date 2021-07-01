@@ -156,9 +156,9 @@ public class BlitemServiceImpl implements BlitemService {
         StockOut stockOut=new StockOut(this.getStockOutDocuNum(),blitem.getDocumentDate(),blitem.getCompanyId(),blitem.getWorkPointId(),blitem.getEmployeeId(),blitem.getEmployeeName(),1,blitem.getWarehouseId(),blitem.getWarehouseName(),"盘亏出库",blitem.getBlitemId());
 
         //总入库数量
-        Integer QuantityTotal=0;
+        Integer quantityTotal=0;
         //总出库数量
-        Integer DeliveryTotal=0;
+        Integer deliveryTotal=0;
 
         System.out.println("盘点数量为"+blitem.getBaldetailList().get(0).getPhysicalInventory());
         System.out.println("调拨数量"+blitem.getBaldetailList().get(0).getInventory());
@@ -176,7 +176,7 @@ public class BlitemServiceImpl implements BlitemService {
                 //新增入库单记录
                 //数量差额
                 Integer warequantityTotal=baldetail.getPhysicalInventory()-baldetail.getInventory();//入库数量=盘点数量-库存数量
-                WarehousingDetail warehousingDetail=new WarehousingDetail(warehouseWarrant.getWarehouseWarrantId(),warehouseWarrant.getWarehouseDocunum(),baldetail.getProductId(),baldetail.getProductPicture(),baldetail.getProductName(),baldetail.getSpecModel(),baldetail.getProductUnit(),warequantityTotal);
+                WarehousingDetail warehousingDetail=new WarehousingDetail(warehouseWarrant.getWarehouseWarrantId(),warehouseWarrant.getWarehouseDocunum(),baldetail.getProductId(),baldetail.getProductName(),baldetail.getSpecModel(),baldetail.getProductUnit(),warequantityTotal);
                 System.out.println("入库数量为：------------");
                 System.out.println(warequantityTotal);
                 System.out.println("入库单详情信息是：");
@@ -185,7 +185,7 @@ public class BlitemServiceImpl implements BlitemService {
                 if(warehouseWarrant.getWarehousingDetailList()==null)
                     warehouseWarrant.setWarehousingDetailList(new ArrayList<WarehousingDetail>());
                 warehouseWarrant.getWarehousingDetailList().add(warehousingDetail);
-                QuantityTotal += warequantityTotal;
+                quantityTotal += warequantityTotal;
 
                 System.out.println("入库信息：-------------");
                 System.out.println(warehouseWarrant.toString());
@@ -196,28 +196,28 @@ public class BlitemServiceImpl implements BlitemService {
                 //如果库存数量大于盘点数量，进行出库处理
             }else if (baldetail.getPhysicalInventory()<baldetail.getInventory()){
                 Integer outQuantity=baldetail.getInventory()-baldetail.getPhysicalInventory();//出库数量=库存数量-盘点数量
-                OutboundDetail outboundDetail=new OutboundDetail(stockOut.getStockOutId(),stockOut.getStockOutDocunum(),baldetail.getProductId(),baldetail.getProductPicture(),baldetail.getProductName(),baldetail.getSpecModel(),baldetail.getProductUnit(),outQuantity);
+                OutboundDetail outboundDetail=new OutboundDetail(stockOut.getStockOutId(),stockOut.getStockOutDocunum(),baldetail.getProductId(),baldetail.getProductName(),baldetail.getSpecModel(),baldetail.getProductUnit(),outQuantity);
                 System.out.println("出库数量为：==============");
                 System.out.println(outQuantity);
                 //如果出库单详情为没有就新建一个详情来新的出库单详情来存储数据
                 if (stockOut.getOutboundDetailList()==null)
                     stockOut.setOutboundDetailList(new ArrayList<OutboundDetail>());
                 stockOut.getOutboundDetailList().add(outboundDetail);
-                DeliveryTotal+=outQuantity;
+                deliveryTotal+=outQuantity;
 
             }
         }
 
+        if(stockOut.getOutboundDetailList()!=null){
+            stockOut.setDeliveryQuantity(deliveryTotal);
+            this.stockOutService.insert(stockOut);
+            this.stockOutService.auditStorage(stockOut.getStockOutId());
+            warehouseWarrant.setInventoryQuantity(quantityTotal);
+            this.warehouseWarrantService.insert(warehouseWarrant);
+            this.warehouseWarrantService.auditStorage(warehouseWarrant.getWarehouseWarrantId());
 
-        System.out.println("入库单的值为"+warehouseWarrant.toString());
-        stockOut.setDeliveryQuantity(DeliveryTotal);
-        this.stockOutService.insert(stockOut);
-        System.out.println("出库单的值为"+stockOut.toString());
-        this.stockOutService.auditStorage(stockOut.getStockOutId());
+        }
 
-        warehouseWarrant.setInventoryQuantity(QuantityTotal);
-        this.warehouseWarrantService.insert(warehouseWarrant);
-        this.warehouseWarrantService.auditStorage(warehouseWarrant.getWarehouseWarrantId());
         return this.queryById(blitemId);
     }
 

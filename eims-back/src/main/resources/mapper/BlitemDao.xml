@@ -88,6 +88,7 @@
             <if test="workPointId != null">and work_point_id = #{workPointId}</if>
         </where>
         )
+        order by BLITEM_ID desc
     </select>
 
     <!--通过实体作为或者条件查询-->
@@ -96,45 +97,40 @@
         <include refid="BlitemCol"></include>
         from (select <include refid="BlitemCol"></include> from EIMS.BLITEM
         <where>
-            company_id = #{companyId}
-            <if test="workPointId != null">and work_point_id = #{workPointId}</if>
+            company_id = #{companyId,jdbcType=INTEGER}
+            <if test="workPointId != null">and work_point_id = #{workPointId,jdbcType=INTEGER}</if>
         </where>
         )
         <where>
             <if test="blitemId != null">
-                or BLITEM_ID like '%'||#{blitemId}||'%'
+                or BLITEM_ID like '%'||#{blitemId,jdbcType=INTEGER}||'%'
             </if>
-            <if test="blitemDocunum != null and blitemDocunum != ''">
-                or BLITEM_DOCUNUM like '%'||#{blitemDocunum}||'%'
+            <if test="blitemDocunum != null">
+                or BLITEM_DOCUNUM like '%'||#{blitemDocunum,jdbcType=VARCHAR}||'%'
             </if>
             <if test="documentDate != null">
-                or DOCUMENT_DATE like '%'||#{documentDate}||'%'
-            </if>
-            <if test="companyId != null">
-                or COMPANY_ID like '%'||#{companyId}||'%'
+                or DOCUMENT_DATE like '%'||#{documentDate,jdbcType=TIMESTAMP}||'%'
             </if>
             <if test="employeeId != null">
-                or EMPLOYEE_ID like '%'||#{employeeId}||'%'
+                or EMPLOYEE_ID like '%'||#{employeeId,jdbcType=INTEGER}||'%'
             </if>
-            <if test="employeeName != null and employeeName != ''">
-                or EMPLOYEE_NAME like '%'||#{employeeName}||'%'
+            <if test="employeeName != null">
+                or EMPLOYEE_NAME like '%'||#{employeeName,jdbcType=VARCHAR}||'%'
             </if>
             <if test="warehouseId != null">
-                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+                or WAREHOUSE_ID like '%'||#{warehouseId,jdbcType=INTEGER}||'%'
             </if>
-            <if test="warehouseName != null and warehouseName != ''">
-                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            <if test="warehouseName != null">
+                or WAREHOUSE_NAME like '%'||#{warehouseName,jdbcType=VARCHAR}||'%'
             </if>
             <if test="audited != null">
-                or AUDITED like '%'||#{audited}||'%'
+                or AUDITED like '%'||#{audited,jdbcType=INTEGER}||'%'
             </if>
-            <if test="reason != null and reason != ''">
-                or REASON like '%'||#{reason}||'%'
-            </if>
-            <if test="documentsNote != null and documentsNote != ''">
-                or DOCUMENTS_NOTE like '%'||#{documentsNote}||'%'
+            <if test="documentsNote != null">
+                or DOCUMENTS_NOTE like '%'||#{documentsNote,jdbcType=VARCHAR}||'%'
             </if>
         </where>
+        order by BLITEM_ID desc
     </select>
 
     <!--通过实体作为并且条件查询-->
@@ -185,6 +181,7 @@
                 and DOCUMENTS_NOTE = #{documentsNote}
             </if>
         </where>
+        order by BLITEM_ID desc
     </select>
 
     <!--新增所有列-->

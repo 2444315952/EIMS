@@ -97,12 +97,9 @@
     </select>
 
     <select id="queryProduct" resultMap="InventoryMap">
-        select
-        <include refid="InventoryCol"></include>
-        from (select <include refid="InventoryCol"></include> from EIMS.INVENTORY
-        <where>
-            COMPANY_ID = #{companyId,jdbcType=INTEGER} and WAREHOUSE_ID = #{warehouseId,jdbcType=INTEGER} and  PRODUCT_ID = #{productId,jdbcType=INTEGER}
-        </where>
+        select <include refid="InventoryCol"></include> from EIMS.INVENTORY
+        where COMPANY_ID = #{companyId,jdbcType=INTEGER} and WAREHOUSE_ID = #{warehouseId,jdbcType=INTEGER} and  PRODUCT_ID = #{productId,jdbcType=INTEGER}
+
     </select>
 
     <!--查询所有-->
@@ -129,44 +126,41 @@
         <include refid="InventoryCol"></include>
         from (select <include refid="InventoryCol"></include> from EIMS.INVENTORY
         <where>
-            company_id = #{companyId}
+            company_id = #{companyId,jdbcType=INTEGER}
         </where>)
-
         <where>
             <if test="inventoryId != null">
-                or INVENTORY_ID like '%'||#{inventoryId}||'%'
+                or INVENTORY_ID like '%'||#{inventoryId,jdbcType=INTEGER}||'%'
             </if>
             <if test="warehouseId != null">
-                or WAREHOUSE_ID like '%'||#{warehouseId}||'%'
+                or WAREHOUSE_ID like '%'||#{warehouseId,jdbcType=INTEGER}||'%'
             </if>
-            <if test="warehouseName != null and warehouseName != ''">
-                or WAREHOUSE_NAME like '%'||#{warehouseName}||'%'
+            <if test="warehouseName != null">
+                or WAREHOUSE_NAME like '%'||#{warehouseName,jdbcType=VARCHAR}||'%'
             </if>
             <if test="productId != null">
-                or PRODUCT_ID like '%'||#{productId}||'%'
+                or PRODUCT_ID like '%'||#{productId,jdbcType=INTEGER}||'%'
             </if>
-            <if test="productPicture != null and productPicture != ''">
-                or PRODUCT_PICTURE like '%'||#{productPicture}||'%'
-            </if>
-            <if test="productName != null and productName != ''">
-                or PRODUCT_NAME like '%'||#{productName}||'%'
+            <if test="productName != null">
+                or PRODUCT_NAME like '%'||#{productName,jdbcType=VARCHAR}||'%'
             </if>
             <if test="purchasePrice != null">
-                or PURCHASE_PRICE like '%'||#{purchasePrice}||'%'
+                or PURCHASE_PRICE like '%'||#{purchasePrice,jdbcType=VARCHAR}||'%'
             </if>
             <if test="inventory != null">
-                or INVENTORY like '%'||#{inventory}||'%'
+                or INVENTORY like '%'||#{inventory,jdbcType=INTEGER}||'%'
             </if>
             <if test="marketPrice != null">
-                or MARKET_PRICE like '%'||#{marketPrice}||'%'
+                or MARKET_PRICE like '%'||#{marketPrice,jdbcType=VARCHAR}||'%'
             </if>
             <if test="totalCost != null">
-                or TOTAL_COST like '%'||#{totalCost}||'%'
+                or TOTAL_COST like '%'||#{totalCost,jdbcType=VARCHAR}||'%'
             </if>
             <if test="minimumStock != null">
-                or MINIMUM_STOCK like '%'||#{minimumStock}||'%'
+                or MINIMUM_STOCK like '%'||#{minimumStock,jdbcType=INTEGER}||'%'
             </if>
         </where>
+        order by INVENTORY_ID desc
     </select>
 
     <!--通过实体作为并且条件查询-->
@@ -190,9 +184,6 @@
             </if>
             <if test="productId != null">
                 and PRODUCT_ID = #{productId}
-            </if>
-            <if test="productPicture != null and productPicture != ''">
-                and PRODUCT_PICTURE = #{productPicture}
             </if>
             <if test="productName != null and productName != ''">
                 and PRODUCT_NAME = #{productName}

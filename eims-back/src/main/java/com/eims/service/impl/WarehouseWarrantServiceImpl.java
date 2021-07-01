@@ -1,13 +1,10 @@
 package com.eims.service.impl;
 
-import com.eims.mybatis.dao.InventoryDao;
-import com.eims.mybatis.dao.PurchaseDao;
-import com.eims.mybatis.dao.WarehousingDetailDao;
+import com.eims.mybatis.dao.*;
 import com.eims.mybatis.entity.*;
 import com.eims.vo.form.PurchaseQueryForm;
 import com.eims.vo.form.SellReturnQueryForm;
 import com.eims.vo.form.WarehouseWarrantQueryForm;
-import com.eims.mybatis.dao.WarehouseWarrantDao;
 import com.eims.service.WarehouseWarrantService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
@@ -37,6 +34,9 @@ public class WarehouseWarrantServiceImpl implements WarehouseWarrantService {
 
     @Resource
     private InventoryDao inventoryDao;
+
+    @Resource
+    private ProductDao productDao;
 
     /**
      * 通过ID查询单条数据
@@ -180,18 +180,20 @@ public class WarehouseWarrantServiceImpl implements WarehouseWarrantService {
      public boolean auditStorage(Integer warehouseWarrantId) {
          System.out.println("入库单id:");
          System.out.println(warehouseWarrantId);
-         Inventory inventory=new Inventory();
         //查询单个拿到详情数据
          WarehouseWarrant warehouseWarrant= this.warehouseWarrantDao.queryById(warehouseWarrantId);
          warehouseWarrant.setAudited(1);
          this.warehouseWarrantDao.update(warehouseWarrant);
          //从详情数据里面拿入库数量和id
-         for(WarehousingDetail warehousingDetail:warehouseWarrant.getWarehousingDetailList())
-            this.warehouseWarrantDao.auditStorage(warehousingDetail.getInventoryQuantity(),warehouseWarrant.getWarehouseId(),warehousingDetail.getProductId());
-//         this.inventoryDao.queryProduct(inventory.getCompanyId(),inventory.getWarehouseId(),inventory.getProductId());
-//         if (inventory.getProductId()!=warehouseWarrant.getWarehousingDetailList().get(0).getProductId()){
-//
-//         }
+         for(WarehousingDetail warehousingDetail:warehouseWarrant.getWarehousingDetailList()){
+//             Inventory inventory = this.inventoryDao.queryProduct(warehouseWarrant.getCompanyId(), warehouseWarrant.getWarehouseId(),warehousingDetail.getProductId());
+//             Product product=this.productDao.queryById(warehousingDetail.getProductId());
+//             if(inventory==null)
+//                 this.inventoryDao.insert(new Inventory(warehouseWarrant.getCompanyId(),warehouseWarrant.getWarehouseId(),warehouseWarrant.getWarehouseName(),warehousingDetail.getProductId(),warehousingDetail.getProductName(),product.getInventory(),product.getMarketPrice(),product.getMinimumStock(),));
+
+             this.warehouseWarrantDao.auditStorage(warehousingDetail.getInventoryQuantity(),warehouseWarrant.getWarehouseId(),warehousingDetail.getProductId());
+
+         }
          return true;
      }
 

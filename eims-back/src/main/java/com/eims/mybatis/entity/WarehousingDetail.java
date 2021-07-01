@@ -41,11 +41,11 @@ public class WarehousingDetail implements Serializable {
 
     private String commodityNote;
 
-    public WarehousingDetail(Integer warehouseWarrantId, String warehouseDocunum, Integer productId, String productPicture, String productName, String specModel, String productUnit, Integer inventoryQuantity) {
+    public WarehousingDetail(Integer warehouseWarrantId, String warehouseDocunum, Integer productId, String productName, String specModel, String productUnit, Integer inventoryQuantity) {
         this.warehouseWarrantId = warehouseWarrantId;
         this.warehouseDocunum = warehouseDocunum;
         this.productId = productId;
-        this.productPicture = productPicture;
+        //this.productPicture = productPicture;
         this.productName = productName;
         this.specModel = specModel;
         this.productUnit = productUnit;

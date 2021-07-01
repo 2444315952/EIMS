@@ -180,7 +180,7 @@
 											@click="removeRow(scope.$index)" circle :disabled="isdisabled"></el-button>
 									</template>
 								</el-table-column>
-								<el-table-column label="产品名称" width="210">
+								<el-table-column label="产品名称" width="230">
 									<template #default="append">
 										<el-input v-model="ruleForm.transferDetailsList[append.$index].productName"
 											placeholder="请选择要调拨的产品" :disabled="isdisabled">
@@ -192,20 +192,20 @@
 										</el-input>
 									</template>
 								</el-table-column>
-								<el-table-column label="产品图片" width="140">
+								<!-- <el-table-column label="产品图片" width="140">
 									<template #default="scope">
 										<img v-if="typeof(this.ruleForm.transferDetailsList[0].productId) != 'undefined'"
 											:src="ruleForm.transferDetailsList[scope.$index].productPicture"
 											style="width: 40px; height: 40px;" />
 									</template>
+								</el-table-column> -->
+								<el-table-column prop="specModel" label="规格" width="120">
 								</el-table-column>
-								<el-table-column prop="specModel" label="规格" width="90">
+								<el-table-column prop="productUnit" label="单位" width="120">
 								</el-table-column>
-								<el-table-column prop="productUnit" label="单位" width="80">
+								<el-table-column property="inventory" label="可用库存" width="120" show-overflow-tooltip>
 								</el-table-column>
-								<el-table-column property="inventory" label="可用库存" width="100" show-overflow-tooltip>
-								</el-table-column>
-								<el-table-column label="调拨数量" width="160" prop="outboundQuantity" show-overflow-tooltip>
+								<el-table-column label="调拨数量" width="170" prop="outboundQuantity" show-overflow-tooltip>
 									<template #default="scope">
 										<el-input-number
 											v-model="ruleForm.transferDetailsList[scope.$index].outboundQuantity"
@@ -484,6 +484,7 @@
 
 			//库存表当前页
 			ProductCurrentChange(val) {
+				this.loading = true
 				this.queryForm.pageNum = val
 				if (this.queryType == 'all') {
 					this.getProduct()
@@ -493,12 +494,19 @@
 
 			//库存表的搜索框查询
 			clickSearch() {
+			    console.log("仓库：")
+				console.log(this.ruleForm.foldWarehouseId)
 				this.queryType = 'search'
-				this.queryForm.productName = this.searchProduct
+				//this.queryForm.productName = this.searchProduct
 				this.axios({
 					method: 'get',
-					url: 'http://localhost:8089/eims/inventory/search',
-					params: this.queryForm
+					url: 'http://localhost:8089/eims/inventory/screen',
+					params: {
+						"pageNum": this.queryForm.pageNum,
+						"pageSize": this.queryForm.pageSize,
+						"warehouseId": this.ruleForm.foldWarehouseId,
+						"productName":this.searchProduct
+					}
 				}).then(res => {
 					console.log("搜索框查询：")
 					console.log(res)
